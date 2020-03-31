@@ -1,0 +1,57 @@
+{
+  "name": "@boardgamelab/sandbox",
+  "version": "0.0.1",
+  "description": "SVG Implementation of Boardgame Lab components",
+  "scripts": {
+    "start": "npm run storybook",
+    "dev": "parcel examples/index.html",
+    "storybook": "start-storybook",
+    "build": "parcel build index.ts",
+    "build:ts": "tsc --declaration",
+    "ts": "tsc --noEmit",
+    "ts:watch": "tsc --noEmit --watch",
+    "lint": "prettier --check **/*.js",
+    "prettier": "prettier --write **/*.js",
+    "prepack": "npm run build && npm run build:ts"
+  },
+  "main": "dist/index.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist/index.js",
+    "dist/types"
+  ],
+  "author": "Nicolo Davis <nicolodavis@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@boardgamelab/components": "github:boardgamelab/components",
+    "@svgdotjs/svg.draggable.js": "^3.0.2",
+    "@svgdotjs/svg.filter.js": "^3.0.7",
+    "@svgdotjs/svg.js": "^3.0.16",
+    "@types/lodash": "^4.14.149",
+    "lodash": "^4.17.15",
+    "shortid": "^2.2.15"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@storybook/addon-actions": "^5.3.17",
+    "@storybook/html": "^5.3.17",
+    "@storybook/preset-typescript": "^2.1.0",
+    "@types/shortid": "0.0.29",
+    "babel-loader": "^8.1.0",
+    "husky": ">=1",
+    "lint-staged": ">=8",
+    "prettier": "1.19.1",
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.7.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,json,md}": [
+      "prettier --write"
+    ]
+  }
+}
