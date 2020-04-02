@@ -27,7 +27,7 @@ interface CardRowArgs {
 
 export class CardRow extends GameObject.augment(Container) {
   constructor(args: CardRowArgs) {
-    super(args);
+    super(args as any);
 
     const { opts } = args;
 

@@ -7,7 +7,7 @@
     "dev": "parcel examples/index.html",
     "storybook": "start-storybook",
     "build": "parcel build index.ts",
-    "build:ts": "tsc --declaration",
+    "build:ts": "tsc --declaration --emitDeclarationOnly --declarationDir=./dist/types",
     "ts": "tsc --noEmit",
     "ts:watch": "tsc --noEmit --watch",
     "lint": "prettier --check **/*.js",

@@ -35,7 +35,7 @@ export class CardHolder extends GameObject.augment(Container) {
   rect: Rect;
 
   constructor(args: CardHolderArgs) {
-    super(args);
+    super(args as any);
 
     let { opts } = args;
 

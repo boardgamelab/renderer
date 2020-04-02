@@ -29,7 +29,7 @@ export class SnapPoint extends GameObject.augment(Container) {
   circle: Circle;
 
   constructor(args: SnapPointArgs) {
-    super(args);
+    super(args as any);
 
     const { opts } = args;
 

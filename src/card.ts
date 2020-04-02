@@ -32,7 +32,7 @@ export class Card extends GameObject.augment(Fade, Drag) {
   rect: Rect;
 
   constructor(args: CardArgs) {
-    super(args);
+    super(args as any);
 
     const { opts } = args;
 

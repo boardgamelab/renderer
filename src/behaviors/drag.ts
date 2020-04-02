@@ -141,7 +141,7 @@ const Drag: Behavior = superclass =>
             (child.data('opts') as SnapPointOpts).enabled !== false
         )
         .filter(ignoreParent)
-        .some((child: G) => {
+        .some(((child: G) => {
           const containerBox = child.rbox(child.root());
           const box = this.el.rbox(this.el.root());
 
@@ -149,7 +149,7 @@ const Drag: Behavior = superclass =>
             this._onCollision(child);
             return true;
           }
-        });
+        }) as any);
     }
 
     checkCollisionsWithSnapPoints() {
