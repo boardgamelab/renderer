@@ -39,7 +39,7 @@ function _ApplyAction(svg: Svg, action: Action) {
 
     case 'opts': {
       const el: Dom = svg.findOne('#' + action.id);
-      const obj: GameObject = el.remember('instance');
+      const obj: any = el.remember('instance');
 
       if (action.key === 'highlight' && action.value === true) {
         obj.highlight();

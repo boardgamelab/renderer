@@ -14,7 +14,6 @@
  *  limitations under the License.
  */
 
-import shortid from 'shortid';
 import { Context } from './context';
 import { Dom, G } from '@svgdotjs/svg.js';
 import compose from 'lodash/fp/compose';
@@ -37,7 +36,7 @@ export class GameObject {
     data: object;
   }) {
     this.ctx = ctx;
-    this.id = id || shortid.generate();
+    this.id = id;
     this.el = this.ctx.svg.group();
     this.el.remember('instance', this);
     this.el.data('id', id);

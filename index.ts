@@ -17,4 +17,6 @@
 import { Init } from './src/state/init';
 import { ApplyActions } from './src/state/apply';
 
+module.exports = { Init, ApplyActions };
+
 export { Init, ApplyActions };
