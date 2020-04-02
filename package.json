@@ -7,7 +7,7 @@
     "dev": "parcel examples/index.html",
     "storybook": "start-storybook",
     "build": "parcel build index.ts",
-    "build:ts": "tsc --declaration --emitDeclarationOnly --declarationDir=./dist/types",
+    "build:ts": "tsc --emitDeclarationOnly --declaration --declarationDir ./dist/types",
     "ts": "tsc --noEmit",
     "ts:watch": "tsc --noEmit --watch",
     "lint": "prettier --check **/*.js",
@@ -17,6 +17,7 @@
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "files": [
+    "dist/index.js.map",
     "dist/index.js",
     "dist/types"
   ],
