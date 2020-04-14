@@ -14,8 +14,4 @@
  *  limitations under the License.
  */
 
-import Canvas from './src/Canvas.svelte';
-
-module.exports = { Canvas };
-
-export { Canvas };
+export { default as Canvas } from './src/Canvas.svelte';

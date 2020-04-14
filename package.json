@@ -17,13 +17,10 @@
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "svelte": "src/Canvas.svelte",
   "files": [
-    "src",
     "dist/index.js.map",
     "dist/index.js",
-    "dist/index.d.ts",
-    "dist/src"
+    "dist/index.d.ts"
   ],
   "author": "Nicolo Davis <nicolodavis@gmail.com>",
   "license": "MIT",

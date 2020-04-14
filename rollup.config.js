@@ -7,19 +7,21 @@ import typescript from 'rollup-plugin-typescript2';
 
 const pkg = require('./package.json');
 
-export default {
-  input: 'index.ts',
-  output: [{ file: pkg.main, name: 'sandbox', format: 'umd', sourcemap: true }],
-  external: [],
-  watch: {
-    include: 'src/**',
+export default [
+  {
+    input: 'index.js',
+    output: [{ file: pkg.main, format: 'es', sourcemap: true }],
+    external: [],
+    watch: {
+      include: 'src/**',
+    },
+    plugins: [
+      json(),
+      svelte(),
+      resolve(),
+      commonjs(),
+      typescript(),
+      sourceMaps(),
+    ],
   },
-  plugins: [
-    json(),
-    svelte(),
-    typescript(),
-    commonjs(),
-    resolve(),
-    sourceMaps(),
-  ],
-};
+];

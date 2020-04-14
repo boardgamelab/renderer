@@ -1,4 +1,5 @@
 import { Component, State, Schema } from '@boardgamelab/components';
+
 import Canvas from './src/Canvas.svelte';
 
 const schema: Schema = {
