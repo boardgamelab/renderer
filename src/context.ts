@@ -14,12 +14,12 @@
  *  limitations under the License.
  */
 
-import { Svg } from '@svgdotjs/svg.js';
-import { Action } from '@boardgamelab/components';
+import { Action, State, Schema } from '@boardgamelab/components';
 
 export interface Context {
+  svg: SVGElement;
+  state: State;
+  schema: Schema;
   dispatchEvent: (eventName: string, arg: object) => void;
   dispatchAction: (action: Action) => void;
-  svg: Svg;
 }
-

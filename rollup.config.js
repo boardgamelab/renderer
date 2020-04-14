@@ -1,5 +1,6 @@
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
+import svelte from 'rollup-plugin-svelte';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 import json from '@rollup/plugin-json';
 import typescript from 'rollup-plugin-typescript2';
@@ -13,5 +14,12 @@ export default {
   watch: {
     include: 'src/**',
   },
-  plugins: [json(), typescript(), commonjs(), resolve(), sourceMaps()],
+  plugins: [
+    json(),
+    svelte(),
+    typescript(),
+    commonjs(),
+    resolve(),
+    sourceMaps(),
+  ],
 };

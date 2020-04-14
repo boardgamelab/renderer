@@ -14,9 +14,8 @@
  *  limitations under the License.
  */
 
-import { Init } from './src/state/init';
-import { ApplyActions } from './src/state/apply';
+import Canvas from './src/Canvas.svelte';
 
-module.exports = { Init, ApplyActions };
+module.exports = { Canvas };
 
-export { Init, ApplyActions };
+export { Canvas };
