@@ -61,5 +61,5 @@
 
 <g {id} class="card" on:mousedown={MouseDown}>
   <title>{id}</title>
-  <svelte:component this={component} {x} {y} {style} />
+  <svelte:component this={component} objectID={id} {schema} {x} {y} {style} />
 </g>

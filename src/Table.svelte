@@ -1,11 +1,16 @@
 <script>
   import GameObject from './objects/GameObject.svelte';
+  import { setContext } from 'svelte';
   import { Init } from './canvas.ts';
   import { tweened } from 'svelte/motion';
   import { cubicOut } from 'svelte/easing';
 
+  // A Svelte component that can render a game object.
+  export let renderer = null;
   export let schema;
   export let state;
+
+  setContext('renderer', renderer);
 
   let ref = { svg: null };
 
