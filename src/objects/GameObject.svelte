@@ -10,7 +10,7 @@
   const { state, schema } = getContext('context');
 
   const style = schema.objects[id].style;
-  const component = GetComponent(schema.objects[id]);
+  const component = GetComponent(schema, schema.objects[id]);
 
   let x;
   let y;
