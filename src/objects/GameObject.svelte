@@ -9,17 +9,16 @@
 
   const { state, schema } = getContext('context');
 
-  const style = schema.objects[id].style;
   const component = GetComponent(schema, schema.objects[id]);
+  const { templateID } = schema.objects[id];
+  const template = schema.templates[templateID];
 
   let x;
   let y;
-  let order;
   $: {
     const opts = MergeOpts(schema, $state, id);
     x = opts.x || 0;
     y = opts.y || 0;
-    order = $state.objects[id].order;
   }
 
   const { drag, mouseup, activeObjectID } = getContext('mouse');
@@ -61,5 +60,11 @@
 
 <g {id} class="card" on:mousedown={MouseDown}>
   <title>{id}</title>
-  <svelte:component this={component} objectID={id} {schema} {x} {y} {style} />
+  <svelte:component
+    this={component}
+    objectID={id}
+    {schema}
+    {template}
+    {x}
+    {y} />
 </g>
