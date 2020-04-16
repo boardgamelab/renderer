@@ -27,11 +27,11 @@
     easing: cubicOut,
   });
   let vx = tweened(0, {
-    duration: 200,
+    duration: 400,
     easing: cubicOut,
   });
   let vy = tweened(0, {
-    duration: 200,
+    duration: 400,
     easing: cubicOut,
   });
 
@@ -44,22 +44,22 @@
   }
 
   function KeyDown(e) {
-    const deltaX = 100;
-    const deltaY = 100;
+    const deltaX = 200;
+    const deltaY = 200;
 
-    if (e.key === 'j') {
+    if (e.key === 's') {
       vy.update(v => v + deltaY);
     }
 
-    if (e.key === 'k') {
+    if (e.key === 'w') {
       vy.update(v => v - deltaY);
     }
 
-    if (e.key === 'h') {
+    if (e.key === 'a') {
       vx.update(v => v - deltaX);
     }
 
-    if (e.key === 'l') {
+    if (e.key === 'd') {
       vx.update(v => v + deltaX);
     }
   }
