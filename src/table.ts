@@ -42,7 +42,7 @@ export function Init(
   // order to not make the network traffic too chatty.
   const localState = writable({ ...state });
 
-  masterState.subscribe(s => {
+  masterState.subscribe((s) => {
     localState.set(s);
   });
 
@@ -55,7 +55,7 @@ export function Init(
   const dispatchAction = (action: Action) => {
     // TODO: We update the state store locally here,
     // but this should probably live outside this component.
-    masterState.update(s => ApplyActionsToState(s, [action]));
+    masterState.update((s) => ApplyActionsToState(s, [action]));
   };
 
   const dispatchEvent = () => {};
@@ -75,7 +75,7 @@ export function Init(
         kind: 'raise',
         id,
       };
-      localState.update(s => ApplyActionsToState(s, [action]));
+      localState.update((s) => ApplyActionsToState(s, [action]));
     }
   });
 
@@ -86,6 +86,11 @@ export function Init(
    * mousemove can compute a delta for the drag event.
    */
   function MouseDown(e: MouseEvent) {
+    // Ignore right-clicks for now.
+    if (e.button !== 0) {
+      return;
+    }
+
     const ctm = ref.svg.getScreenCTM() || {
       a: 1,
       d: 1,
@@ -137,7 +142,7 @@ export function Init(
     mousemove: MouseMove,
     mousedown: MouseDown,
     mouseup: MouseUp,
-    renderingOrder: derived(localState, $s => ComputeRenderingOrder($s)),
+    renderingOrder: derived(localState, ($s) => ComputeRenderingOrder($s)),
     activeObjectID,
   };
 }
@@ -154,4 +159,3 @@ function ComputeRenderingOrder(s: State): string[] {
     return aOrder < bOrder ? -1 : 1;
   });
 }
-

@@ -1,7 +1,7 @@
 <script>
   import GameObject from './objects/GameObject.svelte';
   import { setContext } from 'svelte';
-  import { Init } from './canvas.ts';
+  import { Init } from './table.ts';
   import { tweened } from 'svelte/motion';
   import { cubicOut } from 'svelte/easing';
 
@@ -75,6 +75,7 @@
   {$vy}
   {$vspan}
   {$vspan}"
+  on:contextmenu|preventDefault={() => {}}
   on:mousedown={mousedown}
   on:mousemove={mousemove}
   on:mouseup={mouseup}
