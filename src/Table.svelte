@@ -22,7 +22,7 @@
     activeObjectID,
   } = Init(schema, state, ref);
 
-  let vspan = tweened(1000, {
+  let vspan = tweened(4000, {
     duration: 200,
     easing: cubicOut,
   });

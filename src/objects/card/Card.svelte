@@ -11,7 +11,7 @@
 
   const { width, height } = template.geometry;
   const fill = '#fff';
-  const stroke = '#888';
+  const stroke = '#111';
 </script>
 
 <rect {x} {y} {width} {height} {fill} {stroke} />
