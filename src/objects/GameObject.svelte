@@ -58,7 +58,7 @@
   });
 </script>
 
-<g {id} class="card" on:mousedown={MouseDown}>
+<g {id} on:mousedown={MouseDown}>
   <title>{id}</title>
   <svelte:component
     this={component}
