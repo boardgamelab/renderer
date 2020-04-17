@@ -1,5 +1,6 @@
 <script>
   import GameObject from './objects/GameObject.svelte';
+  import Effects from './Effects.svelte';
   import { setContext } from 'svelte';
   import { Init } from './table.ts';
   import { tweened } from 'svelte/motion';
@@ -80,6 +81,7 @@
   on:mousemove={mousemove}
   on:mouseup={mouseup}
   xmlns="http://www.w3.org/2000/svg">
+  <Effects />
   {#each $renderingOrder as id (id)}
     <GameObject {id} />
   {/each}

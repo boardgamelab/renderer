@@ -1,8 +1,8 @@
-import { SchemaEntry, Schema, Component } from '@boardgamelab/components';
+import { GameObject, Schema, Component } from '@boardgamelab/components';
 import Card from './card/Card.svelte';
 import CardHolder from './card-holder/CardHolder.svelte';
 
-export function GetComponent(schema: Schema, entry: SchemaEntry) {
+export function GetComponent(schema: Schema, entry: GameObject.Entry) {
   switch (schema.templates?.[entry.templateID]?.type) {
     case Component.CARD:
       return Card;

@@ -23,7 +23,14 @@
 </script>
 
 {#if isDragging}
-  <rect x={x + 30} y={y + 30} {width} {height} fill="#555" fill-opacity="5%" />
+  <rect
+    filter="url(#blur)"
+    x={x + 30}
+    y={y + 30}
+    {width}
+    {height}
+    fill="#111"
+    fill-opacity="5%" />
 {/if}
 
 <rect {x} {y} {width} {height} {fill} {stroke} />
