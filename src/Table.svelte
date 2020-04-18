@@ -45,8 +45,8 @@
   }
 
   function KeyDown(e) {
-    const deltaX = 200;
-    const deltaY = 200;
+    const deltaX = 500;
+    const deltaY = 500;
 
     if (e.key === 's') {
       vy.update(v => v + deltaY);
@@ -57,23 +57,22 @@
     }
 
     if (e.key === 'a') {
-      vx.update(v => v - deltaX);
+      vx.update(v => v + deltaX);
     }
 
     if (e.key === 'd') {
-      vx.update(v => v + deltaX);
+      vx.update(v => v - deltaX);
     }
   }
 </script>
 
 <svelte:window on:wheel={Wheel} on:keydown={KeyDown} />
-
 <svg
   id="root"
   bind:this={ref.svg}
   class="w-full h-full"
-  viewBox="{$vx}
-  {$vy}
+  viewBox="{0}
+  {0}
   {$vspan}
   {$vspan}"
   on:contextmenu|preventDefault={() => {}}
@@ -82,7 +81,9 @@
   on:mouseup={mouseup}
   xmlns="http://www.w3.org/2000/svg">
   <Effects />
-  {#each $renderingOrder as id (id)}
-    <GameObject {id} />
-  {/each}
+  <g transform="translate({$vx}, {$vy})">
+    {#each $renderingOrder as id (id)}
+      <GameObject {id} />
+    {/each}
+  </g>
 </svg>
