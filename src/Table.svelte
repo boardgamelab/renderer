@@ -4,7 +4,8 @@
   import { setContext } from 'svelte';
   import { Init } from './table.ts';
   import { tweened } from 'svelte/motion';
-  import { cubicOut } from 'svelte/easing';
+  import { cubicOut, linear } from 'svelte/easing';
+  import throttle from 'lodash.throttle';
 
   // A Svelte component that can render a game object.
   export let renderer = null;
@@ -28,12 +29,12 @@
     easing: cubicOut,
   });
   let vx = tweened(0, {
-    duration: 400,
-    easing: cubicOut,
+    duration: 200,
+    easing: linear,
   });
   let vy = tweened(0, {
-    duration: 400,
-    easing: cubicOut,
+    duration: 200,
+    easing: linear,
   });
 
   function Wheel(e) {
@@ -44,26 +45,30 @@
     }
   }
 
-  function KeyDown(e) {
-    const deltaX = 500;
-    const deltaY = 500;
+  const KeyDown = throttle(
+    e => {
+      const deltaX = 1000;
+      const deltaY = 1000;
 
-    if (e.key === 's') {
-      vy.update(v => v + deltaY);
-    }
+      if (e.key === 's') {
+        vy.update(v => v - deltaY);
+      }
 
-    if (e.key === 'w') {
-      vy.update(v => v - deltaY);
-    }
+      if (e.key === 'w') {
+        vy.update(v => v + deltaY);
+      }
 
-    if (e.key === 'a') {
-      vx.update(v => v + deltaX);
-    }
+      if (e.key === 'a') {
+        vx.update(v => v + deltaX);
+      }
 
-    if (e.key === 'd') {
-      vx.update(v => v - deltaX);
-    }
-  }
+      if (e.key === 'd') {
+        vx.update(v => v - deltaX);
+      }
+    },
+    200,
+    { leading: true }
+  );
 </script>
 
 <svelte:window on:wheel={Wheel} on:keydown={KeyDown} />
