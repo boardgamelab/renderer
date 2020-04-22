@@ -42,6 +42,6 @@
     {y}
     {width}
     {height}
-    {schema}
-    {objectID} />
+    templates={schema.templates}
+    object={schema.objects[objectID]} />
 {/if}
