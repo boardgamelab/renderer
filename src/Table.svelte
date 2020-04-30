@@ -24,24 +24,38 @@
     activeObjectID,
   } = Init(schema, state, ref);
 
-  let vspan = tweened(4000, {
+  // TODO: Need to use something other than card dimensions to
+  // determine initial zoom.
+  const cardWidth = 600;
+  const cardHeight = 720;
+
+  const zoom = tweened(4, {
     duration: 200,
     easing: cubicOut,
   });
-  let vx = tweened(0, {
+  const vx = tweened(0, {
     duration: 200,
     easing: linear,
   });
-  let vy = tweened(0, {
+  const vy = tweened(0, {
     duration: 200,
     easing: linear,
   });
 
+  const MAX_ZOOM = 7;
+  const MIN_ZOOM = 2;
+  let zoomOffsetX = 0;
+  let zoomOffsetY = 0;
+  $: {
+    zoomOffsetX = (cardWidth * (1 - $zoom)) / 2;
+    zoomOffsetY = (cardHeight * (1 - $zoom)) / 2;
+  }
+
   function Wheel(e) {
     if (e.deltaY > 0) {
-      vspan.update(v => v * 1.3);
+      zoom.update(v => Math.min(v * 1.3, MAX_ZOOM));
     } else {
-      vspan.update(v => v * 0.7);
+      zoom.update(v => Math.max(v * 0.7, MIN_ZOOM));
     }
   }
 
@@ -76,10 +90,10 @@
   id="root"
   bind:this={ref.svg}
   class="w-full h-full"
-  viewBox="{0}
-  {0}
-  {$vspan}
-  {$vspan}"
+  viewBox="{zoomOffsetX}
+  {zoomOffsetY}
+  {$zoom * cardWidth}
+  {$zoom * cardHeight}"
   on:contextmenu|preventDefault={() => {}}
   on:mousedown={mousedown}
   on:mousemove={mousemove}
