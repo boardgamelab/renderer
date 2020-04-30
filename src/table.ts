@@ -126,6 +126,7 @@ export function Init(
   }
 
   function TouchMove(e: TouchEvent) {
+    e.preventDefault();
     if (e.touches.length) {
       MouseMove(e.touches[0]);
     }
