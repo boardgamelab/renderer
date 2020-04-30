@@ -19,6 +19,9 @@
   const {
     mousedown,
     mousemove,
+    touchstart,
+    touchmove,
+    touchend,
     mouseup,
     renderingOrder,
     activeObjectID,
@@ -101,6 +104,9 @@
   on:contextmenu|preventDefault={() => {}}
   on:mousedown={mousedown}
   on:mousemove={mousemove}
+  on:touchstart={touchstart}
+  on:touchend={touchend}
+  on:touchmove={touchmove}
   on:mouseup={mouseup}
   xmlns="http://www.w3.org/2000/svg">
   <Effects />

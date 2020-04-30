@@ -29,7 +29,7 @@ export function Init(
   ref: { svg: SVGGraphicsElement }
 ) {
   const drag = writable(null as Drag | null);
-  const mouseup = writable(null as MouseEvent | null);
+  const mouseup = writable(null as MouseEvent | TouchEvent | null);
   const activeObjectID = writable(null as string | null);
 
   // The master state is the state that all clients can see.
@@ -42,7 +42,7 @@ export function Init(
   // order to not make the network traffic too chatty.
   const localState = writable({ ...state });
 
-  masterState.subscribe((s) => {
+  masterState.subscribe(s => {
     localState.set(s);
   });
 
@@ -55,7 +55,7 @@ export function Init(
   const dispatchAction = (action: Action) => {
     // TODO: We update the state store locally here,
     // but this should probably live outside this component.
-    masterState.update((s) => ApplyActionsToState(s, [action]));
+    masterState.update(s => ApplyActionsToState(s, [action]));
   };
 
   const dispatchEvent = () => {};
@@ -75,7 +75,7 @@ export function Init(
         kind: 'raise',
         id,
       };
-      localState.update((s) => ApplyActionsToState(s, [action]));
+      localState.update(s => ApplyActionsToState(s, [action]));
     }
   });
 
@@ -85,12 +85,7 @@ export function Init(
    * Sets an anchor point so that a subsequent
    * mousemove can compute a delta for the drag event.
    */
-  function MouseDown(e: MouseEvent) {
-    // Ignore right-clicks for now.
-    if (e.button !== 0) {
-      return;
-    }
-
+  function MouseDown(e: MouseEvent | Touch) {
     const ctm = ref.svg.getScreenCTM() || {
       a: 1,
       d: 1,
@@ -107,7 +102,7 @@ export function Init(
    * Compute a delta from the latest mousedown event.
    * Subscribers then decide if they want to drag elements.
    */
-  function MouseMove(e: MouseEvent) {
+  function MouseMove(e: MouseEvent | Touch) {
     if (dragAnchor === null) {
       return;
     }
@@ -130,19 +125,38 @@ export function Init(
     });
   }
 
+  function TouchMove(e: TouchEvent) {
+    if (e.touches.length) {
+      MouseMove(e.touches[0]);
+    }
+  }
+
+  function TouchStart(e: TouchEvent) {
+    if (e.touches.length) {
+      MouseDown(e.touches[0]);
+    }
+  }
+
+  function TouchEnd(e: TouchEvent) {
+    MouseUp(e);
+  }
+
   /**
    * Reset the drag anchor.
    */
-  function MouseUp(e: MouseEvent) {
+  function MouseUp(e: MouseEvent | TouchEvent) {
     dragAnchor = null;
     mouseup.set(e);
   }
 
   return {
     mousemove: MouseMove,
+    touchstart: TouchStart,
+    touchmove: TouchMove,
+    touchend: TouchEnd,
     mousedown: MouseDown,
     mouseup: MouseUp,
-    renderingOrder: derived(localState, ($s) => ComputeRenderingOrder($s)),
+    renderingOrder: derived(localState, $s => ComputeRenderingOrder($s)),
     activeObjectID,
   };
 }
