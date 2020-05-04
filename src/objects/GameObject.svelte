@@ -53,7 +53,6 @@
   let dragStart = null;
   function ActivateDrag(e) {
     dragStart = { x: $rawPosition.x, y: $rawPosition.y };
-    positionOffset.set({ dx: -50, dy: -50 });
     activeObjectID.set(id);
   }
 
@@ -67,7 +66,6 @@
   const mouseUnsub = mouseup.subscribe(() => {
     if (dragStart) {
       dragStart = null;
-      positionOffset.set({ dx: 0, dy: 0 });
 
       state.update(s => ({
         ...s,
