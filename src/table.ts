@@ -12,6 +12,8 @@ export function Init(
   state: State,
   svg: { el: SVGGraphicsElement }
 ) {
+  const activeObject = writable(null as string | null);
+
   // The master state is the state that all clients can see.
   const masterState = writable({ ...state });
 
@@ -39,11 +41,9 @@ export function Init(
     schema,
     dispatchEvent,
     dispatchAction,
+    activeObject,
     svg,
   });
-
-  const activeObject = writable(null as string | null);
-  setContext('activeObject', activeObject);
 
   // Raise active object.
   activeObject.subscribe((id: string | null) => {

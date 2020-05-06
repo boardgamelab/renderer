@@ -11,7 +11,7 @@
 
   export let id;
 
-  const { state, schema, svg } = getContext('context');
+  const { state, schema, svg, activeObject } = getContext('context');
 
   const component = GetComponent(schema, schema.objects[id]);
   const { templateID } = schema.objects[id];
@@ -80,7 +80,6 @@
     }));
   }
 
-  const activeObject = getContext('activeObject');
   function Select(e) {
     activeObject.set(id);
   }

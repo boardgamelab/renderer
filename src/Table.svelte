@@ -24,7 +24,7 @@
   const cardWidth = 600;
   const cardHeight = 720;
 
-  const zoomLevel = tweened(4, {
+  const zoomLevel = tweened(5, {
     duration: 200,
     easing: cubicOut,
   });
