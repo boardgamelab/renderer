@@ -3,9 +3,7 @@
   "version": "0.0.1",
   "description": "SVG Implementation of Boardgame Lab components",
   "scripts": {
-    "start": "npm run storybook",
     "dev": "parcel test.html",
-    "storybook": "start-storybook",
     "build": "rollup -c rollup.config.js",
     "build:parcel": "parcel build index.ts",
     "build:ts": "tsc --emitDeclarationOnly --declaration --declarationDir ./dist/types",
@@ -35,9 +33,6 @@
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@rollup/plugin-json": "^4.0.2",
-    "@storybook/addon-actions": "^5.3.17",
-    "@storybook/html": "^5.3.17",
-    "@storybook/preset-typescript": "^2.1.0",
     "babel-loader": "^8.1.0",
     "husky": ">=1",
     "lint-staged": ">=8",
