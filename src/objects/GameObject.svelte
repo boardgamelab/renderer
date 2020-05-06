@@ -1,7 +1,9 @@
 <script>
   import { drag } from '../gestures/drag.ts';
   import { getContext } from 'svelte';
-  import { GetComponent } from './game-object.ts';
+  import { GetComponent, CheckForDrop } from './game-object.ts';
+  import Deck from './deck/Deck.svelte';
+  import { Component } from '@boardgamelab/components';
   import Card from './card/Card.svelte';
   import CardHolder from './card-holder/CardHolder.svelte';
   import { MergeOpts } from '../merge.ts';
@@ -15,7 +17,9 @@
     'context'
   );
 
-  const component = GetComponent(schema, schema.objects[id]);
+  let component = null;
+  $: component = GetComponent(schema, schema.objects[id], $state.objects[id]);
+
   const { templateID } = schema.objects[id];
   const template = schema.templates[templateID];
 
@@ -26,7 +30,7 @@
       easing: expoOut,
     }
   );
-  const rawPosition = writable({ x: 0, y: 0 });
+  const rawPosition = tweened({ x: 0, y: 0 }, { duration: 0 });
   const positionOffset = tweened(
     { dx: 0, dy: 0 },
     {
@@ -44,10 +48,12 @@
     }
   );
 
+  let x;
+  let y;
   $: {
     const opts = MergeOpts(schema, $state, id);
-    const x = opts.x || 0;
-    const y = opts.y || 0;
+    x = opts.x || 0;
+    y = opts.y || 0;
     rawPosition.set({ x, y });
   }
 
@@ -65,8 +71,25 @@
     dispatchAction(action);
   }
 
-  function DragEnd() {
+  async function DragEnd() {
     dragging = false;
+
+    const drop = CheckForDrop($state, schema, $rawPosition, id);
+    let finalX = $rawPosition.x;
+    let finalY = $rawPosition.y;
+
+    if (drop) {
+      await rawPosition.set(
+        {
+          x: drop.x,
+          y: drop.y,
+        },
+        { duration: 100 }
+      );
+
+      finalX = drop.x;
+      finalY = drop.y;
+    }
 
     // TODO: Allow updating multiple opts at the same time.
 
@@ -75,7 +98,7 @@
         kind: 'opts',
         id,
         key: 'x',
-        value: $rawPosition.x,
+        value: finalX,
       };
       dispatchAction(action);
     }
@@ -85,13 +108,26 @@
         kind: 'opts',
         id,
         key: 'y',
-        value: $rawPosition.y,
+        value: finalY,
       };
       dispatchAction(action);
     }
+
+    // {
+    //   const action = {
+    //     kind: 'opts',
+    //     id,
+    //     key: 'isEphemeralDeck',
+    //     value: true,
+    //   };
+    //   dispatchAction(action);
+    // }
   }
 
   function Drag({ detail }) {
+    // TODO: Highlight drop target.
+    // const drop = CheckForDrop($state, schema, $rawPosition, id);
+
     rawPosition.update(p => ({
       x: detail.snapshot.x + detail.dx,
       y: detail.snapshot.y + detail.dy,
@@ -105,7 +141,7 @@
 
 <g
   {id}
-  use:drag={{ svg, snapshot: $rawPosition }}
+  use:drag={{ svg, snapshot: { x, y } }}
   on:dragstart={DragStart}
   on:dragend={DragEnd}
   on:drag={Drag}
@@ -119,4 +155,5 @@
     {template}
     {sizeOffset}
     {position} />
+  <circle cx={$rawPosition.x} cy={$rawPosition.y} r="100" fill="red" />
 </g>

@@ -46,6 +46,7 @@ export function Init(
   });
 
   return {
+    stateStore: localState,
     renderingOrder: derived(localState, $s => ComputeRenderingOrder($s)),
     activeObject,
   };
