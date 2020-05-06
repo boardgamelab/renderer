@@ -4,7 +4,7 @@
   import { zoom } from './gestures/zoom.ts';
   import { pan } from './gestures/pan.ts';
   import { setContext } from 'svelte';
-  import { Init } from './table.ts';
+  import { Init } from './sandbox.ts';
   import { tweened } from 'svelte/motion';
   import { cubicOut, linear } from 'svelte/easing';
 

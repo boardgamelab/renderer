@@ -11,7 +11,9 @@
 
   export let id;
 
-  const { state, schema, svg, activeObject } = getContext('context');
+  const { dispatchAction, state, schema, svg, activeObject } = getContext(
+    'context'
+  );
 
   const component = GetComponent(schema, schema.objects[id]);
   const { templateID } = schema.objects[id];
@@ -52,25 +54,41 @@
   let dragging = false;
   function DragStart() {
     dragging = true;
+
+    // Raise object so that it appears rendered above
+    // other objects while being dragged.
+    const action = {
+      kind: 'raise',
+      id,
+    };
+
+    dispatchAction(action);
   }
 
   function DragEnd() {
     dragging = false;
 
-    state.update(s => ({
-      ...s,
-      objects: {
-        ...s.objects,
-        [id]: {
-          ...s.objects[id],
-          opts: {
-            ...s.objects[id].opts,
-            x: $rawPosition.x,
-            y: $rawPosition.y,
-          },
-        },
-      },
-    }));
+    // TODO: Allow updating multiple opts at the same time.
+
+    {
+      const action = {
+        kind: 'opts',
+        id,
+        key: 'x',
+        value: $rawPosition.x,
+      };
+      dispatchAction(action);
+    }
+
+    {
+      const action = {
+        kind: 'opts',
+        id,
+        key: 'y',
+        value: $rawPosition.y,
+      };
+      dispatchAction(action);
+    }
   }
 
   function Drag({ detail }) {

@@ -45,17 +45,6 @@ export function Init(
     svg,
   });
 
-  // Raise active object.
-  activeObject.subscribe((id: string | null) => {
-    if (id) {
-      const action: Action = {
-        kind: 'raise',
-        id,
-      };
-      localState.update(s => ApplyActionsToState(s, [action]));
-    }
-  });
-
   return {
     renderingOrder: derived(localState, $s => ComputeRenderingOrder($s)),
     activeObject,
