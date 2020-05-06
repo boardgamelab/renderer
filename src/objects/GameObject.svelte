@@ -1,5 +1,6 @@
 <script>
-  import { getContext, onDestroy } from 'svelte';
+  import { drag } from '../gestures/drag.ts';
+  import { getContext } from 'svelte';
   import { GetComponent } from './game-object.ts';
   import Card from './card/Card.svelte';
   import CardHolder from './card-holder/CardHolder.svelte';
@@ -10,7 +11,7 @@
 
   export let id;
 
-  const { state, schema } = getContext('context');
+  const { state, schema, svg } = getContext('context');
 
   const component = GetComponent(schema, schema.objects[id]);
   const { templateID } = schema.objects[id];
@@ -48,56 +49,57 @@
     rawPosition.set({ x, y });
   }
 
-  const { drag, mouseup, activeObjectID } = getContext('mouse');
-
-  let dragStart = null;
-  function ActivateDrag(e) {
-    dragStart = { x: $rawPosition.x, y: $rawPosition.y };
-    activeObjectID.set(id);
+  let dragging = false;
+  function DragStart() {
+    dragging = true;
   }
 
-  const dragUnsub = drag.subscribe(e => {
-    if (dragStart === null) return;
-    const x = dragStart.x + e.delta.x;
-    const y = dragStart.y + e.delta.y;
-    rawPosition.set({ x, y });
-  });
+  function DragEnd() {
+    dragging = false;
 
-  const mouseUnsub = mouseup.subscribe(() => {
-    if (dragStart) {
-      dragStart = null;
-
-      state.update(s => ({
-        ...s,
-        objects: {
-          ...s.objects,
-          [id]: {
-            ...s.objects[id],
-            opts: {
-              ...s.objects[id].opts,
-              x: $rawPosition.x,
-              y: $rawPosition.y,
-            },
+    state.update(s => ({
+      ...s,
+      objects: {
+        ...s.objects,
+        [id]: {
+          ...s.objects[id],
+          opts: {
+            ...s.objects[id].opts,
+            x: $rawPosition.x,
+            y: $rawPosition.y,
           },
         },
-      }));
-    }
-    activeObjectID.set(null);
-  });
+      },
+    }));
+  }
 
-  onDestroy(() => {
-    dragUnsub();
-    mouseUnsub();
-  });
+  function Drag({ detail }) {
+    rawPosition.update(p => ({
+      x: detail.snapshot.x + detail.dx,
+      y: detail.snapshot.y + detail.dy,
+    }));
+  }
+
+  const activeObject = getContext('activeObject');
+  function Select(e) {
+    activeObject.set(id);
+  }
 </script>
 
-<g {id} on:touchstart={ActivateDrag} on:mousedown={ActivateDrag}>
+<g
+  {id}
+  use:drag={{ svg, snapshot: $rawPosition }}
+  on:dragstart={DragStart}
+  on:dragend={DragEnd}
+  on:drag={Drag}
+  on:touchstart={Select}
+  on:mousedown={Select}>
   <svelte:component
     this={component}
+    isDragging={dragging}
     objectID={id}
     {schema}
     {template}
     {sizeOffset}
-    {position}
-    isDragging={dragStart !== null} />
+    {position} />
 </g>

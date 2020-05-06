@@ -14,10 +14,7 @@
  *  limitations under the License.
  */
 
-interface Point {
-  x: number;
-  y: number;
-}
+import { ToSVGPoint } from '../utils/svg';
 
 export interface DragEvent {
   snapshot: any;
@@ -26,21 +23,26 @@ export interface DragEvent {
 }
 
 interface DragOpts {
-  ref: { svg: SVGGraphicsElement };
-  part: any;
+  svg: { el: SVGGraphicsElement };
+  snapshot: any;
+}
+
+interface Point {
+  x: number;
+  y: number;
 }
 
 /**
  * Svelte directive that allows elements to be dragged.
  */
 export function drag(node: Element, opts: DragOpts) {
-  let anchor = { x: 0, y: 0 };
-  let snapshot: any;
+  let anchor: Point | null = null;
+  let snapshot: any = null;
 
   function Drag(e: MouseEvent | Touch) {
-    const point = ConvertToSVGCoords(e as MouseEvent, opts.ref);
-    const dx = point.x - anchor.x;
-    const dy = point.y - anchor.y;
+    const point = ToSVGPoint(e as MouseEvent, opts.svg.el);
+    const dx = point.x - anchor!.x;
+    const dy = point.y - anchor!.y;
 
     node.dispatchEvent(
       new CustomEvent('drag', { detail: { snapshot, dx, dy } })
@@ -58,6 +60,9 @@ export function drag(node: Element, opts: DragOpts) {
   }
 
   function Cancel() {
+    anchor = null;
+    snapshot = null;
+    node.dispatchEvent(new CustomEvent('dragend'));
     window.removeEventListener('mousemove', MouseMove);
     window.removeEventListener('touchmove', TouchMove);
     window.removeEventListener('mouseup', Cancel);
@@ -74,16 +79,18 @@ export function drag(node: Element, opts: DragOpts) {
       return;
     }
 
-    anchor = ConvertToSVGCoords(mouseEvent, opts.ref);
-    snapshot = { ...opts.part };
+    anchor = ToSVGPoint(mouseEvent, opts.svg.el);
+    snapshot = opts.snapshot;
+    node.dispatchEvent(new CustomEvent('dragstart'));
     window.addEventListener('mousemove', MouseMove);
     window.addEventListener('mouseup', Cancel);
   }
 
   function TouchStart(e: Event) {
     const touchEvent = e as TouchEvent;
-    anchor = ConvertToSVGCoords(touchEvent.touches[0], opts.ref);
-    snapshot = { ...opts.part };
+
+    anchor = ToSVGPoint(touchEvent.touches[0], opts.svg.el);
+    snapshot = opts.snapshot;
     window.addEventListener('touchmove', TouchMove, { passive: false });
     window.addEventListener('touchend', Cancel);
     window.addEventListener('touchcancel', Cancel);
@@ -95,30 +102,15 @@ export function drag(node: Element, opts: DragOpts) {
 
   return {
     destroy() {
+      if (anchor) {
+        Cancel();
+      }
       node.removeEventListener('mousedown', MouseDown);
       node.removeEventListener('touchstart', TouchStart);
     },
 
-    update(o: DragOpts) {
-      opts = o;
+    update(newOpts: DragOpts) {
+      opts = newOpts;
     },
   };
-}
-
-function ConvertToSVGCoords(
-  e: MouseEvent | Touch,
-  ref: { svg: SVGGraphicsElement }
-): Point {
-  if (!ref) {
-    return { x: e.clientX, y: e.clientY };
-  }
-  const ctm = ref.svg.getScreenCTM();
-  if (!ctm) {
-    return { x: e.clientX, y: e.clientY };
-  }
-
-  const x = (e.clientX - ctm.e) / ctm.a;
-  const y = (e.clientY - ctm.f) / ctm.d;
-
-  return { x, y };
 }

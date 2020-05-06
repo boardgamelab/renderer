@@ -15,18 +15,9 @@
 
   setContext('renderer', renderer);
 
-  let ref = { svg: null };
+  let svg = { el: null };
 
-  const {
-    mousedown,
-    mousemove,
-    touchstart,
-    touchmove,
-    touchend,
-    mouseup,
-    renderingOrder,
-    activeObjectID,
-  } = Init(schema, state, ref);
+  const { renderingOrder } = Init(schema, state, svg);
 
   // TODO: Need to use something other than card dimensions to
   // determine initial zoom.
@@ -62,7 +53,7 @@
 </div>
 <svg
   id="root"
-  bind:this={ref.svg}
+  bind:this={svg.el}
   class="w-full h-full"
   viewBox="{zoomOffsetX}
   {zoomOffsetY}
@@ -71,12 +62,6 @@
   use:zoom={{ zoomLevel }}
   use:pan={{ viewportX, viewportY }}
   on:contextmenu|preventDefault={() => {}}
-  on:mousedown={mousedown}
-  on:mousemove={mousemove}
-  on:touchstart={touchstart}
-  on:touchend={touchend}
-  on:touchmove={touchmove}
-  on:mouseup={mouseup}
   xmlns="http://www.w3.org/2000/svg">
   <Effects />
   <g transform="translate({$viewportX}, {$viewportY})">

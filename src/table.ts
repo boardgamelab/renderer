@@ -7,31 +7,11 @@ import {
 import { writable, derived } from 'svelte/store';
 import { setContext } from 'svelte';
 
-interface Point {
-  x: number;
-  y: number;
-}
-
-interface Delta {
-  x: number;
-  y: number;
-}
-
-interface Drag {
-  point: Point;
-  delta: Delta;
-  dragAnchor: Point | null;
-}
-
 export function Init(
   schema: Schema,
   state: State,
-  ref: { svg: SVGGraphicsElement }
+  svg: { el: SVGGraphicsElement }
 ) {
-  const drag = writable(null as Drag | null);
-  const mouseup = writable(null as MouseEvent | TouchEvent | null);
-  const activeObjectID = writable(null as string | null);
-
   // The master state is the state that all clients can see.
   const masterState = writable({ ...state });
 
@@ -44,12 +24,6 @@ export function Init(
 
   masterState.subscribe(s => {
     localState.set(s);
-  });
-
-  setContext('mouse', {
-    drag,
-    mouseup,
-    activeObjectID,
   });
 
   const dispatchAction = (action: Action) => {
@@ -65,11 +39,14 @@ export function Init(
     schema,
     dispatchEvent,
     dispatchAction,
-    svg: ref.svg,
+    svg,
   });
 
+  const activeObject = writable(null as string | null);
+  setContext('activeObject', activeObject);
+
   // Raise active object.
-  activeObjectID.subscribe((id: string | null) => {
+  activeObject.subscribe((id: string | null) => {
     if (id) {
       const action: Action = {
         kind: 'raise',
@@ -79,86 +56,9 @@ export function Init(
     }
   });
 
-  let dragAnchor: Point | null = null;
-
-  /**
-   * Sets an anchor point so that a subsequent
-   * mousemove can compute a delta for the drag event.
-   */
-  function MouseDown(e: MouseEvent | Touch) {
-    const ctm = ref.svg.getScreenCTM() || {
-      a: 1,
-      d: 1,
-      e: 0,
-      f: 0,
-    };
-    dragAnchor = {
-      x: (e.clientX - ctm.e) / ctm.a,
-      y: (e.clientY - ctm.f) / ctm.d,
-    };
-  }
-
-  /**
-   * Compute a delta from the latest mousedown event.
-   * Subscribers then decide if they want to drag elements.
-   */
-  function MouseMove(e: MouseEvent | Touch) {
-    if (dragAnchor === null) {
-      return;
-    }
-
-    const ctm = ref.svg.getScreenCTM() || {
-      a: 1,
-      d: 1,
-      e: 0,
-      f: 0,
-    };
-    const x = (e.clientX - ctm.e) / ctm.a;
-    const y = (e.clientY - ctm.f) / ctm.d;
-    const dx = x - dragAnchor.x;
-    const dy = y - dragAnchor.y;
-
-    drag.set({
-      point: { x, y },
-      dragAnchor,
-      delta: { x: dx, y: dy },
-    });
-  }
-
-  function TouchMove(e: TouchEvent) {
-    e.preventDefault();
-    if (e.touches.length) {
-      MouseMove(e.touches[0]);
-    }
-  }
-
-  function TouchStart(e: TouchEvent) {
-    if (e.touches.length) {
-      MouseDown(e.touches[0]);
-    }
-  }
-
-  function TouchEnd(e: TouchEvent) {
-    MouseUp(e);
-  }
-
-  /**
-   * Reset the drag anchor.
-   */
-  function MouseUp(e: MouseEvent | TouchEvent) {
-    dragAnchor = null;
-    mouseup.set(e);
-  }
-
   return {
-    mousemove: MouseMove,
-    touchstart: TouchStart,
-    touchmove: TouchMove,
-    touchend: TouchEnd,
-    mousedown: MouseDown,
-    mouseup: MouseUp,
     renderingOrder: derived(localState, $s => ComputeRenderingOrder($s)),
-    activeObjectID,
+    activeObject,
   };
 }
 
