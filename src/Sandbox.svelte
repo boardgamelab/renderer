@@ -77,8 +77,8 @@
 {#if debug}
   <div
     on:wheel|stopPropagation
-    class="fixed z-50 top-0 mt-16 overflow-y-auto h-screen right-0 bg-white
-    shadow-lg p-8 text-xs">
+    class="hidden md:block fixed z-50 top-0 mt-16 overflow-y-auto h-screen
+    right-0 bg-white shadow-lg p-8 text-xs">
     <pre>{JSON.stringify($stateStore, null, 2)}</pre>
   </div>
 {/if}

@@ -82,7 +82,7 @@
       style="font: bold 80px monospace"
       x={x + width / 2 - 50}
       y={y + height + 100}
-      fill="#444">
+      fill="#aaa">
       x{numCards}
     </text>
   {/if}
