@@ -48,7 +48,9 @@
 
   let x;
   let y;
+  let stateEntry;
   $: {
+    stateEntry = $state.objects[id];
     const opts = MergeOpts(schema, $state, id);
     x = opts.x || 0;
     y = opts.y || 0;
@@ -87,39 +89,35 @@
 
       finalX = drop.x;
       finalY = drop.y;
+
+      dispatchAction({
+        kind: 'add-to',
+        id,
+        parent: drop.id,
+      });
+    } else {
+      dispatchAction({
+        kind: 'add-to',
+        id,
+        parent: null,
+      });
     }
 
     // TODO: Allow updating multiple opts at the same time.
 
-    {
-      const action = {
-        kind: 'opts',
-        id,
-        key: 'x',
-        value: finalX,
-      };
-      dispatchAction(action);
-    }
+    dispatchAction({
+      kind: 'opts',
+      id,
+      key: 'x',
+      value: finalX,
+    });
 
-    {
-      const action = {
-        kind: 'opts',
-        id,
-        key: 'y',
-        value: finalY,
-      };
-      dispatchAction(action);
-    }
-
-    // {
-    //   const action = {
-    //     kind: 'opts',
-    //     id,
-    //     key: 'isEphemeralDeck',
-    //     value: true,
-    //   };
-    //   dispatchAction(action);
-    // }
+    dispatchAction({
+      kind: 'opts',
+      id,
+      key: 'y',
+      value: finalY,
+    });
   }
 
   function Drag({ detail }) {
@@ -150,7 +148,9 @@
     {id}
     isDragging={dragging}
     objectID={id}
+    {stateEntry}
     {schema}
+    state={$state}
     {template}
     {sizeOffset}
     {position} />
