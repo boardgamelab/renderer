@@ -16,6 +16,7 @@
 
   setContext('renderer', renderer);
 
+  let debug = false;
   let svg = { el: null };
 
   const { renderingOrder, stateStore } = Init(schema, state, svg);
@@ -73,10 +74,12 @@
   </g>
 </svg>
 
-<div
-  on:wheel|stopPropagation
-  class="fixed z-50 top-0 overflow-y-auto h-screen right-0 bg-white shadow-lg
-  p-8 text-xs">
-  <pre>{JSON.stringify(schema, null, 2)}</pre>
-  <pre>{JSON.stringify($stateStore, null, 2)}</pre>
-</div>
+{#if debug}
+  <div
+    on:wheel|stopPropagation
+    class="fixed z-50 top-0 overflow-y-auto h-screen right-0 bg-white shadow-lg
+    p-8 text-xs">
+    <pre>{JSON.stringify(schema, null, 2)}</pre>
+    <pre>{JSON.stringify($stateStore, null, 2)}</pre>
+  </div>
+{/if}
