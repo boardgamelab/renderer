@@ -3,15 +3,11 @@
   "version": "0.0.1",
   "description": "SVG Implementation of Boardgame Lab components",
   "scripts": {
-    "dev": "parcel test.html",
-    "build": "rollup -c rollup.config.js",
-    "build:parcel": "parcel build index.ts",
-    "build:ts": "tsc --emitDeclarationOnly --declaration --declarationDir ./dist/types",
+    "dev": "parcel dev.html",
     "ts": "tsc --noEmit",
     "ts:watch": "tsc --noEmit --watch",
     "lint": "prettier --check **/*.js",
-    "prettier": "prettier --write **/*.{js,svelte}",
-    "prepack": "npm run build:parcel && npm run build:ts"
+    "prettier": "prettier --write **/*.{js,svelte}"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,13 +19,16 @@
   "author": "Nicolo Davis <nicolodavis@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@boardgamelab/components": "file:../components",
+    "@boardgamelab/components": "0.0.8",
     "rollup": "^2.3.2",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.5.0",
     "rollup-plugin-typescript2": "^0.27.0"
   },
+  "browserslist": [
+    "last 1 Chrome versions"
+  ],
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@rollup/plugin-json": "^4.0.2",
