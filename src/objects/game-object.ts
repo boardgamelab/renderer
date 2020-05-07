@@ -6,19 +6,14 @@ import {
   StateEntry,
 } from '@boardgamelab/components';
 import { IsOverlap } from '../geometry';
-import Deck from './deck/Deck.svelte';
 import Card from './card/Card.svelte';
 import CardHolder from './card-holder/CardHolder.svelte';
 
 export function GetComponent(
   schema: Schema,
   entry: GameObject.Entry,
-  state: StateEntry
+  _: StateEntry
 ) {
-  if (state.opts?.isEphemeralDeck) {
-    return Deck;
-  }
-
   switch (schema.templates?.[entry.templateID]?.type) {
     case Component.CARD:
       return Card;
@@ -51,6 +46,13 @@ export function CheckForDrop(
     }
 
     const obj = state.objects[id];
+
+    // Don't try to drop on objects that are currently
+    // in other containers.
+    if (obj.parent) {
+      continue;
+    }
+
     const { templateID } = schema.objects[id];
     const { geometry } = schema.templates[templateID];
 
