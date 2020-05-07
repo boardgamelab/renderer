@@ -57,8 +57,9 @@ export function drag(node: Element, opts: DragOpts) {
   }
 
   function Cancel() {
-    anchor = null;
     target!.dispatchEvent(new CustomEvent('moveend'));
+    anchor = null;
+    target = null;
     window.removeEventListener('mousemove', MouseMove);
     window.removeEventListener('touchmove', TouchMove);
     window.removeEventListener('mouseup', Cancel);
@@ -76,24 +77,28 @@ export function drag(node: Element, opts: DragOpts) {
     }
 
     target = (e.target as Element).closest('[data-draggable=true]');
-    target.dispatchEvent(new CustomEvent('movestart'));
 
-    anchor = ToSVGPoint(mouseEvent, opts.svg.el);
-    window.addEventListener('mousemove', MouseMove);
-    window.addEventListener('mouseup', Cancel);
+    if (target) {
+      target.dispatchEvent(new CustomEvent('movestart'));
+      anchor = ToSVGPoint(mouseEvent, opts.svg.el);
+      window.addEventListener('mousemove', MouseMove);
+      window.addEventListener('mouseup', Cancel);
+    }
   }
 
   function TouchStart(e: Event) {
     const touchEvent = e as TouchEvent;
 
     target = (e.target as Element).closest('[data-draggable=true]');
-    target!.dispatchEvent(new CustomEvent('movestart'));
 
-    anchor = ToSVGPoint(touchEvent.touches[0], opts.svg.el);
-    window.addEventListener('touchmove', TouchMove, { passive: false });
-    window.addEventListener('touchend', Cancel);
-    window.addEventListener('touchcancel', Cancel);
-    window.addEventListener('touchleave', Cancel);
+    if (target) {
+      target!.dispatchEvent(new CustomEvent('movestart'));
+      anchor = ToSVGPoint(touchEvent.touches[0], opts.svg.el);
+      window.addEventListener('touchmove', TouchMove, { passive: false });
+      window.addEventListener('touchend', Cancel);
+      window.addEventListener('touchcancel', Cancel);
+      window.addEventListener('touchleave', Cancel);
+    }
   }
 
   node.addEventListener('touchstart', TouchStart);
