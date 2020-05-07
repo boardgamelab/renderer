@@ -1,6 +1,7 @@
 <script>
   import GameObject from './objects/GameObject.svelte';
   import Effects from './Effects.svelte';
+  import { drag } from './gestures/drag.ts';
   import { zoom } from './gestures/zoom.ts';
   import { pan } from './gestures/pan.ts';
   import { setContext } from 'svelte';
@@ -59,6 +60,7 @@
   {zoomOffsetY}
   {$zoomLevel * cardWidth}
   {$zoomLevel * cardHeight}"
+  use:drag={{ svg }}
   use:zoom={{ zoomLevel }}
   use:pan={{ viewportX, viewportY }}
   on:contextmenu|preventDefault={() => {}}

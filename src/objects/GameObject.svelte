@@ -13,9 +13,7 @@
 
   export let id;
 
-  const { dispatchAction, state, schema, svg, activeObject } = getContext(
-    'context'
-  );
+  const { dispatchAction, state, schema, activeObject } = getContext('context');
 
   let component = null;
   $: component = GetComponent(schema, schema.objects[id], $state.objects[id]);
@@ -30,7 +28,7 @@
       easing: expoOut,
     }
   );
-  const rawPosition = tweened({ x: 0, y: 0 }, { duration: 0 });
+  const rawPosition = tweened({ x: 0, y: 0 }, { duration: 1 });
   const positionOffset = tweened(
     { dx: 0, dy: 0 },
     {
@@ -84,7 +82,7 @@
           x: drop.x,
           y: drop.y,
         },
-        { duration: 100 }
+        { duration: 150 }
       );
 
       finalX = drop.x;
@@ -129,8 +127,8 @@
     // const drop = CheckForDrop($state, schema, $rawPosition, id);
 
     rawPosition.update(p => ({
-      x: detail.snapshot.x + detail.dx,
-      y: detail.snapshot.y + detail.dy,
+      x: p.x + detail.dx,
+      y: p.y + detail.dy,
     }));
   }
 
@@ -141,19 +139,19 @@
 
 <g
   {id}
-  use:drag={{ svg, snapshot: { x, y } }}
-  on:dragstart={DragStart}
-  on:dragend={DragEnd}
-  on:drag={Drag}
+  data-draggable="true"
+  on:movestart={DragStart}
+  on:moveend={DragEnd}
+  on:move={Drag}
   on:touchstart={Select}
   on:mousedown={Select}>
   <svelte:component
     this={component}
+    {id}
     isDragging={dragging}
     objectID={id}
     {schema}
     {template}
     {sizeOffset}
     {position} />
-  <circle cx={$rawPosition.x} cy={$rawPosition.y} r="100" fill="red" />
 </g>

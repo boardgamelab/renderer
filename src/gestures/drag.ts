@@ -17,14 +17,12 @@
 import { ToSVGPoint } from '../utils/svg';
 
 export interface DragEvent {
-  snapshot: any;
   dx: number;
   dy: number;
 }
 
 interface DragOpts {
   svg: { el: SVGGraphicsElement };
-  snapshot: any;
 }
 
 interface Point {
@@ -36,17 +34,16 @@ interface Point {
  * Svelte directive that allows elements to be dragged.
  */
 export function drag(node: Element, opts: DragOpts) {
+  let target: any = null;
   let anchor: Point | null = null;
-  let snapshot: any = null;
 
   function Drag(e: MouseEvent | Touch) {
     const point = ToSVGPoint(e as MouseEvent, opts.svg.el);
     const dx = point.x - anchor!.x;
     const dy = point.y - anchor!.y;
+    anchor = point;
 
-    node.dispatchEvent(
-      new CustomEvent('drag', { detail: { snapshot, dx, dy } })
-    );
+    target!.dispatchEvent(new CustomEvent('move', { detail: { dx, dy } }));
   }
 
   function MouseMove(e: Event) {
@@ -61,8 +58,7 @@ export function drag(node: Element, opts: DragOpts) {
 
   function Cancel() {
     anchor = null;
-    snapshot = null;
-    node.dispatchEvent(new CustomEvent('dragend'));
+    target!.dispatchEvent(new CustomEvent('moveend'));
     window.removeEventListener('mousemove', MouseMove);
     window.removeEventListener('touchmove', TouchMove);
     window.removeEventListener('mouseup', Cancel);
@@ -79,9 +75,10 @@ export function drag(node: Element, opts: DragOpts) {
       return;
     }
 
+    target = (e.target as Element).closest('[data-draggable=true]');
+    target.dispatchEvent(new CustomEvent('movestart'));
+
     anchor = ToSVGPoint(mouseEvent, opts.svg.el);
-    snapshot = opts.snapshot;
-    node.dispatchEvent(new CustomEvent('dragstart'));
     window.addEventListener('mousemove', MouseMove);
     window.addEventListener('mouseup', Cancel);
   }
@@ -89,8 +86,10 @@ export function drag(node: Element, opts: DragOpts) {
   function TouchStart(e: Event) {
     const touchEvent = e as TouchEvent;
 
+    target = (e.target as Element).closest('[data-draggable=true]');
+    target!.dispatchEvent(new CustomEvent('movestart'));
+
     anchor = ToSVGPoint(touchEvent.touches[0], opts.svg.el);
-    snapshot = opts.snapshot;
     window.addEventListener('touchmove', TouchMove, { passive: false });
     window.addEventListener('touchend', Cancel);
     window.addEventListener('touchcancel', Cancel);
