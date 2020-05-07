@@ -29,6 +29,7 @@ export function Init(
   });
 
   const dispatchAction = (action: Action) => {
+    console.log(action);
     // TODO: We update the state store locally here,
     // but this should probably live outside this component.
     masterState.update(s => ApplyActionsToState(s, [action]));
