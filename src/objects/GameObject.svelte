@@ -8,45 +8,19 @@
   import Card from './card/Card.svelte';
   import CardHolder from './card-holder/CardHolder.svelte';
   import { MergeOpts } from '../merge.ts';
-  import { writable, derived } from 'svelte/store';
+  import { writable } from 'svelte/store';
   import { tweened } from 'svelte/motion';
   import { expoOut } from 'svelte/easing';
 
   export let id;
-  export let parentPosition = null;
+  export let parentPostion;
 
   const { dispatchAction, state, schema, activeObject } = getContext('context');
 
   let component = null;
   $: component = GetComponent(schema, schema.objects[id], $state.objects[id]);
 
-  const sizeOffset = tweened(
-    { dx: 0, dy: 0 },
-    {
-      duration: 300,
-      easing: expoOut,
-    }
-  );
-  const rawPosition = tweened(null, { duration: 1 });
-  const positionOffset = tweened(
-    { dx: 0, dy: 0 },
-    {
-      duration: 300,
-      easing: expoOut,
-    }
-  );
-  const position = derived(
-    [rawPosition, positionOffset],
-    ([$rawPosition, $positionOffset]) => {
-      if (!$rawPosition) {
-        return null;
-      }
-      return {
-        x: $rawPosition.x + $positionOffset.dx,
-        y: $rawPosition.y + $positionOffset.dy,
-      };
-    }
-  );
+  const position = tweened(null, { duration: 1 });
 
   let x;
   let y;
@@ -54,12 +28,7 @@
     const opts = MergeOpts(schema, $state, id);
     x = opts.x || 0;
     y = opts.y || 0;
-
-    if (parentPosition) {
-      rawPosition.set({ x: $parentPosition.x, y: $parentPosition.y });
-    } else {
-      rawPosition.set({ x, y });
-    }
+    position.set({ x, y });
   }
 
   let isDragging = false;
@@ -80,21 +49,50 @@
     dispatchAction(action);
   }
 
+  function RelativeToParent(pos) {
+    if (!pos) {
+      return null;
+    }
+
+    let dx = 0;
+    let dy = 0;
+
+    if ($parentPostion) {
+      dx = -$parentPostion.x;
+      dy = -$parentPostion.y;
+    }
+
+    return { x: pos.x + dx, y: pos.y + dy };
+  }
+
+  function RelativeToSVG(pos) {
+    if (!pos) {
+      return null;
+    }
+
+    let dx = 0;
+    let dy = 0;
+
+    if ($parentPostion) {
+      dx = $parentPostion.x;
+      dy = $parentPostion.y;
+    }
+
+    return { x: pos.x + dx, y: pos.y + dy };
+  }
+
   async function DragEnd() {
     isDragging = false;
 
-    const drop = CheckForDrop($state, schema, $rawPosition, id);
-    let finalX = $rawPosition.x;
-    let finalY = $rawPosition.y;
+    const absolutePosition = RelativeToSVG($position);
+    const drop = CheckForDrop($state, schema, absolutePosition, id);
+    const dropRelativeToParent = RelativeToParent(drop);
 
     if (drop) {
-      finalX = drop.x;
-      finalY = drop.y;
-
-      await rawPosition.set(
+      await position.set(
         {
-          x: drop.x,
-          y: drop.y,
+          x: dropRelativeToParent.x,
+          y: dropRelativeToParent.y,
         },
         { duration: 150 }
       );
@@ -103,14 +101,14 @@
         kind: 'opts',
         id,
         key: 'x',
-        value: finalX,
+        value: 0,
       });
 
       dispatchAction({
         kind: 'opts',
         id,
         key: 'y',
-        value: finalY,
+        value: 0,
       });
 
       dispatchAction({
@@ -123,14 +121,14 @@
         kind: 'opts',
         id,
         key: 'x',
-        value: finalX,
+        value: absolutePosition.x,
       });
 
       dispatchAction({
         kind: 'opts',
         id,
         key: 'y',
-        value: finalY,
+        value: absolutePosition.y,
       });
 
       dispatchAction({
@@ -141,15 +139,15 @@
     }
   }
 
-  function Drag({ detail }) {
+  const Drag = ({ detail }) => {
     // TODO: Highlight drop target.
-    // const drop = CheckForDrop($state, schema, $rawPosition, id);
+    // const drop = CheckForDrop($state, schema, $position, id);
 
-    rawPosition.update(p => ({
+    position.update(p => ({
       x: p.x + detail.dx,
       y: p.y + detail.dy,
     }));
-  }
+  };
 
   function Select(e) {
     activeObject.set(id);
@@ -158,6 +156,7 @@
 
 {#if $position}
   <g
+    transform="translate({$position.x}, {$position.y})"
     {id}
     data-draggable="true"
     on:movestart={DragStart}
@@ -165,11 +164,6 @@
     on:move={Drag}
     on:touchstart={Select}
     on:mousedown={Select}>
-    <svelte:component
-      this={component}
-      {id}
-      {isDragging}
-      {sizeOffset}
-      {position} />
+    <svelte:component this={component} {id} {isDragging} {position} />
   </g>
 {/if}

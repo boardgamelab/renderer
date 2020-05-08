@@ -1,8 +1,6 @@
 <script>
   export let id;
-  export let position;
   export let isDragging = false;
-  export let sizeOffset;
 
   import { getContext } from 'svelte';
 
@@ -17,36 +15,20 @@
   const stroke = '#111';
 
   $: {
-    width = template.geometry.width + $sizeOffset.dx;
-    height = template.geometry.height + $sizeOffset.dy;
+    width = template.geometry.width;
+    height = template.geometry.height;
   }
 </script>
 
 {#if isDragging}
-  <rect
-    filter="url(#blur)"
-    x={$position.x + 30}
-    y={$position.y + 30}
-    {width}
-    {height}
-    fill="#111"
-    fill-opacity="5%" />
+  <rect filter="url(#blur)" {width} {height} fill="#111" fill-opacity="5%" />
 {/if}
 
-<rect
-  data-id={id}
-  x={$position.x}
-  y={$position.y}
-  {width}
-  {height}
-  {fill}
-  {stroke} />
+<rect data-id={id} {width} {height} {fill} {stroke} />
 
 {#if renderer}
   <svelte:component
     this={renderer}
-    x={$position.x}
-    y={$position.y}
     {width}
     {height}
     templates={schema.templates}

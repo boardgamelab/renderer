@@ -1,7 +1,6 @@
 <script>
   export let id;
   export let position;
-  export let sizeOffset;
   export let isDragging;
 
   import { getContext } from 'svelte';
@@ -22,8 +21,8 @@
   $: {
     x = $position.x;
     y = $position.y;
-    width = template.geometry.width + $sizeOffset.dx;
-    height = template.geometry.height + $sizeOffset.dy;
+    width = template.geometry.width;
+    height = template.geometry.height;
     children = $state.objects[id].children || [];
     numCards = children.length + 1;
   }
@@ -35,16 +34,16 @@
       in:fly={{ duration: 200, y: -100 }}
       class="select-none"
       style="font: bold 80px monospace"
-      x={x + width / 2 - 50}
-      y={y + height + 100}
+      x={width / 2 - 50}
+      y={height + 100}
       fill="#aaa">
       x{numCards}
     </text>
   {/if}
 
-  <Card {id} {position} {sizeOffset} {isDragging} />
+  <Card {id} {isDragging} />
 
   {#each children as child (child)}
-    <GameObject id={child} parentPosition={position} />
+    <GameObject id={child} parentPostion={position} />
   {/each}
 {/if}
