@@ -18,9 +18,6 @@
   let component = null;
   $: component = GetComponent(schema, schema.objects[id], $state.objects[id]);
 
-  const { templateID } = schema.objects[id];
-  const template = schema.templates[templateID];
-
   const sizeOffset = tweened(
     { dx: 0, dy: 0 },
     {
@@ -48,9 +45,7 @@
 
   let x;
   let y;
-  let stateEntry;
   $: {
-    stateEntry = $state.objects[id];
     const opts = MergeOpts(schema, $state, id);
     x = opts.x || 0;
     y = opts.y || 0;
@@ -147,8 +142,6 @@
     this={component}
     {id}
     {isDragging}
-    {stateEntry}
-    {template}
     {sizeOffset}
     {position} />
 </g>

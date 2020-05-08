@@ -1,16 +1,19 @@
 <script>
-  export let stateEntry;
-  export let position;
   export let id;
-  export let template;
+  export let position;
   export let isDragging = false;
   export let sizeOffset;
 
   import { getContext } from 'svelte';
+  import { fly } from 'svelte/transition';
+
   const { schema, state } = getContext('context');
   const renderer = getContext('renderer');
 
   let { x, y } = $position;
+  const { templateID } = schema.objects[id];
+  const template = schema.templates[templateID];
+
   let { width, height } = template.geometry;
   const fill = '#fff';
   const stroke = '#111';
@@ -27,9 +30,11 @@
     width = template.geometry.width + $sizeOffset.dx;
     height = template.geometry.height + $sizeOffset.dy;
 
+    const stateEntry = $state.objects[id];
+
     if (stateEntry.parent) {
-      const parent = $state.objects[stateEntry.parent];
-      if (parent.children[parent.children.length - 1] === id) {
+      const parentEntry = $state.objects[stateEntry.parent];
+      if (parentEntry.children[parentEntry.children.length - 1] === id) {
         topCard = id;
       }
     } else {
@@ -77,6 +82,7 @@
 
   {#if numCards}
     <text
+      transition:fly|local={{ duration: 200, y: -100 }}
       class="select-none"
       style="font: bold 80px monospace"
       x={x + width / 2 - 50}
