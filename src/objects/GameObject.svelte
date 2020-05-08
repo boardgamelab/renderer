@@ -57,9 +57,9 @@
     rawPosition.set({ x, y });
   }
 
-  let dragging = false;
+  let isDragging = false;
   function DragStart() {
-    dragging = true;
+    isDragging = true;
 
     // Raise object so that it appears rendered above
     // other objects while being dragged.
@@ -72,7 +72,7 @@
   }
 
   async function DragEnd() {
-    dragging = false;
+    isDragging = false;
 
     const drop = CheckForDrop($state, schema, $rawPosition, id);
     let finalX = $rawPosition.x;
@@ -146,7 +146,7 @@
   <svelte:component
     this={component}
     {id}
-    isDragging={dragging}
+    {isDragging}
     {stateEntry}
     {template}
     {sizeOffset}
