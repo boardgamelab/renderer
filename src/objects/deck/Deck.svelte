@@ -28,22 +28,24 @@
   }
 </script>
 
-{#if children.length}
-  {#if numCards}
-    <text
-      in:fly={{ duration: 200, y: -100 }}
-      class="select-none"
-      style="font: bold 80px monospace"
-      x={width / 2 - 50}
-      y={height + 100}
-      fill="#aaa">
-      x{numCards}
-    </text>
+<g on:contextmenu={console.log}>
+  {#if children.length}
+    {#if numCards}
+      <text
+        in:fly={{ duration: 200, y: -100 }}
+        class="select-none"
+        style="font: bold 80px monospace"
+        x={width / 2 - 50}
+        y={height + 100}
+        fill="#aaa">
+        x{numCards}
+      </text>
+    {/if}
+
+    <Card {id} {isDragging} />
+
+    {#each children as child (child)}
+      <GameObject id={child} parentPostion={position} />
+    {/each}
   {/if}
-
-  <Card {id} {isDragging} />
-
-  {#each children as child (child)}
-    <GameObject id={child} parentPostion={position} />
-  {/each}
-{/if}
+</g>
