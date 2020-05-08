@@ -1,6 +1,7 @@
 <script>
   import { drag } from '../gestures/drag.ts';
   import { getContext } from 'svelte';
+  import { fade } from 'svelte/transition';
   import { GetComponent, CheckForDrop } from './game-object.ts';
   import Deck from './deck/Deck.svelte';
   import { Component } from '@boardgamelab/components';
@@ -12,6 +13,7 @@
   import { expoOut } from 'svelte/easing';
 
   export let id;
+  export let parentPosition = null;
 
   const { dispatchAction, state, schema, activeObject } = getContext('context');
 
@@ -25,7 +27,7 @@
       easing: expoOut,
     }
   );
-  const rawPosition = tweened({ x: 0, y: 0 }, { duration: 1 });
+  const rawPosition = tweened(null, { duration: 1 });
   const positionOffset = tweened(
     { dx: 0, dy: 0 },
     {
@@ -36,6 +38,9 @@
   const position = derived(
     [rawPosition, positionOffset],
     ([$rawPosition, $positionOffset]) => {
+      if (!$rawPosition) {
+        return null;
+      }
       return {
         x: $rawPosition.x + $positionOffset.dx,
         y: $rawPosition.y + $positionOffset.dy,
@@ -49,18 +54,27 @@
     const opts = MergeOpts(schema, $state, id);
     x = opts.x || 0;
     y = opts.y || 0;
-    rawPosition.set({ x, y });
+
+    if (parentPosition) {
+      rawPosition.set({ x: $parentPosition.x, y: $parentPosition.y });
+    } else {
+      rawPosition.set({ x, y });
+    }
   }
 
   let isDragging = false;
   function DragStart() {
     isDragging = true;
 
+    let toRaise = id;
+    if ($state.objects[id].parent) {
+      toRaise = $state.objects[id].parent;
+    }
     // Raise object so that it appears rendered above
     // other objects while being dragged.
     const action = {
       kind: 'raise',
-      id,
+      id: toRaise,
     };
 
     dispatchAction(action);
@@ -74,6 +88,9 @@
     let finalY = $rawPosition.y;
 
     if (drop) {
+      finalX = drop.x;
+      finalY = drop.y;
+
       await rawPosition.set(
         {
           x: drop.x,
@@ -82,8 +99,19 @@
         { duration: 150 }
       );
 
-      finalX = drop.x;
-      finalY = drop.y;
+      dispatchAction({
+        kind: 'opts',
+        id,
+        key: 'x',
+        value: finalX,
+      });
+
+      dispatchAction({
+        kind: 'opts',
+        id,
+        key: 'y',
+        value: finalY,
+      });
 
       dispatchAction({
         kind: 'add-to',
@@ -92,27 +120,25 @@
       });
     } else {
       dispatchAction({
+        kind: 'opts',
+        id,
+        key: 'x',
+        value: finalX,
+      });
+
+      dispatchAction({
+        kind: 'opts',
+        id,
+        key: 'y',
+        value: finalY,
+      });
+
+      dispatchAction({
         kind: 'add-to',
         id,
         parent: null,
       });
     }
-
-    // TODO: Allow updating multiple opts at the same time.
-
-    dispatchAction({
-      kind: 'opts',
-      id,
-      key: 'x',
-      value: finalX,
-    });
-
-    dispatchAction({
-      kind: 'opts',
-      id,
-      key: 'y',
-      value: finalY,
-    });
   }
 
   function Drag({ detail }) {
@@ -130,18 +156,20 @@
   }
 </script>
 
-<g
-  {id}
-  data-draggable="true"
-  on:movestart={DragStart}
-  on:moveend={DragEnd}
-  on:move={Drag}
-  on:touchstart={Select}
-  on:mousedown={Select}>
-  <svelte:component
-    this={component}
+{#if $position}
+  <g
     {id}
-    {isDragging}
-    {sizeOffset}
-    {position} />
-</g>
+    data-draggable="true"
+    on:movestart={DragStart}
+    on:moveend={DragEnd}
+    on:move={Drag}
+    on:touchstart={Select}
+    on:mousedown={Select}>
+    <svelte:component
+      this={component}
+      {id}
+      {isDragging}
+      {sizeOffset}
+      {position} />
+  </g>
+{/if}

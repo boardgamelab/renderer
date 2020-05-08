@@ -24,7 +24,7 @@ export function Init(
   // order to not make the network traffic too chatty.
   const localState = writable({ ...state });
 
-  masterState.subscribe(s => {
+  masterState.subscribe((s) => {
     localState.set(s);
   });
 
@@ -32,7 +32,7 @@ export function Init(
     console.log(action);
     // TODO: We update the state store locally here,
     // but this should probably live outside this component.
-    masterState.update(s => ApplyActionsToState(s, [action]));
+    masterState.update((s) => ApplyActionsToState(s, [action]));
   };
 
   const dispatchEvent = () => {};
@@ -48,7 +48,7 @@ export function Init(
 
   return {
     stateStore: localState,
-    renderingOrder: derived(localState, $s => ComputeRenderingOrder($s)),
+    renderingOrder: derived(localState, ($s) => ComputeRenderingOrder($s)),
     activeObject,
   };
 }
@@ -59,9 +59,13 @@ export function Init(
  * in the returned array.
  */
 function ComputeRenderingOrder(s: State): string[] {
-  return Object.keys(s.objects).sort((a, b) => {
-    const aOrder = s.objects[a].order || 0;
-    const bOrder = s.objects[b].order || 0;
-    return aOrder < bOrder ? -1 : 1;
-  });
+  return Object.keys(s.objects)
+    .filter((key) => {
+      return !s.objects[key].parent;
+    })
+    .sort((a, b) => {
+      const aOrder = s.objects[a].order || 0;
+      const bOrder = s.objects[b].order || 0;
+      return aOrder < bOrder ? -1 : 1;
+    });
 }
