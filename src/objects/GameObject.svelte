@@ -147,10 +147,7 @@
     this={component}
     {id}
     isDragging={dragging}
-    objectID={id}
     {stateEntry}
-    {schema}
-    state={$state}
     {template}
     {sizeOffset}
     {position} />

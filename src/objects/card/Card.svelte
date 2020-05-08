@@ -1,14 +1,13 @@
 <script>
-  export let state;
   export let stateEntry;
   export let position;
-  export let schema;
-  export let objectID;
+  export let id;
   export let template;
   export let isDragging = false;
   export let sizeOffset;
 
   import { getContext } from 'svelte';
+  const { schema, state } = getContext('context');
   const renderer = getContext('renderer');
 
   let { x, y } = $position;
@@ -29,19 +28,19 @@
     height = template.geometry.height + $sizeOffset.dy;
 
     if (stateEntry.parent) {
-      const parent = state.objects[stateEntry.parent];
-      if (parent.children[parent.children.length - 1] === objectID) {
-        topCard = objectID;
+      const parent = $state.objects[stateEntry.parent];
+      if (parent.children[parent.children.length - 1] === id) {
+        topCard = id;
       }
     } else {
-      topCard = objectID;
+      topCard = id;
     }
 
     if (stateEntry.children && stateEntry.children.length) {
       numCards = stateEntry.children.length + 1;
 
       if (stateEntry.children.length === 1) {
-        topCard = objectID;
+        topCard = id;
       }
 
       if (stateEntry.children.length > 1) {
