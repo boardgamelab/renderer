@@ -5,7 +5,7 @@
   export let active = false;
 
   import { getContext } from 'svelte';
-  import GameObject from '../GameObject.svelte';
+  import Moveable from '../Moveable.svelte';
   import Card from '../card/Card.svelte';
   import { fly } from 'svelte/transition';
 
@@ -60,7 +60,14 @@
     <Card {id} {isDragging} />
 
     {#each children as child (child)}
-      <GameObject id={child} parentPostion={position} />
+      <Moveable
+        id={child}
+        parentPos={position}
+        let:position
+        let:active
+        let:isDragging>
+        <Card id={child} {isDragging} {active} />
+      </Moveable>
     {/each}
   {/if}
 </g>
