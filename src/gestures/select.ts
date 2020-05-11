@@ -30,6 +30,7 @@ export function select(node: Element, opts: Opts) {
     const target = (e.target as Element).closest('[data-selectable=true]');
 
     if (target) {
+      target.dispatchEvent(new CustomEvent('select'));
       const id = (target as HTMLElement).dataset.id as string;
       o.activeObjects.update(() => ({ [id]: true }));
     }
