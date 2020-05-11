@@ -1,7 +1,15 @@
 <script>
   import { getContext } from 'svelte';
 
-  const { state, activeObjects } = getContext('context');
+  const { state, dispatchAction, activeObjects } = getContext('context');
+
+  function Shuffle() {
+    const id = Object.keys($activeObjects)[0];
+    dispatchAction({
+      kind: 'shuffle',
+      id,
+    });
+  }
 
   let deckMenu = false;
   $: {
@@ -27,6 +35,6 @@
 
 {#if deckMenu}
   <div class="p-4 flex flex-row">
-    <div class="item">shuffle</div>
+    <div on:click={Shuffle} class="item">shuffle</div>
   </div>
 {/if}
