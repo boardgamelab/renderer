@@ -21,14 +21,10 @@
 
   let debug = true;
   let svg = { el: null };
-
   let menu = null;
 
-  function activate() {
-    menu = true;
-  }
+  $: menu = Object.keys($activeObjects).length;
 
-  setContext('menu', { activate });
   const { renderingOrder, stateStore, activeObjects } = Init(
     schema,
     state,

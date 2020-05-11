@@ -9,7 +9,6 @@
   import Card from '../card/Card.svelte';
   import { fly } from 'svelte/transition';
 
-  const { activate } = getContext('menu');
   const { schema, state } = getContext('context');
   const { templateID } = schema.objects[id];
   const template = schema.templates[templateID];
@@ -30,10 +29,7 @@
   }
 </script>
 
-<g
-  on:click={() => {
-    activate();
-  }}>
+<g>
   {#if children.length}
     {#if numCards}
       <text

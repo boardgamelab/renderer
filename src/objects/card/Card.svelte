@@ -6,7 +6,6 @@
   import { getContext } from 'svelte';
 
   const { schema } = getContext('context');
-  const { activate } = getContext('menu');
   const renderer = getContext('renderer');
 
   const { templateID } = schema.objects[id];
@@ -22,10 +21,7 @@
   }
 </script>
 
-<g
-  on:click={() => {
-    activate();
-  }}>
+<g>
   {#if isDragging}
     <rect filter="url(#blur)" {width} {height} fill="#111" fill-opacity="5%" />
   {/if}
