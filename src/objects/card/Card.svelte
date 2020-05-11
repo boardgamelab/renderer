@@ -1,10 +1,12 @@
 <script>
   export let id;
   export let isDragging = false;
+  export let active = false;
 
   import { getContext } from 'svelte';
 
   const { schema } = getContext('context');
+  const { activate } = getContext('menu');
   const renderer = getContext('renderer');
 
   const { templateID } = schema.objects[id];
@@ -20,17 +22,33 @@
   }
 </script>
 
-{#if isDragging}
-  <rect filter="url(#blur)" {width} {height} fill="#111" fill-opacity="5%" />
-{/if}
+<g
+  on:click={() => {
+    activate();
+  }}>
+  {#if isDragging}
+    <rect filter="url(#blur)" {width} {height} fill="#111" fill-opacity="5%" />
+  {/if}
 
-<rect data-id={id} {width} {height} {fill} {stroke} />
+  <rect data-id={id} {width} {height} {fill} {stroke} />
 
-{#if renderer}
-  <svelte:component
-    this={renderer}
-    {width}
-    {height}
-    templates={schema.templates}
-    object={schema.objects[id]} />
-{/if}
+  {#if renderer}
+    <svelte:component
+      this={renderer}
+      {width}
+      {height}
+      templates={schema.templates}
+      object={schema.objects[id]} />
+  {/if}
+
+  {#if active}
+    <rect
+      x={-10}
+      y={-10}
+      width={width + 20}
+      height={height + 20}
+      fill="none"
+      stroke-width="10"
+      stroke="#43d8c9" />
+  {/if}
+</g>

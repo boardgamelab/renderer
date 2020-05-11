@@ -1,13 +1,15 @@
 <script>
   export let id;
   export let position;
-  export let isDragging;
+  export let isDragging = false;
+  export let active = false;
 
   import { getContext } from 'svelte';
   import GameObject from '../GameObject.svelte';
   import Card from '../card/Card.svelte';
   import { fly } from 'svelte/transition';
 
+  const { activate } = getContext('menu');
   const { schema, state } = getContext('context');
   const { templateID } = schema.objects[id];
   const template = schema.templates[templateID];
@@ -28,7 +30,10 @@
   }
 </script>
 
-<g on:contextmenu={console.log}>
+<g
+  on:click={() => {
+    activate();
+  }}>
   {#if children.length}
     {#if numCards}
       <text
@@ -42,6 +47,16 @@
       </text>
     {/if}
 
+    {#if active}
+      <rect
+        x={-10}
+        y={-10}
+        width={width + 20}
+        height={height + 20}
+        fill="none"
+        stroke-width="10"
+        stroke="#43d8c9" />
+    {/if}
     <Card {id} {isDragging} />
 
     {#each children as child (child)}

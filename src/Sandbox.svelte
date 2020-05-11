@@ -4,7 +4,9 @@
   import { drag } from './gestures/drag.ts';
   import { zoom } from './gestures/zoom.ts';
   import { pan } from './gestures/pan.ts';
+  import ContextMenu from './ui/menu/Context.svelte';
   import { setContext } from 'svelte';
+  import { fade } from 'svelte/transition';
   import { Init } from './sandbox.ts';
   import { tweened } from 'svelte/motion';
   import { cubicOut, linear } from 'svelte/easing';
@@ -19,7 +21,14 @@
   let debug = true;
   let svg = { el: null };
 
-  const { renderingOrder, stateStore } = Init(schema, state, svg);
+  let menu = null;
+
+  function activate() {
+    menu = true;
+  }
+
+  setContext('menu', { activate });
+  const { renderingOrder, stateStore, activeObject } = Init(schema, state, svg);
 
   // TODO: Need to use something other than card dimensions to
   // determine initial zoom.
@@ -47,6 +56,11 @@
     duration: 200,
     easing: linear,
   });
+
+  function CancelSelect() {
+    activeObject.set(null);
+    menu = false;
+  }
 </script>
 
 <div class="absolute top-0 text-center w-full bg-gray-100 p-2">
@@ -64,6 +78,7 @@
   use:drag={{ svg }}
   use:zoom={{ zoomLevel }}
   use:pan={{ viewportX, viewportY }}
+  on:click|self={CancelSelect}
   on:contextmenu|preventDefault={() => {}}
   xmlns="http://www.w3.org/2000/svg">
   <Effects />
@@ -73,6 +88,14 @@
     {/each}
   </g>
 </svg>
+
+{#if menu}
+  <div
+    transition:fade={{ duration: 100 }}
+    class="fixed z-50 left-0 bottom-0 w-full">
+    <ContextMenu />
+  </div>
+{/if}
 
 {#if debug}
   <div

@@ -149,6 +149,9 @@
     }));
   };
 
+  let active = false;
+  $: active = $activeObject === id;
+
   function Select(e) {
     activeObject.set(id);
   }
@@ -164,6 +167,6 @@
     on:move={Drag}
     on:touchstart={Select}
     on:mousedown={Select}>
-    <svelte:component this={component} {id} {isDragging} {position} />
+    <svelte:component this={component} {id} {active} {isDragging} {position} />
   </g>
 {/if}
