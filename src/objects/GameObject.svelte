@@ -15,7 +15,9 @@
   export let id;
   export let parentPostion;
 
-  const { dispatchAction, state, schema, activeObject } = getContext('context');
+  const { dispatchAction, state, schema, activeObjects } = getContext(
+    'context'
+  );
 
   let component = null;
   $: component = GetComponent(schema, schema.objects[id], $state.objects[id]);
@@ -150,10 +152,10 @@
   };
 
   let active = false;
-  $: active = $activeObject === id;
+  $: active = id in $activeObjects;
 
   function Select(e) {
-    activeObject.set(id);
+    activeObjects.update(v => ({ [id]: true }));
   }
 </script>
 
@@ -162,11 +164,11 @@
     transform="translate({$position.x}, {$position.y})"
     {id}
     data-draggable="true"
+    data-selectable="true"
     on:movestart={DragStart}
     on:moveend={DragEnd}
     on:move={Drag}
-    on:touchstart={Select}
-    on:mousedown={Select}>
+    on:select={Select}>
     <svelte:component this={component} {id} {active} {isDragging} {position} />
   </g>
 {/if}

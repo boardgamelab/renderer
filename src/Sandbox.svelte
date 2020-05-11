@@ -3,6 +3,7 @@
   import Effects from './Effects.svelte';
   import { drag } from './gestures/drag.ts';
   import { zoom } from './gestures/zoom.ts';
+  import { select } from './gestures/select.ts';
   import { pan } from './gestures/pan.ts';
   import ContextMenu from './ui/menu/Context.svelte';
   import { setContext } from 'svelte';
@@ -28,7 +29,11 @@
   }
 
   setContext('menu', { activate });
-  const { renderingOrder, stateStore, activeObject } = Init(schema, state, svg);
+  const { renderingOrder, stateStore, activeObjects } = Init(
+    schema,
+    state,
+    svg
+  );
 
   // TODO: Need to use something other than card dimensions to
   // determine initial zoom.
@@ -58,7 +63,7 @@
   });
 
   function CancelSelect() {
-    activeObject.set(null);
+    activeObjects.set({});
     menu = false;
   }
 </script>
@@ -71,6 +76,7 @@
   {zoomOffsetY}
   {$zoomLevel * cardWidth}
   {$zoomLevel * cardHeight}"
+  use:select
   use:drag={{ svg }}
   use:zoom={{ zoomLevel }}
   use:pan={{ viewportX, viewportY }}
@@ -99,5 +105,6 @@
     class="hidden md:block fixed z-50 top-0 mt-16 overflow-y-auto h-screen
     right-0 bg-white shadow-lg p-8 text-xs">
     <pre>{JSON.stringify($stateStore, null, 2)}</pre>
+    <pre>{JSON.stringify($activeObjects, null, 2)}</pre>
   </div>
 {/if}

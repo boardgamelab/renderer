@@ -12,7 +12,7 @@ export function Init(
   state: State,
   svg: { el: SVGGraphicsElement }
 ) {
-  const activeObject = writable(null as string | null);
+  const activeObjects = writable({});
 
   // The master state is the state that all clients can see.
   const masterState = writable({ ...state });
@@ -42,14 +42,14 @@ export function Init(
     schema,
     dispatchEvent,
     dispatchAction,
-    activeObject,
+    activeObjects,
     svg,
   });
 
   return {
     stateStore: localState,
     renderingOrder: derived(localState, ($s) => ComputeRenderingOrder($s)),
-    activeObject,
+    activeObjects,
   };
 }
 
