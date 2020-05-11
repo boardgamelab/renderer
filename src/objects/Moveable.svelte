@@ -152,22 +152,17 @@
 
   let active = false;
   $: active = id in $activeObjects;
-
-  function Select(e) {
-    activeObjects.update(v => ({ [id]: true }));
-  }
 </script>
 
 {#if $position}
   <g
     transform="translate({$position.x}, {$position.y})"
-    {id}
+    data-id={id}
     data-draggable="true"
     data-selectable="true"
     on:movestart={DragStart}
     on:moveend={DragEnd}
-    on:move={Drag}
-    on:select={Select}>
+    on:move={Drag}>
     <slot {active} {isDragging} {position} />
   </g>
 {/if}

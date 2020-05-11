@@ -14,15 +14,24 @@
  *  limitations under the License.
  */
 
+import type { Writable } from 'svelte/store';
+
+interface Opts {
+  activeObjects: Writable<object>;
+}
+
 /**
  * Svelte directive that allows elements to be selected.
  */
-export function select(node: Element) {
+export function select(node: Element, opts: Opts) {
+  let o = opts;
+
   function Select(e: Event) {
-    const event = new CustomEvent('select');
     const target = (e.target as Element).closest('[data-selectable=true]');
+
     if (target) {
-      target.dispatchEvent(event);
+      const id = (target as HTMLElement).dataset.id as string;
+      o.activeObjects.update(() => ({ [id]: true }));
     }
   }
 
@@ -33,6 +42,10 @@ export function select(node: Element) {
     destroy() {
       node.removeEventListener('mousedown', Select);
       node.removeEventListener('touchstart', Select);
+    },
+
+    update(opts: Opts) {
+      o = opts;
     },
   };
 }
