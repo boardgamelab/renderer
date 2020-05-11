@@ -26,11 +26,13 @@ export function select(node: Element) {
     }
   }
 
+  node.addEventListener('touchstart', Select);
   node.addEventListener('mousedown', Select);
 
   return {
     destroy() {
       node.removeEventListener('mousedown', Select);
+      node.removeEventListener('touchstart', Select);
     },
   };
 }

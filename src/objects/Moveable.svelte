@@ -23,8 +23,10 @@
   }
 
   let isDragging = false;
+  let dragged = false;
   function DragStart() {
     isDragging = true;
+    dragged = false;
 
     let toRaise = id;
     if ($state.objects[id].parent) {
@@ -74,6 +76,10 @@
 
   async function DragEnd() {
     isDragging = false;
+
+    if (!dragged) {
+      return;
+    }
 
     const absolutePosition = RelativeToSVG($position);
     const drop = CheckForDrop($state, schema, absolutePosition, id);
@@ -135,6 +141,8 @@
   const Drag = ({ detail }) => {
     // TODO: Highlight drop target.
     // const drop = CheckForDrop($state, schema, $position, id);
+
+    dragged = true;
 
     position.update(p => ({
       x: p.x + detail.dx,

@@ -57,15 +57,11 @@
         stroke-width="10"
         stroke="#43d8c9" />
     {/if}
+
     <Card {id} {isDragging} />
 
     {#each children as child (child)}
-      <Moveable
-        id={child}
-        parentPos={position}
-        let:position
-        let:active
-        let:isDragging>
+      <Moveable id={child} parentPos={position} let:active let:isDragging>
         <Card id={child} {isDragging} {active} />
       </Moveable>
     {/each}
