@@ -5,6 +5,7 @@
 
   let deckMenu = false;
   $: {
+    deckMenu = false;
     if (Object.keys($activeObjects).length === 1) {
       const id = Object.keys($activeObjects)[0];
       if ($state.objects[id].children && $state.objects[id].children.length) {
