@@ -63,10 +63,6 @@
   }
 </script>
 
-<div class="absolute top-0 text-center w-full bg-gray-100 p-2">
-  Drag your cards around here. This will eventually become a more sophisticated
-  virtual table with multiplayer features.
-</div>
 <svg
   id="root"
   bind:this={svg.el}
