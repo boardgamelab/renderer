@@ -113,11 +113,13 @@
         value: 0,
       });
 
-      dispatchAction({
-        kind: 'add-to',
-        id,
-        parent: drop.id,
-      });
+      if (!drop.originalParent) {
+        dispatchAction({
+          kind: 'add-to',
+          id,
+          parent: drop.id,
+        });
+      }
     } else {
       dispatchAction({
         kind: 'opts',

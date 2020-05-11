@@ -69,7 +69,11 @@ export function CheckForDrop(
     };
 
     if (IsOverlap(boundingBox, dropBox)) {
-      return { ...dropBox, id };
+      let originalParent = false;
+      if (state.objects[draggedObjectID].parent === id) {
+        originalParent = true;
+      }
+      return { ...dropBox, originalParent, id };
     }
   }
 

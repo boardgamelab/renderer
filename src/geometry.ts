@@ -23,7 +23,10 @@ interface Box {
 
 export function IsPointInsideBox(x: number, y: number, box: Box) {
   return (
-    x > box.x && x < box.x + box.width && y > box.y && y < box.y + box.height
+    x >= box.x &&
+    x <= box.x + box.width &&
+    y >= box.y &&
+    y <= box.y + box.height
   );
 }
 
