@@ -44,19 +44,19 @@ export function pan(node: Element, opts: Opts) {
   const KeyDown = throttle(
     (e: KeyboardEvent) => {
       if (e.key === 's' || e.key === 'ArrowDown') {
-        opts.viewportY.update(v => v - PAN_DELTA_Y);
+        opts.viewportY.update((v) => v - PAN_DELTA_Y);
       }
 
       if (e.key === 'w' || e.key === 'ArrowUp') {
-        opts.viewportY.update(v => v + PAN_DELTA_Y);
+        opts.viewportY.update((v) => v + PAN_DELTA_Y);
       }
 
       if (e.key === 'a' || e.key === 'ArrowLeft') {
-        opts.viewportX.update(v => v + PAN_DELTA_X);
+        opts.viewportX.update((v) => v + PAN_DELTA_X);
       }
 
       if (e.key === 'd' || e.key === 'ArrowRight') {
-        opts.viewportX.update(v => v - PAN_DELTA_X);
+        opts.viewportX.update((v) => v - PAN_DELTA_X);
       }
     },
     200,
@@ -70,8 +70,8 @@ export function pan(node: Element, opts: Opts) {
     const dx = point.x - anchor!.x;
     const dy = point.y - anchor!.y;
     anchor = point;
-    opts.viewportX.update(v => v + dx, { duration: 0 });
-    opts.viewportY.update(v => v + dy, { duration: 0 });
+    opts.viewportX.update((v) => v + dx, { duration: 0 });
+    opts.viewportY.update((v) => v + dy, { duration: 0 });
   }
 
   function MouseMove(e: Event) {
@@ -92,6 +92,11 @@ export function pan(node: Element, opts: Opts) {
     }
 
     const mouseEvent = e as MouseEvent;
+
+    if (mouseEvent.button !== 1) {
+      return;
+    }
+
     anchor = ToSVGPoint(mouseEvent, node as SVGGraphicsElement);
     node.addEventListener('mousemove', MouseMove);
   }
