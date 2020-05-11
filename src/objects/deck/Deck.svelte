@@ -32,15 +32,20 @@
 <g>
   {#if children.length}
     {#if numCards}
-      <text
-        in:fly={{ duration: 200, y: -100 }}
-        class="select-none"
-        style="font: bold 80px monospace"
-        x={width / 2 - 50}
-        y={height + 100}
-        fill="#aaa">
-        x{numCards}
-      </text>
+      <g
+        class="cursor-move"
+        transform="translate({width / 2}, {height + 150})"
+        in:fly={{ duration: 200, y: -100, opacity: 1 }}>
+        <circle r="100" height="50" fill="#ddd" />
+        <text
+          y="30"
+          text-anchor="middle"
+          class="select-none"
+          style="font: bold 80px monospace"
+          fill="#888">
+          {numCards}
+        </text>
+      </g>
     {/if}
 
     {#if active}
