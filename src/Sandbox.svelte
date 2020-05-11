@@ -91,7 +91,7 @@
   <div
     transition:fade={{ duration: 100 }}
     class="fixed z-50 left-0 bottom-0 w-full">
-    <ContextMenu />
+    <ContextMenu {activeObjects} />
   </div>
 {/if}
 
