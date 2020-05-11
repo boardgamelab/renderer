@@ -23,7 +23,14 @@
 
 <g>
   {#if isDragging}
-    <rect filter="url(#blur)" {width} {height} fill="#111" fill-opacity="5%" />
+    <rect
+      filter="url(#blur)"
+      x={10}
+      y={10}
+      {width}
+      {height}
+      fill="#111"
+      fill-opacity="50%" />
   {/if}
 
   <rect data-id={id} {width} {height} {fill} {stroke} />
