@@ -28,11 +28,11 @@ export function Init(
     localState.set(s);
   });
 
-  const dispatchAction = (action: Action) => {
-    console.log(action);
+  const dispatchActions = (actions: Action[]) => {
+    console.log(actions);
     // TODO: We update the state store locally here,
     // but this should probably live outside this component.
-    masterState.update((s) => ApplyActionsToState(s, [action]));
+    masterState.update((s) => ApplyActionsToState(s, actions));
   };
 
   const dispatchEvent = () => {};
@@ -41,7 +41,7 @@ export function Init(
     state: localState,
     schema,
     dispatchEvent,
-    dispatchAction,
+    dispatchActions,
     activeObjects,
     svg,
   });

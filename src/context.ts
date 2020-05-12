@@ -21,5 +21,5 @@ export interface Context {
   state: State;
   schema: Schema;
   dispatchEvent: (eventName: string, arg: object) => void;
-  dispatchAction: (action: Action) => void;
+  dispatchActions: (action: Action[]) => void;
 }

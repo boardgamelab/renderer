@@ -1,14 +1,16 @@
 <script>
   import { getContext } from 'svelte';
 
-  const { state, dispatchAction, activeObjects } = getContext('context');
+  const { state, dispatchActions, activeObjects } = getContext('context');
 
   function Shuffle() {
     const id = Object.keys($activeObjects)[0];
-    dispatchAction({
-      kind: 'shuffle',
-      id,
-    });
+    dispatchActions([
+      {
+        kind: 'shuffle',
+        id,
+      },
+    ]);
   }
 
   let deckMenu = false;

@@ -7,7 +7,7 @@
   export let id;
   export let parentPos = null;
 
-  const { dispatchAction, state, schema, activeObjects } = getContext(
+  const { dispatchActions, state, schema, activeObjects } = getContext(
     'context'
   );
 
@@ -34,12 +34,12 @@
     }
     // Raise object so that it appears rendered above
     // other objects while being dragged.
-    const action = {
-      kind: 'raise',
-      id: toRaise,
-    };
-
-    dispatchAction(action);
+    dispatchActions([
+      {
+        kind: 'raise',
+        id: toRaise,
+      },
+    ]);
   }
 
   function RelativeToParent(pos) {
@@ -94,47 +94,52 @@
         { duration: 150 }
       );
 
-      dispatchAction({
-        kind: 'opts',
-        id,
-        key: 'x',
-        value: 0,
-      });
-
-      dispatchAction({
-        kind: 'opts',
-        id,
-        key: 'y',
-        value: 0,
-      });
+      dispatchActions([
+        {
+          kind: 'opts',
+          id,
+          key: 'x',
+          value: 0,
+        },
+        {
+          kind: 'opts',
+          id,
+          key: 'y',
+          value: 0,
+        },
+      ]);
 
       if (!drop.originalParent) {
-        dispatchAction({
-          kind: 'add-to',
-          id,
-          parent: drop.id,
-        });
+        dispatchActions([
+          {
+            kind: 'add-to',
+            id,
+            parent: drop.id,
+          },
+        ]);
       }
     } else {
-      dispatchAction({
-        kind: 'opts',
-        id,
-        key: 'x',
-        value: absolutePosition.x,
-      });
+      dispatchActions([
+        {
+          kind: 'opts',
+          id,
+          key: 'x',
+          value: absolutePosition.x,
+        },
 
-      dispatchAction({
-        kind: 'opts',
-        id,
-        key: 'y',
-        value: absolutePosition.y,
-      });
+        {
+          kind: 'opts',
+          id,
+          key: 'y',
+          value: absolutePosition.y,
+        },
 
-      dispatchAction({
-        kind: 'add-to',
-        id,
-        parent: null,
-      });
+        {
+          kind: 'add-to',
+          id,
+          parent: null,
+        },
+      ]);
     }
   }
 
