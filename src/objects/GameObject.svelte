@@ -9,7 +9,7 @@
   const { state, schema } = getContext('context');
 
   let component = null;
-  $: component = GetComponent(schema, schema.objects[id], $state.objects[id]);
+  $: component = GetComponent(schema, $state, id);
 </script>
 
 <Moveable {id} let:active let:isDragging let:position>

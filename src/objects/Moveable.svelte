@@ -1,8 +1,9 @@
 <script>
   import { getContext } from 'svelte';
-  import { CheckForDrop } from './moveable.ts';
+  import { Drop, CheckForDrop } from './moveable.ts';
   import { MergeOpts } from '../merge.ts';
   import { tweened } from 'svelte/motion';
+  import { Component } from '@boardgamelab/components';
 
   export let id;
   export let parentPos = null;
@@ -42,22 +43,6 @@
     ]);
   }
 
-  function RelativeToParent(pos) {
-    if (!pos) {
-      return null;
-    }
-
-    let dx = 0;
-    let dy = 0;
-
-    if ($parentPos) {
-      dx = -$parentPos.x;
-      dy = -$parentPos.y;
-    }
-
-    return { x: pos.x + dx, y: pos.y + dy };
-  }
-
   function RelativeToSVG(pos) {
     if (!pos) {
       return null;
@@ -74,6 +59,22 @@
     return { x: pos.x + dx, y: pos.y + dy };
   }
 
+  function RelativeToParent(pos) {
+    if (!pos) {
+      return null;
+    }
+
+    let dx = 0;
+    let dy = 0;
+
+    if ($parentPos) {
+      dx = -$parentPos.x;
+      dy = -$parentPos.y;
+    }
+
+    return { x: pos.x + dx, y: pos.y + dy };
+  }
+
   async function DragEnd() {
     isDragging = false;
 
@@ -85,62 +86,14 @@
     const drop = CheckForDrop($state, schema, absolutePosition, id);
     const dropRelativeToParent = RelativeToParent(drop);
 
-    if (drop) {
-      await position.set(
-        {
-          x: dropRelativeToParent.x,
-          y: dropRelativeToParent.y,
-        },
-        { duration: 150 }
-      );
-
-      dispatchActions([
-        {
-          kind: 'opts',
-          id,
-          key: 'x',
-          value: 0,
-        },
-        {
-          kind: 'opts',
-          id,
-          key: 'y',
-          value: 0,
-        },
-      ]);
-
-      if (!drop.originalParent) {
-        dispatchActions([
-          {
-            kind: 'add-to',
-            id,
-            parent: drop.id,
-          },
-        ]);
-      }
-    } else {
-      dispatchActions([
-        {
-          kind: 'opts',
-          id,
-          key: 'x',
-          value: absolutePosition.x,
-        },
-
-        {
-          kind: 'opts',
-          id,
-          key: 'y',
-          value: absolutePosition.y,
-        },
-
-        {
-          kind: 'add-to',
-          id,
-          parent: null,
-        },
-      ]);
-    }
+    await Drop(
+      id,
+      drop,
+      absolutePosition,
+      dropRelativeToParent,
+      position,
+      dispatchActions
+    );
   }
 
   const Drag = ({ detail }) => {
