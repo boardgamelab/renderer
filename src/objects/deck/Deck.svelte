@@ -26,32 +26,6 @@
 
 <g>
   {#if children.length}
-    <g
-      class="cursor-move"
-      transform="translate({width / 2 - 75}, {height + 50})">
-
-      <svg
-        width="150"
-        height="150"
-        viewBox="0 0 136 136"
-        xmlns="http://www.w3.org/2000/svg">
-        <g
-          transform="translate(0 -162)"
-          fill="#fff"
-          stroke="#4f4f4f"
-          stroke-width="7.9">
-          <rect
-            transform="rotate(11)"
-            x="90"
-            y="158"
-            width="74"
-            height="88"
-            ry="13.6" />
-          <rect x="8" y="196" width="74" height="88" ry="13.6" />
-        </g>
-      </svg>
-    </g>
-
     {#if active}
       <rect
         x={-10}
@@ -73,5 +47,21 @@
         <Card id={child} {isDragging} {active} />
       </Moveable>
     {/each}
+
+    {#if active}
+      <g class="cursor-move" transform="translate(-100, -100)">
+        <foreignObject width="200" height="200">
+          <div class="w-full h-full p-8">
+            <div
+              style="font-size: 3rem"
+              class="rounded-full border-4 border-red-800 shadow-xl w-full
+              h-full flex items-center justify-center bg-red-600 select-none
+              font-bold text-white">
+              {children.length}
+            </div>
+          </div>
+        </foreignObject>
+      </g>
+    {/if}
   {/if}
 </g>
