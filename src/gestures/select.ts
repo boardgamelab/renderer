@@ -22,6 +22,8 @@ import { Schema, State } from '@boardgamelab/components';
 interface Opts {
   activeObjects: Writable<object>;
   selectBox: Writable<object | null>;
+  viewportX: number;
+  viewportY: number;
   schema: Schema;
   state: State;
 }
@@ -59,7 +61,18 @@ export function select(svg: SVGSVGElement, opts: Opts) {
 
     o.selectBox.set(box);
 
-    const selectedObjects = FindIntersectingObjects(box, o.schema, o.state);
+    // Adjust the box for the current pan offset.
+    const translatedBox = {
+      ...box,
+      x: box.x - o.viewportX,
+      y: box.y - o.viewportY,
+    };
+
+    const selectedObjects = FindIntersectingObjects(
+      translatedBox,
+      o.schema,
+      o.state
+    );
 
     let selected: any = {};
     selectedObjects.forEach((id) => {

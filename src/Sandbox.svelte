@@ -81,7 +81,7 @@
   {zoomOffsetY}
   {$zoomLevel * cardWidth}
   {$zoomLevel * cardHeight}"
-  use:select={{ activeObjects, selectBox, schema, state: $stateStore }}
+  use:select={{ viewportX: $viewportX, viewportY: $viewportY, activeObjects, selectBox, schema, state: $stateStore }}
   use:drag={{ svg }}
   use:zoom={{ zoomLevel }}
   use:pan={{ viewportX, viewportY }}
