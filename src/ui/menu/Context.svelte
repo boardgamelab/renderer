@@ -31,16 +31,20 @@
 
 <style>
   .item {
-    @apply text-xs p-1 px-4 border border-gray-300 rounded cursor-pointer transition duration-200;
+    @apply text-xs bg-white select-none p-1 px-4 border border-gray-300 rounded cursor-pointer transition duration-200;
   }
 
   .item:hover {
     @apply bg-gray-100;
   }
+
+  .item:active {
+    @apply bg-gray-300;
+  }
 </style>
 
 {#if deckMenu}
-  <div class="p-4 flex flex-row">
+  <div class="p-4 flex flex-row justify-center">
     <div on:click={Shuffle} class="item">shuffle</div>
   </div>
 {/if}
