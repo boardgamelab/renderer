@@ -37,9 +37,12 @@ interface Point {
 export function select(svg: SVGSVGElement, opts: Opts) {
   let o = opts;
   let selectBoxAnchor: Point | null = null;
-  let rect = svg.createSVGRect();
 
-  function Drag(e: MouseEvent) {
+  function TouchDrag(e: TouchEvent) {
+    Drag(e.touches[0]);
+  }
+
+  function Drag(e: MouseEvent | Touch) {
     const point = ToSVGPoint(e as MouseEvent, svg);
 
     const x1 = Math.min(selectBoxAnchor!.x, point.x);
@@ -65,7 +68,7 @@ export function select(svg: SVGSVGElement, opts: Opts) {
     o.activeObjects.set(selected);
   }
 
-  function Select(e: MouseEvent | Touch) {
+  function MouseDown(e: MouseEvent) {
     const target = (e.target as Element).closest('[data-selectable=true]');
 
     if (target) {
@@ -75,12 +78,27 @@ export function select(svg: SVGSVGElement, opts: Opts) {
     } else {
       selectBoxAnchor = ToSVGPoint(e as MouseEvent, svg);
       svg.addEventListener('mousemove', Drag);
+      svg.addEventListener('mouseup', Cancel);
     }
   }
 
   function TouchStart(e: TouchEvent) {
-    if (e.touches.length) {
-      Select(e.touches[0]);
+    if (!e.touches.length) {
+      return;
+    }
+    const touch = e.touches[0];
+    const target = (touch.target as Element).closest('[data-selectable=true]');
+
+    if (target) {
+      target.dispatchEvent(new CustomEvent('select'));
+      const id = (target as HTMLElement).dataset.id as string;
+      o.activeObjects.set({ [id]: true });
+    } else {
+      selectBoxAnchor = ToSVGPoint(touch, svg);
+      svg.addEventListener('touchmove', TouchDrag);
+      svg.addEventListener('touchend', Cancel);
+      svg.addEventListener('touchcancel', Cancel);
+      svg.addEventListener('touchleave', Cancel);
     }
   }
 
@@ -88,18 +106,22 @@ export function select(svg: SVGSVGElement, opts: Opts) {
     selectBoxAnchor = null;
     o.selectBox.set(null);
     svg.removeEventListener('mousemove', Drag);
+    svg.removeEventListener('touchmove', TouchDrag);
+    svg.removeEventListener('touchend', Cancel);
+    svg.removeEventListener('touchcancel', Cancel);
+    svg.removeEventListener('touchleave', Cancel);
+    svg.removeEventListener('mouseup', Cancel);
   }
 
   svg.addEventListener('touchstart', TouchStart);
-  svg.addEventListener('mousedown', Select);
-  svg.addEventListener('mouseup', Cancel);
+  svg.addEventListener('mousedown', MouseDown);
 
   return {
     destroy() {
       if (selectBoxAnchor) {
         Cancel();
       }
-      svg.removeEventListener('mousedown', Select);
+      svg.removeEventListener('mousedown', MouseDown);
       svg.removeEventListener('touchstart', TouchStart);
     },
 
