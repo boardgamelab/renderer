@@ -4,6 +4,7 @@
   export let active = false;
 
   import { getContext } from 'svelte';
+  import { selectionColor } from '../../defaults.ts';
   import Moveable from '../Moveable.svelte';
   import Card from '../card/Card.svelte';
 
@@ -34,7 +35,7 @@
         height={height + 20}
         fill="none"
         stroke-width="10"
-        stroke="#37c3ec" />
+        stroke={selectionColor} />
     {/if}
 
     {#each children.slice(-2) as child (child)}
@@ -53,10 +54,9 @@
         <foreignObject width="200" height="200">
           <div class="w-full h-full p-8">
             <div
-              style="font-size: 3rem"
-              class="rounded-full border-4 border-red-800 shadow-xl w-full
-              h-full flex items-center justify-center bg-red-600 select-none
-              font-bold text-white">
+              style="font-size: 3rem; background-color: {selectionColor}"
+              class="rounded-full shadow-xl w-full h-full flex items-center
+              justify-center select-none font-bold text-white">
               {children.length}
             </div>
           </div>

@@ -4,6 +4,7 @@
   export let active = false;
 
   import { getContext } from 'svelte';
+  import { selectionColor } from '../../defaults.ts';
 
   const { schema } = getContext('context');
   const renderer = getContext('renderer');
@@ -52,6 +53,6 @@
       height={height + 20}
       fill="none"
       stroke-width="10"
-      stroke="#37c3ec" />
+      stroke={selectionColor} />
   {/if}
 </g>
