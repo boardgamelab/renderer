@@ -1,18 +1,8 @@
 import { Component, Schema, State } from '@boardgamelab/components';
 import type { Writable } from 'svelte/store';
 import { IsOverlap } from '../geometry';
+import { GetTemplate } from '../utils/template';
 import shortid from 'shortid';
-
-function GetTemplate(schema: Schema, state: State, id: string) {
-  let template = state.objects[id].template;
-
-  if (!template) {
-    const { templateID } = schema.objects[id];
-    template = schema.templates[templateID];
-  }
-
-  return template;
-}
 
 interface DropInfo {
   x: number;

@@ -14,6 +14,9 @@
  *  limitations under the License.
  */
 
+import { Schema, State } from '@boardgamelab/components';
+import { GetTemplate } from './utils/template';
+
 interface Box {
   x: number;
   y: number;
@@ -40,4 +43,22 @@ export function IsOverlap(a: Box, b: Box): boolean {
   if (IsPointInsideBox(b.x, b.y + b.height, a)) return true;
   if (IsPointInsideBox(b.x + b.width, b.y + b.height, a)) return true;
   return false;
+}
+
+export function FindIntersectingObjects(
+  box: Box,
+  schema: Schema,
+  state: State
+): string[] {
+  let result = [];
+  for (const id in state.objects) {
+    const obj = state.objects[id];
+    const template = GetTemplate(schema, state, id);
+    const { x, y } = (obj.opts as any) || { x: 0, y: 0 };
+    const { width, height } = template.geometry;
+    if (IsOverlap(box, { x, y, width, height })) {
+      result.push(id);
+    }
+  }
+  return result;
 }

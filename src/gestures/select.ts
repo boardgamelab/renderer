@@ -15,34 +15,92 @@
  */
 
 import type { Writable } from 'svelte/store';
+import { ToSVGPoint } from '../utils/svg';
+import { FindIntersectingObjects } from '../geometry';
+import { Schema, State } from '@boardgamelab/components';
 
 interface Opts {
   activeObjects: Writable<object>;
+  selectBox: Writable<object | null>;
+  schema: Schema;
+  state: State;
+}
+
+interface Point {
+  x: number;
+  y: number;
 }
 
 /**
  * Svelte directive that allows elements to be selected.
  */
-export function select(node: Element, opts: Opts) {
+export function select(svg: SVGSVGElement, opts: Opts) {
   let o = opts;
+  let selectBoxAnchor: Point | null = null;
+  let rect = svg.createSVGRect();
 
-  function Select(e: Event) {
+  function Drag(e: MouseEvent) {
+    const point = ToSVGPoint(e as MouseEvent, svg);
+
+    const x1 = Math.min(selectBoxAnchor!.x, point.x);
+    const x2 = Math.max(selectBoxAnchor!.x, point.x);
+    const y1 = Math.min(selectBoxAnchor!.y, point.y);
+    const y2 = Math.max(selectBoxAnchor!.y, point.y);
+
+    const box = {
+      x: x1,
+      y: y1,
+      width: x2 - x1,
+      height: y2 - y1,
+    };
+
+    o.selectBox.set(box);
+
+    const selectedObjects = FindIntersectingObjects(box, o.schema, o.state);
+
+    let selected: any = {};
+    selectedObjects.forEach((id) => {
+      selected[id] = true;
+    });
+    o.activeObjects.set(selected);
+  }
+
+  function Select(e: MouseEvent | Touch) {
     const target = (e.target as Element).closest('[data-selectable=true]');
 
     if (target) {
       target.dispatchEvent(new CustomEvent('select'));
       const id = (target as HTMLElement).dataset.id as string;
       o.activeObjects.set({ [id]: true });
+    } else {
+      selectBoxAnchor = ToSVGPoint(e as MouseEvent, svg);
+      svg.addEventListener('mousemove', Drag);
     }
   }
 
-  node.addEventListener('touchstart', Select);
-  node.addEventListener('mousedown', Select);
+  function TouchStart(e: TouchEvent) {
+    if (e.touches.length) {
+      Select(e.touches[0]);
+    }
+  }
+
+  function Cancel() {
+    selectBoxAnchor = null;
+    o.selectBox.set(null);
+    svg.removeEventListener('mousemove', Drag);
+  }
+
+  svg.addEventListener('touchstart', TouchStart);
+  svg.addEventListener('mousedown', Select);
+  svg.addEventListener('mouseup', Cancel);
 
   return {
     destroy() {
-      node.removeEventListener('mousedown', Select);
-      node.removeEventListener('touchstart', Select);
+      if (selectBoxAnchor) {
+        Cancel();
+      }
+      svg.removeEventListener('mousedown', Select);
+      svg.removeEventListener('touchstart', TouchStart);
     },
 
     update(opts: Opts) {

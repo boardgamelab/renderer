@@ -7,6 +7,7 @@
   import { pan } from './gestures/pan.ts';
   import ContextMenu from './ui/menu/Context.svelte';
   import { setContext } from 'svelte';
+  import { writable } from 'svelte/store';
   import { fade } from 'svelte/transition';
   import { Init } from './sandbox.ts';
   import { tweened } from 'svelte/motion';
@@ -35,6 +36,8 @@
   // determine initial zoom.
   const cardWidth = 600;
   const cardHeight = 720;
+
+  const selectBox = writable(null);
 
   const zoomLevel = tweened(5, {
     duration: 200,
@@ -78,7 +81,7 @@
   {zoomOffsetY}
   {$zoomLevel * cardWidth}
   {$zoomLevel * cardHeight}"
-  use:select={{ activeObjects }}
+  use:select={{ activeObjects, selectBox, schema, state: $stateStore }}
   use:drag={{ svg }}
   use:zoom={{ zoomLevel }}
   use:pan={{ viewportX, viewportY }}
@@ -92,6 +95,17 @@
       <GameObject {id} />
     {/each}
   </g>
+
+  {#if $selectBox}
+    <rect
+      fill="none"
+      stroke-width="10"
+      stroke="#aaa"
+      x={$selectBox.x}
+      y={$selectBox.y}
+      width={$selectBox.width}
+      height={$selectBox.height} />
+  {/if}
 </svg>
 
 {#if menu}
