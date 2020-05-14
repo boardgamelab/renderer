@@ -7,6 +7,8 @@
 
   export let id;
   export let parentPos = null;
+  export let draggable = true;
+  export let selectable = true;
 
   const { dispatchActions, state, schema, activeObjects } = getContext(
     'context'
@@ -33,6 +35,7 @@
     if ($state.objects[id].parent) {
       toRaise = $state.objects[id].parent;
     }
+
     // Raise object so that it appears rendered above
     // other objects while being dragged.
     dispatchActions([
@@ -103,6 +106,10 @@
 
     dragged = true;
 
+    activeObjects.set({
+      [id]: true,
+    });
+
     position.update(p => ({
       x: p.x + detail.dx,
       y: p.y + detail.dy,
@@ -117,8 +124,8 @@
   <g
     transform="translate({$position.x}, {$position.y})"
     data-id={id}
-    data-draggable="true"
-    data-selectable="true"
+    data-draggable={draggable}
+    data-selectable={selectable}
     on:movestart={DragStart}
     on:moveend={DragEnd}
     on:move={Drag}>

@@ -54,7 +54,12 @@
     {/if}
 
     {#each children as child (child)}
-      <Moveable id={child} parentPos={position} let:active let:isDragging>
+      <Moveable
+        id={child}
+        selectable={false}
+        parentPos={position}
+        let:active
+        let:isDragging>
         <Card id={child} {isDragging} {active} />
       </Moveable>
     {/each}
