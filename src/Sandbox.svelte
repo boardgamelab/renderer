@@ -107,7 +107,7 @@
     on:wheel|stopPropagation
     class="hidden md:block fixed z-50 top-0 mt-16 overflow-y-auto h-screen
     right-0 bg-white shadow-lg p-8 text-xs">
-    <pre>{JSON.stringify($stateStore, null, 2)}</pre>
     <pre>{JSON.stringify($activeObjects, null, 2)}</pre>
+    <pre>{JSON.stringify($stateStore, null, 2)}</pre>
   </div>
 {/if}

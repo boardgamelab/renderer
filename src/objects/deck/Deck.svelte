@@ -54,7 +54,7 @@
         <foreignObject width="200" height="200">
           <div class="w-full h-full p-8">
             <div
-              style="font-size: 3rem; background-color: {selectionColor}"
+              style="font-size: 3rem; color: white; background-color: {selectionColor}"
               class="rounded-full shadow-xl w-full h-full flex items-center
               justify-center select-none font-bold text-white">
               {children.length}
