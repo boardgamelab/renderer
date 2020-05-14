@@ -27,17 +27,30 @@
 
 <g>
   {#if children.length}
-    <g class="cursor-move" transform="translate({width / 2}, {height + 150})">
-      <circle x="0" y="0" r="100" height="50" fill="#ddd" />
-      <text
-        x="0"
-        y="30"
-        text-anchor="middle"
-        class="select-none"
-        style="font: bold 80px monospace"
-        fill="#888">
-        {children.length}
-      </text>
+    <g
+      class="cursor-move"
+      transform="translate({width / 2 - 75}, {height + 50})">
+
+      <svg
+        width="150"
+        height="150"
+        viewBox="0 0 136 136"
+        xmlns="http://www.w3.org/2000/svg">
+        <g
+          transform="translate(0 -162)"
+          fill="#fff"
+          stroke="#4f4f4f"
+          stroke-width="7.9">
+          <rect
+            transform="rotate(11)"
+            x="90"
+            y="158"
+            width="74"
+            height="88"
+            ry="13.6" />
+          <rect x="8" y="196" width="74" height="88" ry="13.6" />
+        </g>
+      </svg>
     </g>
 
     {#if active}
