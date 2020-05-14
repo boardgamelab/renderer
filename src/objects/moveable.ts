@@ -64,6 +64,9 @@ export async function Drop(
     if (drop.targetType === Component.CARD) {
       DropInNewDeck(dispatchActions, drop, id, activeObjects);
     } else {
+      activeObjects.set({
+        [drop.targetID]: true,
+      });
       dispatchActions([
         {
           kind: 'add-to',
