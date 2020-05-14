@@ -6,7 +6,6 @@
   import { getContext } from 'svelte';
   import Moveable from '../Moveable.svelte';
   import Card from '../card/Card.svelte';
-  import { fly } from 'svelte/transition';
 
   const { schema, state } = getContext('context');
   const { template } = $state.objects[id];
