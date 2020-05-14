@@ -53,7 +53,7 @@
         stroke="#37c3ec" />
     {/if}
 
-    {#each children as child (child)}
+    {#each children.slice(-2) as child (child)}
       <Moveable
         id={child}
         selectable={false}
