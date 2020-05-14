@@ -4,6 +4,7 @@
   export let active = false;
 
   import { getContext } from 'svelte';
+  import { tweened } from 'svelte/motion';
   import { selectionColor } from '../../defaults.ts';
   import Moveable from '../Moveable.svelte';
   import Card from '../card/Card.svelte';
@@ -15,6 +16,22 @@
   const fill = '#fff';
   const stroke = '#111';
 
+  const rotation = tweened(0, { duration: 200 });
+
+  async function ShuffleAnimation() {
+    await rotation.update(r => r + 359);
+    await rotation.set(0, { duration: 1 });
+  }
+
+  let shuffleID = null;
+  $: {
+    const newID = $state.objects[id].opts.shuffleID;
+    if (newID && newID !== shuffleID) {
+      ShuffleAnimation();
+      shuffleID = newID;
+    }
+  }
+
   let children = [];
   $: {
     x = $position.x;
@@ -25,7 +42,7 @@
   }
 </script>
 
-<g>
+<g transform="rotate({$rotation}, {width / 2}, {height / 2})">
   {#if children.length}
     {#if active}
       <rect
