@@ -69,6 +69,10 @@ export function select(svg: SVGSVGElement, opts: Opts) {
   }
 
   function MouseDown(e: MouseEvent) {
+    if (e.button !== 0) {
+      return;
+    }
+
     const target = (e.target as Element).closest('[data-selectable=true]');
 
     if (target) {
