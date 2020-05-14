@@ -50,7 +50,7 @@
         height={height + 20}
         fill="none"
         stroke-width="10"
-        stroke="orange" />
+        stroke="#37c3ec" />
     {/if}
 
     {#each children as child (child)}

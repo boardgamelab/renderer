@@ -92,7 +92,8 @@
       absolutePosition,
       dropRelativeToParent,
       position,
-      dispatchActions
+      dispatchActions,
+      activeObjects
     );
   }
 

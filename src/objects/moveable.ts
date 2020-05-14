@@ -1,4 +1,5 @@
 import { Component, Schema, State } from '@boardgamelab/components';
+import type { Writable } from 'svelte/store';
 import { IsOverlap } from '../geometry';
 import shortid from 'shortid';
 
@@ -29,7 +30,8 @@ export async function Drop(
   absolutePosition: any,
   dropRelativeToParent: any,
   position: any,
-  dispatchActions: any
+  dispatchActions: any,
+  activeObjects: Writable<object>
 ) {
   if (drop) {
     await position.set(
@@ -60,7 +62,7 @@ export async function Drop(
     }
 
     if (drop.targetType === Component.CARD) {
-      DropInNewDeck(dispatchActions, drop, id);
+      DropInNewDeck(dispatchActions, drop, id, activeObjects);
     } else {
       dispatchActions([
         {
@@ -97,8 +99,18 @@ function DropOnTable(dispatchActions: any, id: string, absolutePosition: any) {
   ]);
 }
 
-function DropInNewDeck(dispatchActions: any, drop: DropInfo, id: string) {
+function DropInNewDeck(
+  dispatchActions: any,
+  drop: DropInfo,
+  id: string,
+  activeObjects: Writable<object>
+) {
   const newID = shortid();
+
+  activeObjects.set({
+    [newID]: true,
+  });
+
   dispatchActions([
     // Create a new ephemeral deck.
     {
