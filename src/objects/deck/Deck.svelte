@@ -27,12 +27,10 @@
 
 <g>
   {#if children.length}
-    <g
-      class="cursor-move"
-      transform="translate({width / 2}, {height + 150})"
-      in:fly={{ duration: 200, y: -100, opacity: 1 }}>
-      <circle r="100" height="50" fill="#ddd" />
+    <g class="cursor-move" transform="translate({width / 2}, {height + 150})">
+      <circle x="0" y="0" r="100" height="50" fill="#ddd" />
       <text
+        x="0"
         y="30"
         text-anchor="middle"
         class="select-none"
