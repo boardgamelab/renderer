@@ -22,8 +22,8 @@ import { Schema, State } from '@boardgamelab/components';
 interface Opts {
   activeObjects: Writable<object>;
   selectBox: Writable<object | null>;
-  viewportX: number;
-  viewportY: number;
+  panX: number;
+  panY: number;
   schema: Schema;
   state: State;
 }
@@ -64,8 +64,8 @@ export function select(svg: SVGSVGElement, opts: Opts) {
     // Adjust the box for the current pan offset.
     const translatedBox = {
       ...box,
-      x: box.x - o.viewportX,
-      y: box.y - o.viewportY,
+      x: box.x - o.panX,
+      y: box.y - o.panY,
     };
 
     const selectedObjects = FindIntersectingObjects(

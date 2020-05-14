@@ -51,12 +51,12 @@
     zoomOffsetY = (cardHeight * (1 - $zoomLevel)) / 2;
   }
 
-  const viewportX = tweened(0, {
+  const panX = tweened(0, {
     duration: 200,
     easing: linear,
   });
 
-  const viewportY = tweened(0, {
+  const panY = tweened(0, {
     duration: 200,
     easing: linear,
   });
@@ -81,16 +81,16 @@
   {zoomOffsetY}
   {$zoomLevel * cardWidth}
   {$zoomLevel * cardHeight}"
-  use:select={{ viewportX: $viewportX, viewportY: $viewportY, activeObjects, selectBox, schema, state: $stateStore }}
+  use:select={{ panX: $panX, panY: $panY, activeObjects, selectBox, schema, state: $stateStore }}
   use:drag={{ svg }}
   use:zoom={{ zoomLevel }}
-  use:pan={{ viewportX, viewportY }}
+  use:pan={{ panX, panY }}
   on:touchmove|preventDefault={() => {}}
   on:click|self={CancelSelect}
   on:contextmenu|preventDefault={() => {}}
   xmlns="http://www.w3.org/2000/svg">
   <Effects />
-  <g transform="translate({$viewportX}, {$viewportY})">
+  <g transform="translate({$panX}, {$panY})">
     {#each $renderingOrder as id (id)}
       <GameObject {id} />
     {/each}
