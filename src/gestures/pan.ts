@@ -80,8 +80,10 @@ export function pan(node: Element, opts: Opts) {
 
   function TouchMove(e: Event) {
     const touchEvent = e as TouchEvent;
-    if (touchEvent.touches.length) {
-      e.preventDefault();
+    e.preventDefault();
+
+    if (touchEvent.touches.length === 2) {
+      e.stopPropagation();
       Drag(touchEvent.touches[0]);
     }
   }

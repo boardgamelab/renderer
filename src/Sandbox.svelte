@@ -64,6 +64,12 @@
   }
 </script>
 
+<svelte:head>
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0,user-scalable=no" />
+</svelte:head>
+
 <svg
   id="root"
   bind:this={svg.el}
@@ -76,6 +82,7 @@
   use:drag={{ svg }}
   use:zoom={{ zoomLevel }}
   use:pan={{ viewportX, viewportY }}
+  on:touchmove|preventDefault={() => {}}
   on:click|self={CancelSelect}
   on:contextmenu|preventDefault={() => {}}
   xmlns="http://www.w3.org/2000/svg">
