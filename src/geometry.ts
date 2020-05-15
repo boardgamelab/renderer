@@ -53,6 +53,12 @@ export function FindIntersectingObjects(
   let result = [];
   for (const id in state.objects) {
     const obj = state.objects[id];
+
+    // Ignore objects in containers.
+    if (obj.parent) {
+      continue;
+    }
+
     const template = GetTemplate(schema, state, id);
     const { x, y } = (obj.opts as any) || { x: 0, y: 0 };
     const { width, height } = template.geometry;
