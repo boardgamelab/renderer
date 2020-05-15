@@ -32,15 +32,6 @@ export async function Drop(
       { duration: 150 }
     );
 
-    dispatchActions([
-      {
-        kind: 'position',
-        id,
-        x: 0,
-        y: 0,
-      },
-    ]);
-
     if (drop.targetIsCurrentParent) {
       return;
     }
@@ -112,12 +103,6 @@ function DropInNewDeck(
       id: newID,
       x: drop.x,
       y: drop.y,
-    },
-    {
-      kind: 'position',
-      id: drop.targetID,
-      x: 0,
-      y: 0,
     },
     // Add drop target to new deck.
     {
