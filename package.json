@@ -24,7 +24,8 @@
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.5.0",
-    "rollup-plugin-typescript2": "^0.27.0"
+    "rollup-plugin-typescript2": "^0.27.0",
+    "shortid": "^2.2.15"
   },
   "browserslist": [
     "last 1 Chrome versions"
@@ -33,6 +34,7 @@
     "@babel/core": "^7.9.0",
     "@rollup/plugin-json": "^4.0.2",
     "@types/lodash.throttle": "^4.1.6",
+    "@types/shortid": "0.0.29",
     "babel-loader": "^8.1.0",
     "husky": ">=1",
     "lint-staged": ">=8",
