@@ -1,9 +1,7 @@
 <script>
   import { getContext } from 'svelte';
   import { Drop, CheckForDrop } from './moveable.ts';
-  import { MergeOpts } from '../merge.ts';
   import { tweened } from 'svelte/motion';
-  import { Component } from '@boardgamelab/components';
 
   export let id;
   export let parentPos = null;
@@ -19,9 +17,8 @@
   let x;
   let y;
   $: {
-    const opts = MergeOpts(schema, $state, id);
-    x = opts.x || 0;
-    y = opts.y || 0;
+    x = $state.objects[id].x || 0;
+    y = $state.objects[id].y || 0;
     position.set({ x, y });
   }
 

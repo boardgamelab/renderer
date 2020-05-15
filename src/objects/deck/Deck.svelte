@@ -25,7 +25,7 @@
 
   let shuffleID = null;
   $: {
-    const newID = $state.objects[id].opts.shuffleID;
+    const newID = $state.objects[id].shuffleID;
     if (newID && newID !== shuffleID) {
       ShuffleAnimation();
       shuffleID = newID;

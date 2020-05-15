@@ -34,16 +34,10 @@ export async function Drop(
 
     dispatchActions([
       {
-        kind: 'opts',
+        kind: 'position',
         id,
-        key: 'x',
-        value: 0,
-      },
-      {
-        kind: 'opts',
-        id,
-        key: 'y',
-        value: 0,
+        x: 0,
+        y: 0,
       },
     ]);
 
@@ -73,16 +67,10 @@ export async function Drop(
 function DropOnTable(dispatchActions: any, id: string, absolutePosition: any) {
   dispatchActions([
     {
-      kind: 'opts',
+      kind: 'position',
       id,
-      key: 'x',
-      value: absolutePosition.x,
-    },
-    {
-      kind: 'opts',
-      id,
-      key: 'y',
-      value: absolutePosition.y,
+      x: absolutePosition.x,
+      y: absolutePosition.y,
     },
     {
       kind: 'add-to',
@@ -120,28 +108,16 @@ function DropInNewDeck(
     },
     // Position deck over card.
     {
-      kind: 'opts',
+      kind: 'position',
       id: newID,
-      key: 'x',
-      value: drop.x,
+      x: drop.x,
+      y: drop.y,
     },
     {
-      kind: 'opts',
-      id: newID,
-      key: 'y',
-      value: drop.y,
-    },
-    {
-      kind: 'opts',
+      kind: 'position',
       id: drop.targetID,
-      key: 'x',
-      value: 0,
-    },
-    {
-      kind: 'opts',
-      id: drop.targetID,
-      key: 'y',
-      value: 0,
+      x: 0,
+      y: 0,
     },
     // Add drop target to new deck.
     {
@@ -190,8 +166,8 @@ export function CheckForDrop(
     const template = GetTemplate(schema, state, id);
     const { geometry } = template;
     const dropBox: any = {
-      x: obj.opts?.x || 0,
-      y: obj.opts?.y || 0,
+      x: obj.x || 0,
+      y: obj.y || 0,
       width: geometry.width,
       height: geometry.height,
     };

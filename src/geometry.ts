@@ -60,7 +60,8 @@ export function FindIntersectingObjects(
     }
 
     const template = GetTemplate(schema, state, id);
-    const { x, y } = (obj.opts as any) || { x: 0, y: 0 };
+    const x = obj.x || 0;
+    const y = obj.y || 0;
     const { width, height } = template.geometry;
     if (IsOverlap(box, { x, y, width, height })) {
       result.push(id);
