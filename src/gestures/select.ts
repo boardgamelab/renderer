@@ -41,7 +41,9 @@ export function select(svg: SVGSVGElement, opts: Opts) {
   let selectBoxAnchor: Point | null = null;
 
   function TouchDrag(e: TouchEvent) {
-    Drag(e.touches[0]);
+    if (e.touches.length === 1) {
+      Drag(e.touches[0]);
+    }
   }
 
   function Drag(e: MouseEvent | Touch) {
@@ -100,7 +102,7 @@ export function select(svg: SVGSVGElement, opts: Opts) {
   }
 
   function TouchStart(e: TouchEvent) {
-    if (!e.touches.length) {
+    if (e.touches.length !== 1) {
       return;
     }
     const touch = e.touches[0];
