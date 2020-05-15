@@ -89,10 +89,6 @@ export function pan(node: Element, opts: Opts) {
   }
 
   function MouseDown(e: Event) {
-    if (e.target !== node) {
-      return;
-    }
-
     const mouseEvent = e as MouseEvent;
 
     if (mouseEvent.button !== 1) {
@@ -104,10 +100,6 @@ export function pan(node: Element, opts: Opts) {
   }
 
   function TouchStart(e: Event) {
-    if (e.target !== node) {
-      return;
-    }
-
     const touchEvent = e as TouchEvent;
 
     if (touchEvent.touches.length) {
