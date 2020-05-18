@@ -25,7 +25,6 @@
   let isDragging = false;
   let dragged = false;
   function DragStart() {
-    isDragging = true;
     dragged = false;
 
     let toRaise = id;
@@ -102,6 +101,7 @@
     // const drop = CheckForDrop($state, schema, $position, id);
 
     dragged = true;
+    isDragging = true;
 
     activeObjects.set({
       [id]: true,

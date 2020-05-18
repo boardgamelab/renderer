@@ -81,10 +81,10 @@
   {zoomOffsetY}
   {$zoomLevel * cardWidth}
   {$zoomLevel * cardHeight}"
+  use:pan={{ panX, panY }}
   use:select={{ panX: $panX, panY: $panY, activeObjects, selectBox, schema, state: $stateStore }}
   use:drag={{ svg }}
   use:zoom={{ zoomLevel }}
-  use:pan={{ panX, panY }}
   on:touchmove|preventDefault={() => {}}
   on:click|self={CancelSelect}
   on:contextmenu|preventDefault={() => {}}

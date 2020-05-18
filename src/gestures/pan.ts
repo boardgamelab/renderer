@@ -97,30 +97,38 @@ export function pan(node: Element, opts: Opts) {
 
     anchor = ToSVGPoint(mouseEvent, node as SVGGraphicsElement);
     node.addEventListener('mousemove', MouseMove);
+    window.addEventListener('mouseup', Cancel);
   }
 
   function TouchStart(e: Event) {
     const touchEvent = e as TouchEvent;
 
-    if (touchEvent.touches.length) {
+    if (touchEvent.touches.length === 2) {
+      // prevent other gestures like 'select' from being triggered.
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+
       anchor = ToSVGPoint(touchEvent.touches[0], node as SVGGraphicsElement);
       node.addEventListener('touchmove', TouchMove);
+      node.addEventListener('touchcancel', Cancel);
+      node.addEventListener('touchend', Cancel);
+      node.addEventListener('touchleave', Cancel);
     }
   }
 
   function Cancel() {
     node.removeEventListener('mousemove', MouseMove);
     node.removeEventListener('touchmove', TouchMove);
+    node.removeEventListener('touchcancel', Cancel);
+    node.removeEventListener('touchend', Cancel);
+    node.removeEventListener('touchleave', Cancel);
+    window.removeEventListener('mouseup', Cancel);
     anchor = null;
   }
 
   window.addEventListener('keydown', KeyDown);
   node.addEventListener('mousedown', MouseDown);
   node.addEventListener('touchstart', TouchStart);
-  window.addEventListener('mouseup', Cancel);
-  node.addEventListener('touchcancel', Cancel);
-  node.addEventListener('touchend', Cancel);
-  node.addEventListener('touchleave', Cancel);
 
   return {
     destroy() {
@@ -130,10 +138,6 @@ export function pan(node: Element, opts: Opts) {
       window.removeEventListener('keydown', KeyDown);
       node.removeEventListener('mousedown', MouseDown);
       node.removeEventListener('touchstart', TouchStart);
-      window.removeEventListener('mouseup', Cancel);
-      node.removeEventListener('touchcancel', Cancel);
-      node.removeEventListener('touchend', Cancel);
-      node.removeEventListener('touchleave', Cancel);
     },
 
     update(newOpts: Opts) {
