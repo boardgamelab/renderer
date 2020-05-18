@@ -10,7 +10,8 @@ import { setContext } from 'svelte';
 export function Init(
   schema: Schema,
   state: State,
-  svg: { el: SVGGraphicsElement }
+  svg: { el: SVGGraphicsElement },
+  hand: { el: HTMLElement }
 ) {
   const activeObjects = writable({});
 
@@ -44,12 +45,14 @@ export function Init(
     dispatchActions,
     activeObjects,
     svg,
+    hand,
   });
 
   return {
     stateStore: localState,
     renderingOrder: derived(localState, ($s) => ComputeRenderingOrder($s)),
     activeObjects,
+    dispatchActions,
   };
 }
 

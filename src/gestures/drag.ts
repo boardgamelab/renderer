@@ -15,14 +15,26 @@
  */
 
 import { ToSVGPoint } from '../utils/svg';
+import type { Writable } from 'svelte/store';
 
 export interface DragEvent {
-  dx: number;
-  dy: number;
+  // ID of the object being dragged.
+  id: string;
+  svg: {
+    dx: number;
+    dy: number;
+  };
+  screen: {
+    dx: number;
+    dy: number;
+  };
 }
 
 interface DragOpts {
   svg: { el: SVGGraphicsElement };
+  panX: number;
+  panY: number;
+  dispatchActions: Function;
 }
 
 interface Point {
@@ -35,15 +47,38 @@ interface Point {
  */
 export function drag(node: Element, opts: DragOpts) {
   let target: any = null;
-  let anchor: Point | null = null;
+  let anchorScreen: Point | null = null;
+  let anchorSVG: Point | null = null;
+  let pointScreen: Point | null = null;
+  let pointSVG: Point | null = null;
+
+  function CreateCustomEvent(name: string, target: HTMLElement) {
+    const id = target.dataset.id;
+    return new CustomEvent(name, {
+      detail: {
+        id,
+        svg: {
+          x: pointSVG!.x,
+          y: pointSVG!.y,
+          dx: pointSVG!.x - anchorSVG!.x,
+          dy: pointSVG!.y - anchorSVG!.y,
+        },
+        screen: {
+          x: pointScreen!.x,
+          y: pointScreen!.y,
+          dx: pointScreen!.x - anchorScreen!.x,
+          dy: pointScreen!.y - anchorScreen!.y,
+        },
+      },
+    });
+  }
 
   function Drag(e: MouseEvent | Touch) {
-    const point = ToSVGPoint(e as MouseEvent, opts.svg.el);
-    const dx = point.x - anchor!.x;
-    const dy = point.y - anchor!.y;
-    anchor = point;
+    // Update the current drag point.
+    pointSVG = ToSVGPoint(e, opts.svg.el, opts.panX, opts.panY);
+    pointScreen = { x: e.clientX, y: e.clientY };
 
-    target!.dispatchEvent(new CustomEvent('move', { detail: { dx, dy } }));
+    target!.dispatchEvent(CreateCustomEvent('move', target));
   }
 
   function MouseMove(e: Event) {
@@ -57,8 +92,8 @@ export function drag(node: Element, opts: DragOpts) {
   }
 
   function Cancel() {
-    target!.dispatchEvent(new CustomEvent('moveend'));
-    anchor = null;
+    target!.dispatchEvent(CreateCustomEvent('moveend', target));
+    anchorSVG = null;
     target = null;
     window.removeEventListener('mousemove', MouseMove);
     window.removeEventListener('touchmove', TouchMove);
@@ -79,8 +114,18 @@ export function drag(node: Element, opts: DragOpts) {
     target = (e.target as Element).closest('[data-draggable=true]');
 
     if (target) {
-      target.dispatchEvent(new CustomEvent('movestart'));
-      anchor = ToSVGPoint(mouseEvent, opts.svg.el);
+      pointSVG = anchorSVG = ToSVGPoint(
+        mouseEvent,
+        opts.svg.el,
+        opts.panX,
+        opts.panY
+      );
+      pointScreen = anchorScreen = {
+        x: mouseEvent.clientX,
+        y: mouseEvent.clientY,
+      };
+
+      target!.dispatchEvent(CreateCustomEvent('movestart', target));
       window.addEventListener('mousemove', MouseMove);
       window.addEventListener('mouseup', Cancel);
     }
@@ -92,8 +137,17 @@ export function drag(node: Element, opts: DragOpts) {
     target = (e.target as Element).closest('[data-draggable=true]');
 
     if (target) {
-      target!.dispatchEvent(new CustomEvent('movestart'));
-      anchor = ToSVGPoint(touchEvent.touches[0], opts.svg.el);
+      const touch = touchEvent.touches[0];
+      pointSVG = anchorSVG = ToSVGPoint(
+        touch,
+        opts.svg.el,
+        opts.panX,
+        opts.panY
+      );
+      pointScreen = anchorScreen = { x: touch.clientX, y: touch.clientY };
+
+      target!.dispatchEvent(CreateCustomEvent('movestart', target));
+
       window.addEventListener('touchmove', TouchMove, { passive: false });
       window.addEventListener('touchend', Cancel);
       window.addEventListener('touchcancel', Cancel);
@@ -106,7 +160,7 @@ export function drag(node: Element, opts: DragOpts) {
 
   return {
     destroy() {
-      if (anchor) {
+      if (anchorSVG) {
         Cancel();
       }
       node.removeEventListener('mousedown', MouseDown);

@@ -8,10 +8,16 @@
   export let draggable = true;
   export let selectable = true;
 
-  const { dispatchActions, state, schema, activeObjects } = getContext(
-    'context'
-  );
+  const {
+    svg,
+    hand,
+    dispatchActions,
+    state,
+    schema,
+    activeObjects,
+  } = getContext('context');
 
+  const toSVGPoint = getContext('to-svg-point');
   const position = tweened(null, { duration: 1 });
 
   let x;
@@ -24,8 +30,11 @@
 
   let isDragging = false;
   let dragged = false;
+  let snapshot = null;
   function DragStart() {
     dragged = false;
+
+    snapshot = $position;
 
     let toRaise = id;
     if ($state.objects[id].parent) {
@@ -82,7 +91,14 @@
     }
 
     const absolutePosition = RelativeToSVG($position);
-    const drop = CheckForDrop($state, schema, absolutePosition, id);
+    const drop = CheckForDrop(
+      $state,
+      schema,
+      absolutePosition,
+      id,
+      hand,
+      toSVGPoint
+    );
     const dropRelativeToParent = RelativeToParent(drop);
 
     await Drop(
@@ -107,10 +123,10 @@
       [id]: true,
     });
 
-    position.update(p => ({
-      x: p.x + detail.dx,
-      y: p.y + detail.dy,
-    }));
+    position.set({
+      x: snapshot.x + detail.svg.dx,
+      y: snapshot.y + detail.svg.dy,
+    });
   };
 
   let active = false;

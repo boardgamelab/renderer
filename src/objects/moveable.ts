@@ -1,5 +1,6 @@
 import { Component, Schema, State } from '@boardgamelab/components';
 import type { Writable } from 'svelte/store';
+import { ToSVG } from '../utils/svg';
 import { IsOverlap } from '../geometry';
 import { GetTemplate } from '../utils/template';
 import shortid from 'shortid';
@@ -123,7 +124,9 @@ export function CheckForDrop(
   state: State,
   schema: Schema,
   rawPosition: any,
-  draggedObjectID: string
+  draggedObjectID: string,
+  hand: { el: HTMLElement },
+  toSVGPoint: Function
 ): DropInfo | null {
   const template = GetTemplate(schema, state, draggedObjectID);
   const { geometry } = template;
@@ -134,6 +137,24 @@ export function CheckForDrop(
     width: geometry.width,
     height: geometry.height,
   };
+
+  // Check if we should drop on the player hand.
+  const rect = hand!.el.getBoundingClientRect();
+  const handPosition = toSVGPoint({
+    x: rect.left + rect.width / 2,
+    y: rect.top,
+  });
+  if (rawPosition.y + geometry.height > handPosition.y) {
+    return {
+      x: handPosition.x,
+      y: handPosition.y,
+      width: rect.width,
+      height: rect.height,
+      targetType: Component.HAND,
+      targetIsCurrentParent: false,
+      targetID: 'hand',
+    };
+  }
 
   for (let id in state.objects) {
     if (id === draggedObjectID) {
@@ -149,6 +170,12 @@ export function CheckForDrop(
     }
 
     const template = GetTemplate(schema, state, id);
+
+    // Don't try to drop on player hand.
+    if (template.type === Component.HAND) {
+      continue;
+    }
+
     const { geometry } = template;
     const dropBox: any = {
       x: obj.x || 0,

@@ -23,6 +23,8 @@ export function GetComponent(schema: Schema, state: State, id: string) {
       return Deck;
     case Component.CARD_HOLDER:
       return CardHolder;
+    case Component.HAND:
+      return null;
     default:
       throw new Error(`Invalid template: ${template}`);
   }
