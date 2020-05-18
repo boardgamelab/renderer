@@ -90,7 +90,11 @@ export function select(svg: SVGSVGElement, opts: Opts) {
 
     const target = (e.target as Element).closest('[data-selectable=true]');
 
-    if (!target) {
+    if (target) {
+      target.dispatchEvent(new CustomEvent('select'));
+      const id = (target as HTMLElement).dataset.id as string;
+      o.activeObjects.set({ [id]: true });
+    } else {
       selectBoxAnchor = ToSVGPoint(e as MouseEvent, svg);
       svg.addEventListener('mousemove', Drag);
       svg.addEventListener('mouseup', Cancel);
@@ -104,22 +108,16 @@ export function select(svg: SVGSVGElement, opts: Opts) {
     const touch = e.touches[0];
     const target = (touch.target as Element).closest('[data-selectable=true]');
 
-    if (!target) {
+    if (target) {
+      target.dispatchEvent(new CustomEvent('select'));
+      const id = (target as HTMLElement).dataset.id as string;
+      o.activeObjects.set({ [id]: true });
+    } else {
       selectBoxAnchor = ToSVGPoint(touch, svg);
       svg.addEventListener('touchmove', TouchDrag);
       svg.addEventListener('touchend', Cancel);
       svg.addEventListener('touchcancel', Cancel);
       svg.addEventListener('touchleave', Cancel);
-    }
-  }
-
-  function Select(e: Event) {
-    const target = (e.target as Element).closest('[data-selectable=true]');
-
-    if (target) {
-      target.dispatchEvent(new CustomEvent('select'));
-      const id = (target as HTMLElement).dataset.id as string;
-      o.activeObjects.set({ [id]: true });
     }
   }
 
@@ -136,7 +134,6 @@ export function select(svg: SVGSVGElement, opts: Opts) {
 
   svg.addEventListener('touchstart', TouchStart);
   svg.addEventListener('mousedown', MouseDown);
-  svg.addEventListener('click', Select);
 
   return {
     destroy() {
@@ -145,7 +142,6 @@ export function select(svg: SVGSVGElement, opts: Opts) {
       }
       svg.removeEventListener('mousedown', MouseDown);
       svg.removeEventListener('touchstart', TouchStart);
-      svg.removeEventListener('select', Select);
     },
 
     update(opts: Opts) {
