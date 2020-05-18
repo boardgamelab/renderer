@@ -92,7 +92,7 @@
 
 <style>
   .item {
-    @apply text-xs bg-white select-none p-1 px-4 border border-gray-300 rounded cursor-pointer transition duration-200;
+    @apply text-xs bg-white select-none p-1 px-4 border border-gray-300 rounded cursor-pointer transition duration-200 pointer-events-auto;
   }
 
   .item:hover {
@@ -105,7 +105,7 @@
 </style>
 
 {#if menu}
-  <div class="p-4 flex flex-row justify-center">
+  <div class="p-4 flex flex-row justify-center pointer-events-none">
     {#if menu === DECK}
       <div on:click={Shuffle} class="item">shuffle</div>
     {/if}
