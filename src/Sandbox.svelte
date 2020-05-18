@@ -5,6 +5,7 @@
   import { zoom } from './gestures/zoom.ts';
   import { select } from './gestures/select.ts';
   import { pan } from './gestures/pan.ts';
+  import Hand from './hand/Hand.svelte';
   import ContextMenu from './ui/menu/Context.svelte';
   import { setContext } from 'svelte';
   import { writable } from 'svelte/store';
@@ -20,7 +21,7 @@
 
   setContext('renderer', renderer);
 
-  let debug = true;
+  let debug = false;
   let svg = { el: null };
   let menu = null;
 
@@ -107,6 +108,8 @@
       height={$selectBox.height} />
   {/if}
 </svg>
+
+<Hand />
 
 {#if menu}
   <div
