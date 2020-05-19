@@ -1,19 +1,24 @@
+interface Point {
+  x: number;
+  y: number;
+}
+
 export function ToSVGPoint(
   e: MouseEvent | Touch,
   svg: SVGGraphicsElement,
   panX?: number,
   panY?: number
 ) {
+  const point = { x: e.clientX, y: e.clientY };
   if (!svg) {
-    return { x: e.clientX, y: e.clientY };
+    return point;
   }
   const ctm = svg.getScreenCTM();
   if (!ctm) {
-    return { x: e.clientX, y: e.clientY };
+    return point;
   }
 
-  let x = (e.clientX - ctm.e) / ctm.a;
-  let y = (e.clientY - ctm.f) / ctm.d;
+  let { x, y } = ApplyCTMInverse(point, ctm);
 
   x -= panX || 0;
   y -= panY || 0;
@@ -22,7 +27,7 @@ export function ToSVGPoint(
 }
 
 export function ToSVGPointWithPan(
-  point: { x: number; y: number },
+  point: Point,
   svg: SVGGraphicsElement,
   panX?: number,
   panY?: number
@@ -32,8 +37,7 @@ export function ToSVGPointWithPan(
     return point;
   }
 
-  let x = (point.x - ctm.e) / ctm.a;
-  let y = (point.y - ctm.f) / ctm.d;
+  let { x, y } = ApplyCTMInverse(point, ctm);
 
   x -= panX || 0;
   y -= panY || 0;
@@ -41,20 +45,12 @@ export function ToSVGPointWithPan(
   return { x, y };
 }
 
-export function ToClientPoint(
-  point: { x: number; y: number },
-  svg: SVGSVGElement
-) {
+export function ToClientPoint(point: Point, svg: SVGSVGElement) {
   const ctm = svg.getScreenCTM();
   if (!ctm) {
     return point;
   }
-
-  let p = svg.createSVGPoint();
-  p.x = point.x;
-  p.y = point.y;
-
-  return p.matrixTransform(ctm);
+  return ApplyCTM(point, ctm);
 }
 
 export function ToClientLength(length: number, svg: SVGSVGElement) {
@@ -62,17 +58,8 @@ export function ToClientLength(length: number, svg: SVGSVGElement) {
   if (!ctm) {
     return null;
   }
-
-  const a = svg.createSVGPoint();
-  const b = svg.createSVGPoint();
-  a.x = 0;
-  a.y = 0;
-  b.x = length;
-  b.y = 0;
-
-  const ca = a.matrixTransform(ctm);
-  const cb = b.matrixTransform(ctm);
-
+  const ca = ApplyCTM({ x: 0, y: 0 }, ctm);
+  const cb = ApplyCTM({ x: length, y: 0 }, ctm);
   return cb.x - ca.x;
 }
 
@@ -81,17 +68,20 @@ export function ToSVGLength(length: number, svg: SVGSVGElement) {
   if (!ctm) {
     return null;
   }
-
-  const a = svg.createSVGPoint();
-  const b = svg.createSVGPoint();
-  a.x = 0;
-  a.y = 0;
-  b.x = length;
-  b.y = 0;
-
-  const inverse = ctm.inverse();
-  const ca = a.matrixTransform(inverse);
-  const cb = b.matrixTransform(inverse);
-
+  const ca = ApplyCTMInverse({ x: 0, y: 0 }, ctm);
+  const cb = ApplyCTMInverse({ x: length, y: 0 }, ctm);
   return cb.x - ca.x;
 }
+
+function ApplyCTM(point: Point, ctm: any): Point {
+  const x = point.x * ctm.a + ctm.e;
+  const y = point.y * ctm.d + ctm.f;
+  return { x, y };
+}
+
+function ApplyCTMInverse(point: Point, ctm: any): Point {
+  const x = ctm.a ? (point.x - ctm.e) / ctm.a : 0;
+  const y = ctm.d ? (point.y - ctm.f) / ctm.d : 0;
+  return { x, y };
+}
+
