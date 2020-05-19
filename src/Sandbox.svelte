@@ -66,7 +66,7 @@
   });
 
   function ToSVGPoint(point) {
-    return ToSVGPointWithPan(point, $panX, $panY, svg.el);
+    return ToSVGPointWithPan(point, svg.el, $panX, $panY);
   }
   setContext('to-svg-point', ToSVGPoint);
 

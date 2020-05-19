@@ -3,6 +3,7 @@
   export let hoverObject = null;
 
   import HandObject from './HandObject.svelte';
+  import { flip } from 'svelte/animate';
 
   let list = [];
   $: {
@@ -26,6 +27,8 @@
 
 <div id="hand" data-hand="true" class="hand" class:hover={hoverObject}>
   {#each list as id (id)}
-    <HandObject {id} />
+    <div animate:flip={{ duration: 100 }}>
+      <HandObject {id} />
+    </div>
   {/each}
 </div>

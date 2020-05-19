@@ -15,16 +15,19 @@
  */
 
 import { ToSVGPoint } from '../utils/svg';
-import type { Writable } from 'svelte/store';
 
 export interface DragEvent {
   // ID of the object being dragged.
   id: string;
+
+  // Coordinates relative to the SVG viewport.
   svg: {
     dx: number;
     dy: number;
   };
-  screen: {
+
+  // Coordinates relative to the client viewport.
+  client: {
     dx: number;
     dy: number;
   };
@@ -63,7 +66,7 @@ export function drag(node: Element, opts: DragOpts) {
           dx: pointSVG!.x - anchorSVG!.x,
           dy: pointSVG!.y - anchorSVG!.y,
         },
-        screen: {
+        client: {
           x: pointScreen!.x,
           y: pointScreen!.y,
           dx: pointScreen!.x - anchorScreen!.x,
