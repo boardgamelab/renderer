@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { Schema, State } from '@boardgamelab/components';
+import { Component, Schema, State } from '@boardgamelab/components';
 import { GetTemplate } from './utils/template';
 
 interface Box {
@@ -56,6 +56,10 @@ export function FindIntersectingObjects(
 
     // Ignore objects in containers.
     if (obj.parent) {
+      continue;
+    }
+
+    if (obj.template?.type === Component.HAND) {
       continue;
     }
 

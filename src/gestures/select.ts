@@ -96,8 +96,8 @@ export function select(svg: SVGSVGElement, opts: Opts) {
       o.activeObjects.set({ [id]: true });
     } else {
       selectBoxAnchor = ToSVGPoint(e as MouseEvent, svg);
-      svg.addEventListener('mousemove', Drag);
-      svg.addEventListener('mouseup', Cancel);
+      window.addEventListener('mousemove', Drag);
+      window.addEventListener('mouseup', Cancel);
     }
   }
 
@@ -124,12 +124,12 @@ export function select(svg: SVGSVGElement, opts: Opts) {
   function Cancel() {
     selectBoxAnchor = null;
     o.selectBox.set(null);
-    svg.removeEventListener('mousemove', Drag);
+    window.removeEventListener('mousemove', Drag);
+    window.removeEventListener('mouseup', Cancel);
     svg.removeEventListener('touchmove', TouchDrag);
     svg.removeEventListener('touchend', Cancel);
     svg.removeEventListener('touchcancel', Cancel);
     svg.removeEventListener('touchleave', Cancel);
-    svg.removeEventListener('mouseup', Cancel);
   }
 
   svg.addEventListener('touchstart', TouchStart);
