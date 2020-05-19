@@ -1,6 +1,5 @@
 import { Component, Schema, State } from '@boardgamelab/components';
 import type { Writable } from 'svelte/store';
-import { ToSVG } from '../utils/svg';
 import { IsOverlap } from '../geometry';
 import { GetTemplate } from '../utils/template';
 import shortid from 'shortid';
