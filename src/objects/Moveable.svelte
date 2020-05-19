@@ -17,6 +17,7 @@
     activeObjects,
   } = getContext('context');
 
+  const highlight = getContext('highlight');
   const toSVGPoint = getContext('to-svg-point');
   const position = tweened(null, { duration: 1 });
 
@@ -86,6 +87,8 @@
   async function DragEnd() {
     isDragging = false;
 
+    highlight.set({});
+
     if (!dragged) {
       return;
     }
@@ -113,8 +116,23 @@
   }
 
   const Drag = ({ detail }) => {
-    // TODO: Highlight drop target.
-    // const drop = CheckForDrop($state, schema, $position, id);
+    const absolutePosition = RelativeToSVG($position);
+    const drop = CheckForDrop(
+      $state,
+      schema,
+      absolutePosition,
+      id,
+      hand,
+      toSVGPoint
+    );
+
+    let h = {};
+    if (drop) {
+      h = {
+        [drop.targetID]: true,
+      };
+    }
+    highlight.set(h);
 
     dragged = true;
     isDragging = true;

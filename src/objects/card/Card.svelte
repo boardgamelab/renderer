@@ -8,6 +8,7 @@
 
   const { schema } = getContext('context');
   const renderer = getContext('renderer');
+  const highlight = getContext('highlight');
 
   const { templateID } = schema.objects[id];
   const template = schema.templates[templateID];
@@ -45,7 +46,7 @@
       object={schema.objects[id]} />
   {/if}
 
-  {#if active}
+  {#if id in $highlight || active}
     <rect
       x={-10}
       y={-10}

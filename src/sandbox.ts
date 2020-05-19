@@ -38,6 +38,9 @@ export function Init(
 
   const dispatchEvent = () => {};
 
+  const highlight = writable({});
+  setContext('highlight', highlight);
+
   setContext('context', {
     state: localState,
     schema,

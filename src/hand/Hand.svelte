@@ -1,9 +1,13 @@
 <script>
+  export let id = 'hand';
   export let hand = {};
   export let hoverObject = null;
 
   import HandObject from './HandObject.svelte';
   import { flip } from 'svelte/animate';
+  import { getContext } from 'svelte';
+
+  const highlight = getContext('highlight');
 
   let list = [];
   $: {
@@ -23,9 +27,18 @@
   .hover {
     background: rgba(200, 200, 200, 0.5);
   }
+
+  .active {
+    border-color: #37c3ec;
+  }
 </style>
 
-<div id="hand" data-hand="true" class="hand" class:hover={hoverObject}>
+<div
+  id="hand"
+  class:active={id in $highlight}
+  data-hand="true"
+  class="hand"
+  class:hover={hoverObject}>
   {#if list.length === 0}PLAYER HAND{/if}
   {#each list as id (id)}
     <div animate:flip={{ duration: 100 }}>

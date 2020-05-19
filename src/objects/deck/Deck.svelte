@@ -10,6 +10,7 @@
   import Card from '../card/Card.svelte';
 
   const { schema, state } = getContext('context');
+  const highlight = getContext('highlight');
   const { template } = $state.objects[id];
   let { x, y } = $position;
   let { width, height } = template.geometry;
@@ -24,27 +25,29 @@
   }
 
   let shuffleID = null;
+  let children = [];
   $: {
-    const newID = $state.objects[id].shuffleID;
-    if (newID && newID !== shuffleID) {
-      ShuffleAnimation();
-      shuffleID = newID;
+    if (id in $state.objects) {
+      const newID = $state.objects[id].shuffleID;
+      if (newID && newID !== shuffleID) {
+        ShuffleAnimation();
+        shuffleID = newID;
+      }
+      children = $state.objects[id].children || [];
     }
   }
 
-  let children = [];
   $: {
     x = $position.x;
     y = $position.y;
     width = template.geometry.width;
     height = template.geometry.height;
-    children = $state.objects[id].children || [];
   }
 </script>
 
 <g transform="rotate({$rotation}, {width / 2}, {height / 2})">
   {#if children.length}
-    {#if active}
+    {#if id in $highlight || active}
       <rect
         x={-10}
         y={-10}

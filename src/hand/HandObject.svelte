@@ -79,7 +79,7 @@
   on:movestart={DragStart}
   on:moveend={DragEnd}
   on:move={Drag}
-  class="mx-2"
+  class="mx-2 shadow-lg"
   width="100"
   viewBox="0 0 600 720"
   xmlns="http://www.w3.org/2000/svg">
