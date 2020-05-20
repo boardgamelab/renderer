@@ -127,7 +127,7 @@
 
 {#if menu}
   <div
-    transition:fade={{ duration: 200 }}
+    transition:fade|local={{ duration: 200 }}
     class="absolute z-50 left-0 top-0 w-full">
     <ContextMenu {activeObjects} />
   </div>
