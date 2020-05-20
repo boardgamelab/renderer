@@ -8,7 +8,7 @@
   import Hand from './hand/Hand.svelte';
   import ContextMenu from './ui/menu/Context.svelte';
   import { ToSVGPointWithPan } from './utils/svg.ts';
-  import { setContext } from 'svelte';
+  import { createEventDispatcher, setContext } from 'svelte';
   import { writable } from 'svelte/store';
   import { fade } from 'svelte/transition';
   import { Init } from './sandbox.ts';
@@ -19,6 +19,8 @@
   export let renderer = null;
   export let schema;
   export let state;
+
+  const dispatch = createEventDispatcher();
 
   setContext('renderer', renderer);
 
@@ -33,7 +35,8 @@
     schema,
     state,
     svg,
-    hand
+    hand,
+    dispatch
   );
 
   // TODO: Need to use something other than card dimensions to
