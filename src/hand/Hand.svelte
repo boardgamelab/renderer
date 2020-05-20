@@ -29,12 +29,13 @@
   }
 
   .active {
-    border-color: #37c3ec;
+    background: rgba(200, 200, 200, 0.6);
   }
 </style>
 
 <div
   id="hand"
+  on:contextmenu|preventDefault={() => {}}
   class:active={id in $highlight}
   data-hand="true"
   class="hand"
