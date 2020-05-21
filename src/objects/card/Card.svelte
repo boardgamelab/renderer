@@ -10,10 +10,6 @@
   const renderer = getContext('renderer');
   const highlight = getContext('highlight');
 
-  if (!(id in $schema.objects)) {
-    console.log(`${id} not found in schema.objects`);
-  }
-
   const { templateID } = $schema.objects[id];
   const template = $schema.templates[templateID];
 
