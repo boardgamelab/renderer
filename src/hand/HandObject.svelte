@@ -6,15 +6,16 @@
   import { getContext } from 'svelte';
   import { ToClientLength, ToSVGLength } from '../utils/svg.ts';
 
-  const { schema, activeObjects, dispatchActions, svg } = getContext('context');
+  const { activeObjects, dispatchActions, svg } = getContext('context');
+  const schema = getContext('schema');
 
   const offset = tweened({ x: 0, y: 0 }, { duration: 1 });
   const scale = tweened(1, { duration: 100 });
   let ref;
   let snapshot = null;
   let cursorOffset = null;
-  const { templateID } = schema.objects[id];
-  const { geometry } = schema.templates[templateID];
+  const { templateID } = $schema.objects[id];
+  const { geometry } = $schema.templates[templateID];
 
   const DragStart = ({ detail }) => {
     const rect = ref.getBoundingClientRect();
