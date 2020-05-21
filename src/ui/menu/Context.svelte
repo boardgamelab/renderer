@@ -4,9 +4,8 @@
   import { Component } from '@boardgamelab/components';
   import { GetTemplate } from '../../utils/template.ts';
   import shortid from 'shortid';
-  const { schema, state, dispatchActions, activeObjects } = getContext(
-    'context'
-  );
+  const schema = getContext('schema');
+  const { state, dispatchActions, activeObjects } = getContext('context');
 
   const DECK = 'deck';
   const CARDS = 'cards';
@@ -14,7 +13,7 @@
   function MakeDeck() {
     const firstCardID = Object.keys($activeObjects)[0];
     const firstCard = $state.objects[firstCardID];
-    const firstCardTemplate = GetTemplate(schema, $state, firstCardID);
+    const firstCardTemplate = GetTemplate($schema, $state, firstCardID);
     const newID = shortid();
 
     const actions = [
@@ -78,7 +77,7 @@
 
     if (Object.keys($activeObjects).length > 1) {
       const allCards = Object.keys($activeObjects).every(id => {
-        const template = GetTemplate(schema, $state, id);
+        const template = GetTemplate($schema, $state, id);
         return (
           template.type === Component.CARD || template.type === Component.DECK
         );
