@@ -4,6 +4,10 @@ import Card from './card/Card.svelte';
 import CardHolder from './card-holder/CardHolder.svelte';
 
 export function GetComponent(schema: Schema, state: State, id: string) {
+  if (!(id in state.objects)) {
+    return null;
+  }
+
   const entry = state.objects[id];
 
   // The object itself might carry a template.

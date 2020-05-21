@@ -18,14 +18,11 @@
   // A Svelte component that can render a game object.
   export let renderer = null;
   export let schema;
-
-  // TODO: Accept the object and not the store.
-  // We don't need to modify the store anyway since we're
-  // just passing actions back from this component.
   export let state;
 
   const dispatch = createEventDispatcher();
 
+  setContext('schema', schema);
   setContext('renderer', renderer);
 
   let debug = true;

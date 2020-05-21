@@ -6,10 +6,11 @@
 
   export let id;
 
-  const { state, schema } = getContext('context');
+  const { state } = getContext('context');
+  const schema = getContext('schema');
 
   let component = null;
-  $: component = GetComponent(schema, $state, id);
+  $: component = GetComponent($schema, $state, id);
 </script>
 
 <Moveable {id} let:active let:isDragging let:position>

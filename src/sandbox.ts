@@ -5,7 +5,6 @@ import { writable, derived, get } from 'svelte/store';
 import { setContext } from 'svelte';
 
 export function Init(
-  schema: Schema,
   masterState: Readable<State>,
   svg: { el: SVGGraphicsElement },
   hand: { el: HTMLElement },
@@ -37,7 +36,6 @@ export function Init(
 
   setContext('context', {
     state: localState,
-    schema,
     dispatchEvent,
     dispatchActions,
     activeObjects,

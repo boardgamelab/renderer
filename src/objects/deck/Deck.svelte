@@ -9,7 +9,7 @@
   import Moveable from '../Moveable.svelte';
   import Card from '../card/Card.svelte';
 
-  const { schema, state } = getContext('context');
+  const { state } = getContext('context');
   const highlight = getContext('highlight');
   const { template } = $state.objects[id];
   let { x, y } = $position;

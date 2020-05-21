@@ -6,12 +6,16 @@
   import { getContext } from 'svelte';
   import { selectionColor } from '../../defaults.ts';
 
-  const { schema } = getContext('context');
+  const schema = getContext('schema');
   const renderer = getContext('renderer');
   const highlight = getContext('highlight');
 
-  const { templateID } = schema.objects[id];
-  const template = schema.templates[templateID];
+  if (!(id in $schema.objects)) {
+    console.log(`${id} not found in schema.objects`);
+  }
+
+  const { templateID } = $schema.objects[id];
+  const template = $schema.templates[templateID];
 
   let { width, height } = template.geometry;
   const fill = '#fff';
@@ -42,8 +46,8 @@
       this={renderer}
       {width}
       {height}
-      templates={schema.templates}
-      object={schema.objects[id]} />
+      templates={$schema.templates}
+      object={$schema.objects[id]} />
   {/if}
 
   {#if id in $highlight || active}
