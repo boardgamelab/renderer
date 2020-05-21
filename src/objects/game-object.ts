@@ -16,6 +16,10 @@ export function GetComponent(schema: Schema, state: State, id: string) {
 
   // If not, locate it in the schema.
   if (!template) {
+    if (!(id in schema.objects)) {
+      return null;
+    }
+
     const templateID = schema.objects[id].templateID;
     template = schema.templates[templateID];
   }
