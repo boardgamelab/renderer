@@ -127,7 +127,7 @@
     );
 
     let h = {};
-    if (drop) {
+    if (drop && !drop.targetIsCurrentParent) {
       h = {
         [drop.targetID]: true,
       };
