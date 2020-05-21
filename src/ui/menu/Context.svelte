@@ -78,6 +78,9 @@
     if (Object.keys($activeObjects).length > 1) {
       const allCards = Object.keys($activeObjects).every(id => {
         const template = GetTemplate($schema, $state, id);
+        if (!template) {
+          return false;
+        }
         return (
           template.type === Component.CARD || template.type === Component.DECK
         );

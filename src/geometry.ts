@@ -64,6 +64,10 @@ export function FindIntersectingObjects(
     }
 
     const template = GetTemplate(schema, state, id);
+    if (!template) {
+      continue;
+    }
+
     const x = obj.x || 0;
     const y = obj.y || 0;
     const { width, height } = template.geometry;

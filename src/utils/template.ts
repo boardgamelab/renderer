@@ -1,11 +1,17 @@
 import { Schema, State } from '@boardgamelab/components';
 
 export function GetTemplate(schema: Schema, state: State, id: string) {
-  let template = state.objects[id].template;
+  let template = null;
 
-  if (!template) {
+  if (id in state.objects) {
+    const t = state.objects[id].template;
+    if (t) template = t;
+  }
+
+  if (!template && id in schema.objects) {
     const { templateID } = schema.objects[id];
-    template = schema.templates[templateID];
+    const t = schema.templates[templateID];
+    if (t) template = t;
   }
 
   return template;

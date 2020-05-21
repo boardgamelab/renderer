@@ -128,6 +128,10 @@ export function CheckForDrop(
   toSVGPoint: Function
 ): DropInfo | null {
   const template = GetTemplate(schema, state, draggedObjectID);
+  if (!template) {
+    return null;
+  }
+
   const { geometry } = template;
 
   const boundingBox: any = {
@@ -169,6 +173,9 @@ export function CheckForDrop(
     }
 
     const template = GetTemplate(schema, state, id);
+    if (!template) {
+      continue;
+    }
 
     // Don't try to drop on player hand.
     if (template.type === Component.HAND) {
