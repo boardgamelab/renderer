@@ -33,7 +33,6 @@
   $: menu = Object.keys($activeObjects).length;
 
   const { dispatchActions, renderingOrder, stateStore, activeObjects } = Init(
-    schema,
     state,
     svg,
     hand,

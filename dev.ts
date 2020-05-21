@@ -1,6 +1,7 @@
 import { Component, State, Schema } from '@boardgamelab/components';
 
 import Sandbox from './src/Sandbox.svelte';
+import { writable } from 'svelte/store';
 
 const schema: Schema = {
   assets: {},
@@ -34,7 +35,7 @@ const state: State = {
 new Sandbox({
   target: document.getElementById('root'),
   props: {
-    schema,
-    state,
+    schema: writable(schema),
+    state: writable(state),
   },
 });
