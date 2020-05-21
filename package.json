@@ -19,7 +19,7 @@
   "author": "Nicolo Davis <nicolodavis@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@boardgamelab/components": "0.0.9",
+    "@boardgamelab/components": "0.0.10",
     "rollup": "^2.3.2",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
