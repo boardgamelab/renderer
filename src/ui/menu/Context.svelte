@@ -56,6 +56,7 @@
       {
         kind: 'shuffle',
         id,
+        seed: shortid(),
       },
     ]);
   }
