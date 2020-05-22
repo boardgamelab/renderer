@@ -67,11 +67,8 @@
 
     if (Object.keys($activeObjects).length === 1) {
       const id = Object.keys($activeObjects)[0];
-      if (
-        id in $state.objects &&
-        $state.objects[id].children &&
-        $state.objects[id].children.length
-      ) {
+      const template = GetTemplate($schema, $state, id);
+      if (template && template.type === Component.DECK) {
         menu = DECK;
       }
     }
