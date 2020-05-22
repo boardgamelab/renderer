@@ -96,7 +96,7 @@ export function pan(node: Element, opts: Opts) {
     }
 
     anchor = ToSVGPoint(mouseEvent, node as SVGGraphicsElement);
-    node.addEventListener('mousemove', MouseMove);
+    window.addEventListener('mousemove', MouseMove);
     window.addEventListener('mouseup', Cancel);
   }
 
@@ -117,11 +117,11 @@ export function pan(node: Element, opts: Opts) {
   }
 
   function Cancel() {
-    node.removeEventListener('mousemove', MouseMove);
     node.removeEventListener('touchmove', TouchMove);
     node.removeEventListener('touchcancel', Cancel);
     node.removeEventListener('touchend', Cancel);
     node.removeEventListener('touchleave', Cancel);
+    window.removeEventListener('mousemove', MouseMove);
     window.removeEventListener('mouseup', Cancel);
     anchor = null;
   }
