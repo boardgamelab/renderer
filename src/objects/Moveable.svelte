@@ -106,15 +106,17 @@
     );
     const dropRelativeToParent = RelativeToParent(drop);
 
-    await Drop(
-      id,
-      drop,
-      absolutePosition,
-      dropRelativeToParent,
-      position,
-      dispatchActions,
-      activeObjects
-    );
+    if (drop) {
+      await position.set(
+        {
+          x: dropRelativeToParent.x,
+          y: dropRelativeToParent.y,
+        },
+        { duration: 150 }
+      );
+    }
+
+    Drop(id, drop, absolutePosition, dispatchActions, activeObjects);
   }
 
   const Drag = ({ detail }) => {

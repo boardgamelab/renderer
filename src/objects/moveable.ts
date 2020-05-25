@@ -14,24 +14,14 @@ interface DropInfo {
   targetIsCurrentParent: boolean;
 }
 
-export async function Drop(
+export function Drop(
   id: string,
   drop: DropInfo | null,
   absolutePosition: any,
-  dropRelativeToParent: any,
-  position: any,
   dispatchActions: any,
   activeObjects: Writable<object>
 ) {
   if (drop) {
-    await position.set(
-      {
-        x: dropRelativeToParent.x,
-        y: dropRelativeToParent.y,
-      },
-      { duration: 150 }
-    );
-
     if (drop.targetIsCurrentParent) {
       return;
     }
