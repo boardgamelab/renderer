@@ -92,7 +92,7 @@
 
 <style>
   .item {
-    @apply text-xs bg-white select-none p-1 px-4 border border-gray-300 rounded cursor-pointer transition duration-200 pointer-events-auto;
+    @apply text-xs uppercase rounded text-gray-800 font-bold select-none p-1 px-4 cursor-pointer transition duration-200 pointer-events-auto;
   }
 
   .item:hover {
