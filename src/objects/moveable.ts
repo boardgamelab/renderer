@@ -132,21 +132,23 @@ export function CheckForDrop(
   };
 
   // Check if we should drop on the player hand.
-  const rect = hand!.el.getBoundingClientRect();
-  const handPosition = toSVGPoint({
-    x: rect.left + rect.width / 2,
-    y: rect.top,
-  });
-  if (rawPosition.y + geometry.height > handPosition.y) {
-    return {
-      x: handPosition.x,
-      y: handPosition.y,
-      width: rect.width,
-      height: rect.height,
-      targetType: Component.HAND,
-      targetIsCurrentParent: false,
-      targetID: 'hand',
-    };
+  if (hand?.el) {
+    const rect = hand.el.getBoundingClientRect();
+    const handPosition = toSVGPoint({
+      x: rect.left + rect.width / 2,
+      y: rect.top,
+    });
+    if (rawPosition.y + geometry.height > handPosition.y) {
+      return {
+        x: handPosition.x,
+        y: handPosition.y,
+        width: rect.width,
+        height: rect.height,
+        targetType: Component.HAND,
+        targetIsCurrentParent: false,
+        targetID: hand.el.dataset.handid as string,
+      };
+    }
   }
 
   for (let id in state.objects) {

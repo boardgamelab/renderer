@@ -10,16 +10,19 @@
   const renderer = getContext('renderer');
   const highlight = getContext('highlight');
 
-  const { templateID } = $schema.objects[id];
-  const template = $schema.templates[templateID];
+  let geometry = { width: 0, height: 0 };
 
-  let { width, height } = template.geometry;
+  let { width, height } = geometry;
   const fill = '#fff';
   const stroke = '#111';
 
   $: {
-    width = template.geometry.width;
-    height = template.geometry.height;
+    if (id in $schema.objects) {
+      const { templateID } = $schema.objects[id];
+      const template = $schema.templates[templateID];
+      width = template.geometry.width;
+      height = template.geometry.height;
+    }
   }
 </script>
 
@@ -37,7 +40,7 @@
 
   <rect data-id={id} {width} {height} {fill} {stroke} />
 
-  {#if renderer}
+  {#if renderer && id in $schema.objects}
     <svelte:component
       this={renderer}
       {width}

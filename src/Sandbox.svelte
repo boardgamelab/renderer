@@ -19,18 +19,26 @@
   export let renderer = null;
   export let schema;
   export let state;
+  export let seatID = null;
 
   const dispatch = createEventDispatcher();
 
   setContext('schema', schema);
   setContext('renderer', renderer);
 
-  let debug = false;
+  let debug = true;
   let svg = { el: null };
   let hand = { el: null };
 
+  let handID = null;
   let menu = null;
   $: menu = Object.keys($activeObjects).length;
+
+  $: {
+    if ($state.seats && seatID in $state.seats) {
+      handID = $state.seats[seatID].handID;
+    }
+  }
 
   const { dispatchActions, renderingOrder, stateStore, activeObjects } = Init(
     state,
@@ -120,9 +128,14 @@
     {/if}
   </svg>
 
-  <div bind:this={hand.el} class="fixed bottom-0 left-0 w-full">
-    <Hand ref={hand} hand={$stateStore.objects['hand']} />
-  </div>
+  {#if handID}
+    <div
+      bind:this={hand.el}
+      data-handid={handID}
+      class="fixed bottom-0 left-0 w-full">
+      <Hand ref={hand} hand={$stateStore.objects[handID]} />
+    </div>
+  {/if}
 </span>
 
 {#if menu}
@@ -136,8 +149,8 @@
 {#if debug}
   <div
     on:wheel|stopPropagation
-    class="hidden md:block fixed z-50 top-0 mt-16 overflow-y-auto h-screen
-    right-0 bg-white shadow-lg p-8 text-xs">
+    class="hidden opacity-75 md:block fixed z-50 top-0 mt-16 overflow-y-auto
+    h-screen right-0 bg-white shadow-lg p-8 text-xs">
     <pre>{JSON.stringify($activeObjects, null, 2)}</pre>
     <pre>{JSON.stringify($stateStore, null, 2)}</pre>
   </div>
