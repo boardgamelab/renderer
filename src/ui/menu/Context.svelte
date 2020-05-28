@@ -9,6 +9,7 @@
 
   const DECK = 'deck';
   const CARDS = 'cards';
+  const CARD = 'card';
 
   function MakeDeck() {
     const firstCardID = Object.keys($activeObjects)[0];
@@ -61,6 +62,16 @@
     ]);
   }
 
+  function FlipCard() {
+    const id = Object.keys($activeObjects)[0];
+    dispatchActions([
+      {
+        kind: 'card/flip',
+        id,
+      },
+    ]);
+  }
+
   let menu = null;
   $: {
     menu = null;
@@ -70,6 +81,9 @@
       const template = GetTemplate($schema, $state, id);
       if (template && template.type === Component.DECK) {
         menu = DECK;
+      }
+      if (template && template.type === Component.CARD) {
+        menu = CARD;
       }
     }
 
@@ -112,6 +126,10 @@
 
     {#if menu === CARDS}
       <div on:click={MakeDeck} class="item">group</div>
+    {/if}
+
+    {#if menu === CARD}
+      <div on:click={FlipCard} class="item">flip</div>
     {/if}
   </div>
 {/if}
