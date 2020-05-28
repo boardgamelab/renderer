@@ -84,5 +84,5 @@
   width="100"
   viewBox="0 0 600 720"
   xmlns="http://www.w3.org/2000/svg">
-  <Card {id} active={id in $activeObjects} />
+  <Card {id} forceFaceUp={true} active={id in $activeObjects} />
 </svg>

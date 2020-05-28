@@ -2,6 +2,7 @@
   export let id;
   export let isDragging = false;
   export let active = false;
+  export let forceFaceUp = false;
 
   import { getContext } from 'svelte';
   import { selectionColor } from '../../defaults.ts';
@@ -17,7 +18,7 @@
   let { width, height } = geometry;
   const fill = '#fff';
   const stroke = '#111';
-  let faceUp = true;
+  let faceDown = false;
 
   $: {
     if (id in $schema.objects) {
@@ -28,9 +29,9 @@
     }
 
     if (id in $state.objects) {
-      faceUp = true;
-      if ($state.objects[id].faceUp === false) {
-        faceUp = false;
+      faceDown = false;
+      if ($state.objects[id].faceDown) {
+        faceDown = true;
       }
     }
   }
@@ -48,7 +49,9 @@
       fill-opacity="50%" />
   {/if}
 
-  {#if faceUp}
+  {#if faceDown && !forceFaceUp}
+    <Back {id} {width} {height} />
+  {:else}
     <rect data-id={id} {width} {height} {fill} {stroke} />
 
     {#if renderer && id in $schema.objects}
@@ -59,8 +62,6 @@
         templates={$schema.templates}
         object={$schema.objects[id]} />
     {/if}
-  {:else}
-    <Back {id} {width} {height} />
   {/if}
 
   {#if id in $highlight || active}
