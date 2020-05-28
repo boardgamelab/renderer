@@ -61,6 +61,16 @@
     ]);
   }
 
+  function RotateCard() {
+    const id = Object.keys($activeObjects)[0];
+    dispatchActions([
+      {
+        kind: 'card/rotate',
+        id,
+      },
+    ]);
+  }
+
   function FlipDeck() {
     const id = Object.keys($activeObjects)[0];
     dispatchActions([
@@ -141,6 +151,7 @@
 
     {#if menu === CARD}
       <div on:click={FlipCard} class="item">flip</div>
+      <div on:click={RotateCard} class="item">rotate</div>
     {/if}
   </div>
 {/if}

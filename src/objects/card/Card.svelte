@@ -5,6 +5,7 @@
   export let forceFaceUp = false;
 
   import { getContext } from 'svelte';
+  import { tweened } from 'svelte/motion';
   import { selectionColor } from '../../defaults.ts';
   import Back from './Back.svelte';
 
@@ -19,6 +20,7 @@
   const fill = '#fff';
   const stroke = '#111';
   let faceDown = false;
+  let rotation = tweened(0, { duration: 100 });
 
   $: {
     if (id in $schema.objects) {
@@ -29,15 +31,21 @@
     }
 
     if (id in $state.objects) {
+      const card = $state.objects[id];
       faceDown = false;
-      if ($state.objects[id].faceDown) {
+      if (card.faceDown) {
         faceDown = true;
+      }
+      if (card.rotation !== undefined) {
+        rotation.set(card.rotation);
+      } else {
+        rotation.set(0);
       }
     }
   }
 </script>
 
-<g>
+<g transform="rotate({$rotation} {width / 2} {height / 2})">
   {#if isDragging}
     <rect
       filter="url(#blur)"
