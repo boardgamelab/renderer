@@ -51,23 +51,33 @@
     activeObjects.set({ [newID]: true });
   }
 
-  function Shuffle() {
-    const id = Object.keys($activeObjects)[0];
-    dispatchActions([
-      {
-        kind: 'shuffle',
-        id,
-        seed: shortid(),
-      },
-    ]);
-  }
-
   function FlipCard() {
     const id = Object.keys($activeObjects)[0];
     dispatchActions([
       {
         kind: 'card/flip',
         id,
+      },
+    ]);
+  }
+
+  function FlipDeck() {
+    const id = Object.keys($activeObjects)[0];
+    dispatchActions([
+      {
+        kind: 'deck/flip',
+        id,
+      },
+    ]);
+  }
+
+  function Shuffle() {
+    const id = Object.keys($activeObjects)[0];
+    dispatchActions([
+      {
+        kind: 'deck/shuffle',
+        id,
+        seed: shortid(),
       },
     ]);
   }
@@ -122,6 +132,7 @@
   <div class="p-4 flex flex-row justify-center pointer-events-none">
     {#if menu === DECK}
       <div on:click={Shuffle} class="item">shuffle</div>
+      <div on:click={FlipDeck} class="item">flip</div>
     {/if}
 
     {#if menu === CARDS}
