@@ -150,8 +150,8 @@
     {/if}
 
     {#if menu === CARD}
-      <div on:click={FlipCard} class="item">flip</div>
       <div on:click={RotateCard} class="item">rotate</div>
+      <div on:click={FlipCard} class="item">flip</div>
     {/if}
   </div>
 {/if}
