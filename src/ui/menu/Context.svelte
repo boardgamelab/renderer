@@ -139,7 +139,7 @@
 </style>
 
 {#if menu}
-  <div class="p-4 flex flex-row justify-center pointer-events-none">
+  <div class="p-4 flex flex-row justify-center">
     {#if menu === DECK}
       <div on:click={Shuffle} class="item">shuffle</div>
       <div on:click={FlipDeck} class="item">flip</div>
