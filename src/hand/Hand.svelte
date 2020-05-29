@@ -39,11 +39,9 @@
     <div class="pb-4">PLAYER HAND</div>
   {/if}
 
-  <div class="flex flex-row items-center">
-    {#each list as id (id)}
-      <div animate:flip={{ duration: 100 }}>
-        <HandObject {id} />
-      </div>
-    {/each}
-  </div>
+  {#each list as id (id)}
+    <div animate:flip={{ duration: 100 }}>
+      <HandObject {id} />
+    </div>
+  {/each}
 </div>
