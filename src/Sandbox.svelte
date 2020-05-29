@@ -106,7 +106,6 @@
     use:select={{ panX: $panX, panY: $panY, activeObjects, selectBox, schema: $schema, state: $stateStore }}
     use:zoom={{ zoomLevel }}
     on:touchmove|preventDefault={() => {}}
-    on:click|self={CancelSelect}
     on:contextmenu|preventDefault={() => {}}
     xmlns="http://www.w3.org/2000/svg">
     <Effects />

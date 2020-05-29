@@ -39,6 +39,7 @@ interface Point {
 export function select(svg: SVGSVGElement, opts: Opts) {
   let o = opts;
   let selectBoxAnchor: Point | null = null;
+  let selectBox = false;
 
   function TouchDrag(e: TouchEvent) {
     if (e.touches.length === 1) {
@@ -48,6 +49,8 @@ export function select(svg: SVGSVGElement, opts: Opts) {
 
   function Drag(e: MouseEvent | Touch) {
     const point = ToSVGPoint(e as MouseEvent, svg);
+
+    selectBox = true;
 
     const x1 = Math.min(selectBoxAnchor!.x, point.x);
     const x2 = Math.max(selectBoxAnchor!.x, point.x);
@@ -122,6 +125,13 @@ export function select(svg: SVGSVGElement, opts: Opts) {
   }
 
   function Cancel() {
+    // No select box was created and no element was selected.
+    // Cancel any existing selection.
+    if (!selectBox) {
+      o.activeObjects.set({});
+    }
+
+    selectBox = false;
     selectBoxAnchor = null;
     o.selectBox.set(null);
     window.removeEventListener('mousemove', Drag);
