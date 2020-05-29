@@ -132,7 +132,7 @@
       bind:this={hand.el}
       data-handid={handID}
       class="fixed bottom-0 left-0 w-full">
-      <Hand ref={hand} hand={$stateStore.objects[handID]} />
+      <Hand ref={hand} {handID} hand={$stateStore.objects[handID]} />
     </div>
   {/if}
 </span>

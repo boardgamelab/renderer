@@ -1,7 +1,6 @@
 <script>
-  export let id = 'hand';
+  export let handID;
   export let hand = {};
-  export let hoverObject = null;
 
   import HandObject from './HandObject.svelte';
   import { flip } from 'svelte/animate';
@@ -24,10 +23,6 @@
     background: rgba(200, 200, 200, 0.1);
   }
 
-  .hover {
-    background: rgba(200, 200, 200, 0.5);
-  }
-
   .active {
     border: none;
     background: rgba(200, 200, 200, 0.6);
@@ -37,10 +32,9 @@
 <div
   id="hand"
   on:contextmenu|preventDefault={() => {}}
-  class:active={id in $highlight}
+  class:active={handID in $highlight}
   data-hand="true"
-  class="hand"
-  class:hover={hoverObject}>
+  class="hand">
   {#if list.length === 0}
     <div class="pb-4">PLAYER HAND</div>
   {/if}
