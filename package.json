@@ -44,7 +44,7 @@
     "prettier": "1.19.1",
     "prettier-plugin-svelte": "^0.7.0",
     "rollup-plugin-svelte": "^5.2.1",
-    "svelte": "^3.20.1",
+    "svelte": "^3.23.0",
     "ts-loader": "^6.2.2",
     "typescript": "^3.7.5"
   },

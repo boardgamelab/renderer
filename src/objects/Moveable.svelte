@@ -15,7 +15,7 @@
   const schema = getContext('schema');
   const highlight = getContext('highlight');
   const toSVGPoint = getContext('to-svg-point');
-  const position = tweened(null, { duration: 1 });
+  const position = tweened(null, { duration: 0 });
 
   let x;
   let y;

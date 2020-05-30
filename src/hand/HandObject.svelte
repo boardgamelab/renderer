@@ -9,7 +9,7 @@
   const { activeObjects, dispatchActions, svg } = getContext('context');
   const schema = getContext('schema');
 
-  const offset = tweened({ x: 0, y: 0 }, { duration: 1 });
+  const offset = tweened({ x: 0, y: 0 }, { duration: 0 });
   const scale = tweened(1, { duration: 100 });
   let ref;
   let snapshot = null;
