@@ -34,7 +34,7 @@ export function Drop(
       });
       dispatchActions([
         {
-          kind: 'add-to',
+          type: 'add-to',
           id,
           parent: drop.targetID,
         },
@@ -48,15 +48,15 @@ export function Drop(
 function DropOnTable(dispatchActions: any, id: string, absolutePosition: any) {
   dispatchActions([
     {
-      kind: 'position',
+      type: 'add-to',
+      id,
+      parent: null,
+    },
+    {
+      type: 'position',
       id,
       x: absolutePosition.x,
       y: absolutePosition.y,
-    },
-    {
-      kind: 'add-to',
-      id,
-      parent: null,
     },
   ]);
 }
@@ -76,7 +76,7 @@ function DropInNewDeck(
   dispatchActions([
     // Create a new ephemeral deck.
     {
-      kind: 'create',
+      type: 'create',
       id: newID,
       template: {
         type: Component.DECK,
@@ -89,20 +89,20 @@ function DropInNewDeck(
     },
     // Position deck over card.
     {
-      kind: 'position',
+      type: 'position',
       id: newID,
       x: drop.x,
       y: drop.y,
     },
     // Add drop target to new deck.
     {
-      kind: 'add-to',
+      type: 'add-to',
       id: drop.targetID,
       parent: newID,
     },
     // Add dragged card to new deck.
     {
-      kind: 'add-to',
+      type: 'add-to',
       id,
       parent: newID,
     },

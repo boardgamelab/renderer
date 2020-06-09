@@ -58,13 +58,13 @@
   const DragEnd = ({ detail }) => {
     dispatchActions([
       {
-        kind: 'position',
+        type: 'position',
         id: detail.id,
         x: detail.svg.x - ToSVGLength(cursorOffset.dx, svg.el),
         y: detail.svg.y - ToSVGLength(cursorOffset.dy, svg.el),
       },
       {
-        kind: 'add-to',
+        type: 'add-to',
         id: detail.id,
         parent: null,
       },

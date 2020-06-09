@@ -48,7 +48,7 @@
     // other objects while being dragged.
     dispatchActions([
       {
-        kind: 'raise',
+        type: 'raise',
         id: toRaise,
       },
     ]);

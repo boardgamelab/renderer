@@ -1,4 +1,4 @@
-import { Schema, State, Action } from '@boardgamelab/components';
+import { State, Action } from '@boardgamelab/components';
 import type { createEventDispatcher } from 'svelte';
 import type { Readable } from 'svelte/store';
 import { writable, derived, get } from 'svelte/store';

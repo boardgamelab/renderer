@@ -19,7 +19,7 @@
 
     const actions = [
       {
-        kind: 'create',
+        type: 'create',
         id: newID,
         template: {
           type: Component.DECK,
@@ -31,7 +31,7 @@
         },
       },
       {
-        kind: 'position',
+        type: 'position',
         id: newID,
         x: firstCard.x,
         y: firstCard.y,
@@ -40,7 +40,7 @@
 
     Object.keys($activeObjects).forEach(id => {
       actions.push({
-        kind: 'add-to',
+        type: 'add-to',
         id,
         parent: newID,
       });
@@ -55,7 +55,8 @@
     const id = Object.keys($activeObjects)[0];
     dispatchActions([
       {
-        kind: 'card/flip',
+        type: 'card',
+        subtype: 'flip',
         id,
       },
     ]);
@@ -65,7 +66,8 @@
     const id = Object.keys($activeObjects)[0];
     dispatchActions([
       {
-        kind: 'card/rotate',
+        type: 'card',
+        subtype: 'rotate',
         id,
       },
     ]);
@@ -75,7 +77,8 @@
     const id = Object.keys($activeObjects)[0];
     dispatchActions([
       {
-        kind: 'deck/flip',
+        type: 'deck',
+        subtype: 'flip',
         id,
       },
     ]);
@@ -85,7 +88,8 @@
     const id = Object.keys($activeObjects)[0];
     dispatchActions([
       {
-        kind: 'deck/shuffle',
+        type: 'deck',
+        subtype: 'shuffle',
         id,
         seed: shortid(),
       },

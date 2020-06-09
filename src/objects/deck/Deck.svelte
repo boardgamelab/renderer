@@ -40,8 +40,8 @@
   $: {
     x = $position.x;
     y = $position.y;
-    width = template.geometry.width;
-    height = template.geometry.height;
+    width = template.geometry.width || 0;
+    height = template.geometry.height || 0;
   }
 </script>
 
