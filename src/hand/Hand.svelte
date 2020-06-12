@@ -30,7 +30,8 @@
 </style>
 
 <div
-  id="hand"
+  data-id={handID}
+  data-droppable="true"
   on:contextmenu|preventDefault={() => {}}
   class:active={handID in $highlight}
   data-hand="true"

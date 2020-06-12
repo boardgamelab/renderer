@@ -50,6 +50,7 @@ interface Point {
  */
 export function drag(node: Element, opts: DragOpts) {
   let target: any = null;
+  let dropTarget: any = null;
   let anchorScreen: Point | null = null;
   let anchorSVG: Point | null = null;
   let pointScreen: Point | null = null;
@@ -57,9 +58,12 @@ export function drag(node: Element, opts: DragOpts) {
 
   function CreateCustomEvent(name: string, target: HTMLElement) {
     const id = target.dataset.id;
+    const dropID = dropTarget?.dataset.id || null;
+
     return new CustomEvent(name, {
       detail: {
         id,
+        dropID,
         svg: {
           x: pointSVG!.x,
           y: pointSVG!.y,
@@ -81,6 +85,8 @@ export function drag(node: Element, opts: DragOpts) {
     pointSVG = ToSVGPoint(e, opts.svg.el, opts.panX, opts.panY);
     pointScreen = { x: e.clientX, y: e.clientY };
 
+    dropTarget = (e.target as Element).closest('[data-droppable=true]');
+
     target!.dispatchEvent(CreateCustomEvent('move', target));
   }
 
@@ -96,8 +102,11 @@ export function drag(node: Element, opts: DragOpts) {
 
   function Cancel() {
     target!.dispatchEvent(CreateCustomEvent('moveend', target));
+    target!.style.pointerEvents = 'auto';
+
     anchorSVG = null;
     target = null;
+    dropTarget = null;
     window.removeEventListener('mousemove', MouseMove);
     window.removeEventListener('touchmove', TouchMove);
     window.removeEventListener('mouseup', Cancel);
@@ -129,6 +138,8 @@ export function drag(node: Element, opts: DragOpts) {
       };
 
       target!.dispatchEvent(CreateCustomEvent('movestart', target));
+      target!.style.pointerEvents = 'none';
+
       window.addEventListener('mousemove', MouseMove);
       window.addEventListener('mouseup', Cancel);
     }
@@ -150,6 +161,7 @@ export function drag(node: Element, opts: DragOpts) {
       pointScreen = anchorScreen = { x: touch.clientX, y: touch.clientY };
 
       target!.dispatchEvent(CreateCustomEvent('movestart', target));
+      target!.style.pointerEvents = 'none';
 
       window.addEventListener('touchmove', TouchMove, { passive: false });
       window.addEventListener('touchend', Cancel);

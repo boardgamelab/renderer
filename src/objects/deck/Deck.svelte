@@ -45,7 +45,10 @@
   }
 </script>
 
-<g transform="rotate({$rotation}, {width / 2}, {height / 2})">
+<g
+  data-id={id}
+  data-droppable="true"
+  transform="rotate({$rotation}, {width / 2}, {height / 2})">
   {#if children.length}
     {#if id in $highlight || active}
       <rect
