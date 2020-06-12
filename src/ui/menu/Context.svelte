@@ -91,7 +91,7 @@
         type: 'deck',
         subtype: 'shuffle',
         id,
-        seed: shortid(),
+        seed: Math.floor(Math.random() * 1000),
       },
     ]);
   }
