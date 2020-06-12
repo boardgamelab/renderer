@@ -24,7 +24,6 @@ export function Init(
   });
 
   const dispatchActions = (actions: Action[]) => {
-    console.log(actions);
     dispatch('action', { actions });
   };
 
