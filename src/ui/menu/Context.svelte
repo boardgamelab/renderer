@@ -8,6 +8,7 @@
   const { state, dispatchActions, activeObjects } = getContext('context');
 
   const DECK = 'deck';
+  const ANCHOR = 'anchor';
   const CARDS = 'cards';
   const CARD = 'card';
 
@@ -96,6 +97,22 @@
     ]);
   }
 
+  function Custom() {
+    const id = Object.keys($activeObjects)[0];
+    dispatchActions([
+      {
+        type: 'custom',
+        actions: [
+          {
+            type: 'deck',
+            subtype: 'flip',
+            id,
+          },
+        ],
+      },
+    ]);
+  }
+
   let menu = null;
   $: {
     menu = null;
@@ -105,6 +122,9 @@
       const template = GetTemplate($schema, $state, id);
       if (template && template.type === Component.DECK) {
         menu = DECK;
+      }
+      if (template && template.type === Component.ANCHOR) {
+        menu = ANCHOR;
       }
       if (template && template.type === Component.CARD) {
         menu = CARD;
@@ -147,6 +167,12 @@
     {#if menu === DECK}
       <div on:click={Shuffle} class="item">shuffle</div>
       <div on:click={FlipDeck} class="item">flip</div>
+    {/if}
+
+    {#if menu === ANCHOR}
+      <div on:click={Shuffle} class="item">shuffle</div>
+      <div on:click={FlipDeck} class="item">flip</div>
+      <div on:click={Custom} class="item">custom</div>
     {/if}
 
     {#if menu === CARDS}
