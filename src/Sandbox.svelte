@@ -26,7 +26,7 @@
   setContext('schema', schema);
   setContext('renderer', renderer);
 
-  let debug = true;
+  let debug = false;
   let svg = { el: null };
   let hand = { el: null };
 
