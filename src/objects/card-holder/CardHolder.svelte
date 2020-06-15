@@ -9,11 +9,13 @@
   import Moveable from '../Moveable.svelte';
   import Card from '../card/Card.svelte';
 
+  const schema = getContext('schema');
   const { state } = getContext('context');
   const highlight = getContext('highlight');
   const { template } = $state.objects[id];
   let { x, y } = $position;
-  let { width, height } = template.geometry;
+  let width = 0;
+  let height = 0;
   const fill = '#fff';
   const stroke = '#111';
 
@@ -27,6 +29,13 @@
   let shuffleID = null;
   let children = [];
   $: {
+    if (id in $schema.objects) {
+      const { templateID } = $schema.objects[id];
+      const template = $schema.templates[templateID];
+      width = template.geometry.width;
+      height = template.geometry.height;
+    }
+
     if (id in $state.objects) {
       const newID = $state.objects[id].shuffleID;
       if (newID && newID !== shuffleID) {
@@ -40,8 +49,6 @@
   $: {
     x = $position.x;
     y = $position.y;
-    width = template.geometry.width || 0;
-    height = template.geometry.height || 0;
   }
 </script>
 
