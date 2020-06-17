@@ -35,8 +35,8 @@ export function Drop(
       dispatchActions([
         {
           type: 'add-to',
-          id,
-          parent: drop.targetID,
+          subject: { id },
+          dest: { id: drop.targetID },
         },
       ]);
     }
@@ -49,12 +49,12 @@ function DropOnTable(dispatchActions: any, id: string, absolutePosition: any) {
   dispatchActions([
     {
       type: 'add-to',
-      id,
-      parent: null,
+      subject: { id },
+      dest: null,
     },
     {
       type: 'position',
-      id,
+      subject: { id },
       x: absolutePosition.x,
       y: absolutePosition.y,
     },
@@ -90,21 +90,21 @@ function DropInNewDeck(
     // Position deck over card.
     {
       type: 'position',
-      id: newID,
+      subject: { id: newID },
       x: drop.x,
       y: drop.y,
     },
     // Add drop target to new deck.
     {
       type: 'add-to',
-      id: drop.targetID,
-      parent: newID,
+      subject: { id: drop.targetID },
+      dest: { id: newID },
     },
     // Add dragged card to new deck.
     {
       type: 'add-to',
-      id,
-      parent: newID,
+      subject: { id },
+      dest: { id: newID },
     },
   ]);
 }

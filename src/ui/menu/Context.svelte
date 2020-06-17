@@ -33,7 +33,7 @@
       },
       {
         type: 'position',
-        id: newID,
+        subject: { id: newID },
         x: firstCard.x,
         y: firstCard.y,
       },
@@ -42,8 +42,8 @@
     Object.keys($activeObjects).forEach(id => {
       actions.push({
         type: 'add-to',
-        id,
-        parent: newID,
+        subject: { id },
+        dest: { id: newID },
       });
     });
 

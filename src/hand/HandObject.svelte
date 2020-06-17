@@ -59,14 +59,14 @@
     dispatchActions([
       {
         type: 'position',
-        id: detail.id,
+        subject: { id: detail.id },
         x: detail.svg.x - ToSVGLength(cursorOffset.dx, svg.el),
         y: detail.svg.y - ToSVGLength(cursorOffset.dy, svg.el),
       },
       {
         type: 'add-to',
-        id: detail.id,
-        parent: null,
+        subject: { id: detail.id },
+        dest: null,
       },
     ]);
   };
