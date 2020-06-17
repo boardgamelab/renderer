@@ -1,4 +1,6 @@
 <script>
+  export let handID;
+
   import { getContext } from 'svelte';
 
   import { Component } from '@boardgamelab/components';
@@ -102,11 +104,26 @@
     dispatchActions([
       {
         type: 'custom',
-        actions: [
+        steps: [
           {
-            type: 'deck',
-            subtype: 'flip',
-            id,
+            condition: {
+              boolean: {
+                property: {
+                  type: 'container',
+                  subject: { id },
+                  property: {
+                    boolean: {
+                      type: 'is-empty',
+                    },
+                  },
+                },
+              },
+            },
+            action: {
+              type: 'add-to',
+              subject: { id: handID },
+              dest: { id },
+            },
           },
         ],
       },
