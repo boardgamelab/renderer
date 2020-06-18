@@ -1,7 +1,7 @@
 import { State, Schema, Component } from '@boardgamelab/components';
-import Deck from './deck/Deck.svelte';
-import Card from './card/Card.svelte';
-import CardHolder from './card-holder/CardHolder.svelte';
+import Anchor from './container/Anchor.svelte';
+import Card from './tile/card/Card.svelte';
+import Deck from './container/Deck.svelte';
 
 export function GetComponent(schema: Schema, state: State, id: string) {
   if (!(id in state.objects)) {
@@ -29,8 +29,8 @@ export function GetComponent(schema: Schema, state: State, id: string) {
       return Card;
     case Component.DECK:
       return Deck;
-    case Component.CARD_HOLDER:
-      return CardHolder;
+    case Component.ANCHOR:
+      return Anchor;
     case Component.HAND:
       return null;
     default:

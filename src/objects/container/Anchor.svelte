@@ -7,13 +7,16 @@
   import { tweened } from 'svelte/motion';
   import { selectionColor } from '../../defaults.ts';
   import Moveable from '../Moveable.svelte';
-  import Card from '../card/Card.svelte';
+  import Card from '../tile/card/Card.svelte';
 
+  const renderer = getContext('renderer');
+  const schema = getContext('schema');
   const { state } = getContext('context');
   const highlight = getContext('highlight');
   const { template } = $state.objects[id];
   let { x, y } = $position;
-  let { width, height } = template.geometry;
+  let width = 0;
+  let height = 0;
   const fill = '#fff';
   const stroke = '#111';
 
@@ -27,6 +30,13 @@
   let shuffleID = null;
   let children = [];
   $: {
+    if (id in $schema.objects) {
+      const { templateID } = $schema.objects[id];
+      const template = $schema.templates[templateID];
+      width = template.geometry.width;
+      height = template.geometry.height;
+    }
+
     if (id in $state.objects) {
       const newID = $state.objects[id].shuffleID;
       if (newID && newID !== shuffleID) {
@@ -40,8 +50,6 @@
   $: {
     x = $position.x;
     y = $position.y;
-    width = template.geometry.width || 0;
-    height = template.geometry.height || 0;
   }
 </script>
 
@@ -49,6 +57,25 @@
   data-id={id}
   data-droppable="true"
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
+  <rect
+    x={10}
+    y={10}
+    width={width - 20}
+    height={height - 20}
+    fill="#fff"
+    stroke="#aaa"
+    stroke-width="10"
+    stroke-dasharray="50,25" />
+
+  {#if renderer && id in $schema.objects}
+    <svelte:component
+      this={renderer}
+      {width}
+      {height}
+      templates={$schema.templates}
+      object={$schema.objects[id]} />
+  {/if}
+
   {#if children.length}
     {#if id in $highlight || active}
       <rect

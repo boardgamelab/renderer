@@ -6,7 +6,7 @@
 
   import { getContext } from 'svelte';
   import { tweened } from 'svelte/motion';
-  import { selectionColor } from '../../defaults.ts';
+  import { selectionColor } from '../../../defaults.ts';
   import Back from './Back.svelte';
 
   const { state } = getContext('context');

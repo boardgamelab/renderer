@@ -1,7 +1,7 @@
 <script>
   export let id;
 
-  import Card from '../objects/card/Card.svelte';
+  import Card from '../objects/tile/card/Card.svelte';
   import { tweened } from 'svelte/motion';
   import { getContext } from 'svelte';
   import { ToClientLength, ToSVGLength } from '../utils/svg.ts';
