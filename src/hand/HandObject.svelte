@@ -14,8 +14,13 @@
   let ref;
   let snapshot = null;
   let cursorOffset = null;
-  const { templateID } = $schema.objects[id];
-  const { geometry } = $schema.templates[templateID];
+
+  let geometry = { width: 0 };
+
+  if (id in $schema.objects) {
+    const { templateID } = $schema.objects[id];
+    geometry = $schema.templates[templateID].geometry;
+  }
 
   const DragStart = ({ detail }) => {
     const rect = ref.getBoundingClientRect();
