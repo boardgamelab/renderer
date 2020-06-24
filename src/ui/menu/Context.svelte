@@ -7,6 +7,7 @@
   import { GetTemplate } from '../../utils/template.ts';
   import shortid from 'shortid';
   const schema = getContext('schema');
+  const seatID = getContext('seatID');
   const { state, dispatchActions, activeObjects } = getContext('context');
 
   const DECK = 'deck';
@@ -22,6 +23,7 @@
 
     const actions = [
       {
+        context: { seatID },
         type: 'create',
         id: newID,
         template: {
@@ -34,6 +36,7 @@
         },
       },
       {
+        context: { seatID },
         type: 'position',
         subject: { id: newID },
         x: firstCard.x,
@@ -41,8 +44,9 @@
       },
     ];
 
-    Object.keys($activeObjects).forEach(id => {
+    Object.keys($activeObjects).forEach((id) => {
       actions.push({
+        context: { seatID },
         type: 'add-to',
         subject: { id },
         dest: { id: newID },
@@ -58,6 +62,7 @@
     const id = Object.keys($activeObjects)[0];
     dispatchActions([
       {
+        context: { seatID },
         type: 'card',
         subtype: 'flip',
         id,
@@ -69,6 +74,7 @@
     const id = Object.keys($activeObjects)[0];
     dispatchActions([
       {
+        context: { seatID },
         type: 'card',
         subtype: 'rotate',
         id,
@@ -80,6 +86,7 @@
     const id = Object.keys($activeObjects)[0];
     dispatchActions([
       {
+        context: { seatID },
         type: 'deck',
         subtype: 'flip',
         id,
@@ -91,9 +98,10 @@
     const id = Object.keys($activeObjects)[0];
     dispatchActions([
       {
+        context: { seatID },
         type: 'deck',
         subtype: 'shuffle',
-        id,
+        subject: { id },
         seed: Math.floor(Math.random() * 1000),
       },
     ]);
@@ -103,9 +111,13 @@
     const id = Object.keys($activeObjects)[0];
     dispatchActions([
       {
-        type: 'custom',
-        steps: [
+        context: { seatID },
+        type: 'advanced',
+        subtype: 'multi',
+        actions: [
           {
+            type: 'advanced',
+            subtype: 'conditional',
             condition: {
               boolean: {
                 property: {
@@ -120,10 +132,25 @@
               },
             },
             action: {
+              seatID,
               type: 'add-to',
               subject: { id: handID },
               dest: { id },
             },
+          },
+          {
+            context: { seatID },
+            type: 'add-to',
+            subject: {
+              reference: {
+                type: 'container',
+                subject: { id },
+                reference: {
+                  type: 'top-child',
+                },
+              },
+            },
+            dest: { reference: { type: 'hand' } },
           },
         ],
       },
@@ -149,7 +176,7 @@
     }
 
     if (Object.keys($activeObjects).length > 1) {
-      const allCards = Object.keys($activeObjects).every(id => {
+      const allCards = Object.keys($activeObjects).every((id) => {
         const template = GetTemplate($schema, $state, id);
         if (!template) {
           return false;

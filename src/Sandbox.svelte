@@ -25,6 +25,7 @@
 
   setContext('schema', schema);
   setContext('renderer', renderer);
+  setContext('seatID', seatID);
 
   let debug = true;
   let svg = { el: null };
