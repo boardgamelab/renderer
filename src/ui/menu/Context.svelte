@@ -111,7 +111,7 @@
     const id = Object.keys($activeObjects)[0];
     dispatchActions([
       {
-        context: { seatID },
+        context: { seatID, subject: { id } },
         type: 'advanced',
         subtype: 'multi',
         actions: [
@@ -139,12 +139,11 @@
             },
           },
           {
-            context: { seatID },
             type: 'add-to',
             subject: {
               reference: {
                 type: 'container',
-                subject: { id },
+                subject: { inherit: {} },
                 reference: {
                   type: 'top-child',
                 },
