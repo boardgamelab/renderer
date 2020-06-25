@@ -4,7 +4,7 @@
   import { getContext } from 'svelte';
 
   import { Component } from '@boardgamelab/components';
-  import { GetTemplate } from '../../utils/template.ts';
+  import { GetTemplate } from '../../../utils/template.ts';
   import shortid from 'shortid';
   const schema = getContext('schema');
   const seatID = getContext('seatID');
@@ -107,62 +107,79 @@
     ]);
   }
 
-  function Custom() {
+  function Behavior(behavior) {
     const id = Object.keys($activeObjects)[0];
     dispatchActions([
       {
         context: { seatID, subject: { id } },
         type: 'advanced',
         subtype: 'multi',
-        actions: [
-          {
-            type: 'advanced',
-            subtype: 'conditional',
-            condition: {
-              boolean: {
-                property: {
-                  type: 'container',
-                  subject: { id },
-                  property: {
-                    boolean: {
-                      type: 'is-empty',
-                    },
-                  },
-                },
-              },
-            },
-            action: {
-              seatID,
-              type: 'add-to',
-              subject: { id: handID },
-              dest: { id },
-            },
-          },
-          {
-            type: 'add-to',
-            subject: {
-              reference: {
-                type: 'container',
-                subject: { inherit: {} },
-                reference: {
-                  type: 'top-child',
-                },
-              },
-            },
-            dest: { reference: { type: 'hand' } },
-          },
-        ],
+        ...behavior.action,
       },
     ]);
   }
 
+  // function Custom() {
+  //   const id = Object.keys($activeObjects)[0];
+  //   dispatchActions([
+  //     {
+  //       context: { seatID, subject: { id } },
+  //       type: 'advanced',
+  //       subtype: 'multi',
+  //       actions: [
+  //         {
+  //           type: 'advanced',
+  //           subtype: 'conditional',
+  //           condition: {
+  //             boolean: {
+  //               property: {
+  //                 type: 'container',
+  //                 subject: { id },
+  //                 property: {
+  //                   boolean: {
+  //                     type: 'is-empty',
+  //                   },
+  //                 },
+  //               },
+  //             },
+  //           },
+  //           action: {
+  //             seatID,
+  //             type: 'add-to',
+  //             subject: { id: handID },
+  //             dest: { id },
+  //           },
+  //         },
+  //         {
+  //           type: 'add-to',
+  //           subject: {
+  //             reference: {
+  //               type: 'container',
+  //               subject: { inherit: {} },
+  //               reference: {
+  //                 type: 'top-child',
+  //               },
+  //             },
+  //           },
+  //           dest: { reference: { type: 'hand' } },
+  //         },
+  //       ],
+  //     },
+  //   ]);
+  // }
+
   let menu = null;
+  let behaviors = [];
   $: {
     menu = null;
+    behaviors = [];
 
     if (Object.keys($activeObjects).length === 1) {
       const id = Object.keys($activeObjects)[0];
       const template = GetTemplate($schema, $state, id);
+
+      behaviors = Object.values(template.behaviors || {});
+
       if (template && template.type === Component.DECK) {
         menu = DECK;
       }
@@ -215,7 +232,6 @@
     {#if menu === ANCHOR}
       <div on:click={Shuffle} class="item">shuffle</div>
       <div on:click={FlipDeck} class="item">flip</div>
-      <div on:click={Custom} class="item">custom</div>
     {/if}
 
     {#if menu === CARDS}
@@ -226,5 +242,11 @@
       <div on:click={RotateCard} class="item">rotate</div>
       <div on:click={FlipCard} class="item">flip</div>
     {/if}
+
+    {#each behaviors as behavior}
+      <div on:click={() => Behavior(behavior)} class="item">
+        {behavior.name}
+      </div>
+    {/each}
   </div>
 {/if}

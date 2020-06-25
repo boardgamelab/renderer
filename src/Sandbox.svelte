@@ -6,7 +6,7 @@
   import { select } from './gestures/select.ts';
   import { pan } from './gestures/pan.ts';
   import Hand from './hand/Hand.svelte';
-  import ContextMenu from './ui/menu/Context.svelte';
+  import ContextMenu from './ui/menu/context/Context.svelte';
   import { ToSVGPointWithPan } from './utils/svg.ts';
   import { createEventDispatcher, setContext } from 'svelte';
   import { writable } from 'svelte/store';
@@ -27,7 +27,7 @@
   setContext('renderer', renderer);
   setContext('seatID', seatID);
 
-  let debug = true;
+  let debug = false;
   let svg = { el: null };
   let hand = { el: null };
 
