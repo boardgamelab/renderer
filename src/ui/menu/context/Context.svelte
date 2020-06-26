@@ -178,8 +178,8 @@
       const id = Object.keys($activeObjects)[0];
       const template = GetTemplate($schema, $state, id);
 
-      if (template) {
-        behaviors = Object.values(template.behaviors || {});
+      if (template && template.behaviors) {
+        behaviors = template.behaviors;
       }
 
       if (template && template.type === Component.DECK) {
