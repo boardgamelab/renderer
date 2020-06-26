@@ -65,7 +65,7 @@
         context: { seatID },
         type: 'card',
         subtype: 'flip',
-        id,
+        subject: { id },
       },
     ]);
   }
@@ -77,7 +77,7 @@
         context: { seatID },
         type: 'card',
         subtype: 'rotate',
-        id,
+        subject: { id },
       },
     ]);
   }
@@ -89,7 +89,7 @@
         context: { seatID },
         type: 'deck',
         subtype: 'flip',
-        id,
+        subject: { id },
       },
     ]);
   }
