@@ -178,7 +178,9 @@
       const id = Object.keys($activeObjects)[0];
       const template = GetTemplate($schema, $state, id);
 
-      behaviors = Object.values(template.behaviors || {});
+      if (template) {
+        behaviors = Object.values(template.behaviors || {});
+      }
 
       if (template && template.type === Component.DECK) {
         menu = DECK;
