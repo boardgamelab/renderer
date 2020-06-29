@@ -8,9 +8,7 @@
   export let draggable = true;
   export let selectable = true;
 
-  const { svg, hand, dispatchActions, state, activeObjects } = getContext(
-    'context'
-  );
+  const { hand, dispatchActions, state, activeObjects } = getContext('context');
 
   const schema = getContext('schema');
   const highlight = getContext('highlight');
