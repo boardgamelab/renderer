@@ -87,7 +87,8 @@
   on:move={Drag}
   class="mx-2 shadow-lg"
   width="100"
-  viewBox="0 0 600 720"
+  viewBox="0 0 {geometry.width}
+  {geometry.height}"
   xmlns="http://www.w3.org/2000/svg">
   <Card {id} forceFaceUp={true} active={id in $activeObjects} />
 </svg>
