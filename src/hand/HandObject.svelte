@@ -90,5 +90,9 @@
   viewBox="0 0 {geometry.width}
   {geometry.height}"
   xmlns="http://www.w3.org/2000/svg">
-  <Card {id} forceFaceUp={true} active={id in $activeObjects} />
+  <Card
+    {id}
+    forceRotation={0}
+    forceFaceUp={true}
+    active={id in $activeObjects} />
 </svg>

@@ -3,6 +3,7 @@
   export let isDragging = false;
   export let active = false;
   export let forceFaceUp = false;
+  export let forceRotation;
 
   import { getContext } from 'svelte';
   import { tweened } from 'svelte/motion';
@@ -40,6 +41,10 @@
         rotation.set(card.rotation);
       } else {
         rotation.set(0);
+      }
+
+      if (forceRotation !== undefined) {
+        rotation.set(forceRotation);
       }
     }
   }
