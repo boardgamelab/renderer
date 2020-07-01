@@ -23,7 +23,7 @@
   const rotation = tweened(0, { duration: 200 });
 
   async function ShuffleAnimation() {
-    await rotation.update(r => r + 359);
+    await rotation.update((r) => r + 359);
     await rotation.set(0, { duration: 1 });
   }
 
@@ -76,18 +76,18 @@
       object={$schema.objects[id]} />
   {/if}
 
-  {#if children.length}
-    {#if id in $highlight || active}
-      <rect
-        x={-10}
-        y={-10}
-        width={width + 20}
-        height={height + 20}
-        fill="none"
-        stroke-width="10"
-        stroke={selectionColor} />
-    {/if}
+  {#if id in $highlight || active}
+    <rect
+      x={-10}
+      y={-10}
+      width={width + 20}
+      height={height + 20}
+      fill="none"
+      stroke-width="10"
+      stroke={selectionColor} />
+  {/if}
 
+  {#if children.length}
     {#each children.slice(-2) as child (child)}
       <Moveable
         id={child}
