@@ -63,7 +63,7 @@
     dispatchActions([
       {
         context: { seatID },
-        type: 'card',
+        type: 'tile',
         subtype: 'flip',
         subject: { id },
       },
@@ -75,7 +75,7 @@
     dispatchActions([
       {
         context: { seatID },
-        type: 'card',
+        type: 'tile',
         subtype: 'rotate',
         subject: { id },
       },
@@ -87,7 +87,7 @@
     dispatchActions([
       {
         context: { seatID },
-        type: 'deck',
+        type: 'container',
         subtype: 'flip',
         subject: { id },
       },
@@ -99,7 +99,7 @@
     dispatchActions([
       {
         context: { seatID },
-        type: 'deck',
+        type: 'container',
         subtype: 'shuffle',
         subject: { id },
         seed: Math.floor(Math.random() * 1000),
@@ -118,55 +118,6 @@
       },
     ]);
   }
-
-  // function Custom() {
-  //   const id = Object.keys($activeObjects)[0];
-  //   dispatchActions([
-  //     {
-  //       context: { seatID, subject: { id } },
-  //       type: 'advanced',
-  //       subtype: 'multi',
-  //       actions: [
-  //         {
-  //           type: 'advanced',
-  //           subtype: 'conditional',
-  //           condition: {
-  //             boolean: {
-  //               property: {
-  //                 type: 'container',
-  //                 subject: { id },
-  //                 property: {
-  //                   boolean: {
-  //                     type: 'is-empty',
-  //                   },
-  //                 },
-  //               },
-  //             },
-  //           },
-  //           action: {
-  //             seatID,
-  //             type: 'add-to',
-  //             subject: { id: handID },
-  //             dest: { id },
-  //           },
-  //         },
-  //         {
-  //           type: 'add-to',
-  //           subject: {
-  //             reference: {
-  //               type: 'container',
-  //               subject: { inherit: {} },
-  //               reference: {
-  //                 type: 'top-child',
-  //               },
-  //             },
-  //           },
-  //           dest: { reference: { type: 'hand' } },
-  //         },
-  //       ],
-  //     },
-  //   ]);
-  // }
 
   let menu = null;
   let behaviors = [];
