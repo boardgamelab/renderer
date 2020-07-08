@@ -22,32 +22,42 @@
       x = $state.objects[id].x || 0;
       y = $state.objects[id].y || 0;
 
-      if ($state.remote && $state.previousPositions) {
-        Object.entries($state.previousPositions).forEach(([key, value]) => {
-          if (key !== id) return;
-
-          let px = value.x || 0;
-          let py = value.y || 0;
-
-          if (value.type === 'in-container') {
-            if (value.x !== undefined || value.y !== undefined) {
-              px = value.x || 0;
-              py = value.y || 0;
-            } else if (value.id in $state.objects) {
-              const { x, y } = $state.objects[value.id];
-              px = x || 0;
-              py = y || 0;
-            }
-          }
-
-          position.set(RelativeToParent({ x: px, y: py }));
+      if ($state.remote && $state.latestActions) {
+        $state.latestActions.forEach((action) => {
+          AnimateAction(action);
         });
-
-        position.set({ x, y }, { duration: 100 });
       } else {
         position.set({ x, y });
       }
     }
+  }
+
+  async function AnimateAction(action) {
+    if (!action.previousPositions) {
+      return;
+    }
+
+    Object.entries(action.previousPositions).forEach(([key, value]) => {
+      if (key !== id) return;
+
+      let px = value.x || 0;
+      let py = value.y || 0;
+
+      if (value.type === 'in-container') {
+        if (value.x !== undefined || value.y !== undefined) {
+          px = value.x || 0;
+          py = value.y || 0;
+        } else if (value.id in $state.objects) {
+          const { x, y } = $state.objects[value.id];
+          px = x || 0;
+          py = y || 0;
+        }
+      }
+
+      position.set(RelativeToParent({ x: px, y: py }));
+    });
+
+    await position.set({ x, y }, { duration: 100 });
   }
 
   let isDragging = false;
