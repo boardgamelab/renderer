@@ -75,6 +75,7 @@
 
     // Raise object so that it appears rendered above
     // other objects while being dragged.
+    // TODO: Use a ghost and stop calling "raise" here.
     dispatchActions([
       {
         type: 'raise',
