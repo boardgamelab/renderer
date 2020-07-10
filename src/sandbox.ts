@@ -2,7 +2,7 @@ import { State, Action } from '@boardgamelab/components';
 import type { createEventDispatcher } from 'svelte';
 import type { Readable } from 'svelte/store';
 import { writable, derived, get } from 'svelte/store';
-import { setContext } from 'svelte';
+import { setContext, onDestroy } from 'svelte';
 
 export function Init(
   masterState: Readable<State>,
@@ -19,7 +19,7 @@ export function Init(
   // order to not make the network traffic too chatty.
   const localState = writable({ ...get(masterState) });
 
-  masterState.subscribe((s) => {
+  const unsub = masterState.subscribe((s) => {
     // TODO: Should we update the state in a loop here
     // so that individual actions can be animated?
     // Consider playing animations *before* a state
@@ -35,6 +35,10 @@ export function Init(
     // Maybe use ghosts everywhere so that you don't have
     // to worry about elements being present?
     localState.set(s);
+  });
+
+  onDestroy(() => {
+    unsub();
   });
 
   const dispatchActions = (actions: Action[]) => {
