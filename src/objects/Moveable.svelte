@@ -18,6 +18,7 @@
 
   let x, absoluteX;
   let y, absoluteY;
+
   $: {
     if (id in $state.objects) {
       absoluteX = x = $state.objects[id].x || 0;

@@ -62,18 +62,7 @@ export function crossfade({ fallback, ...defaults }) {
 }
 
 const [send, receive] = crossfade({
-  duration: (d) => Math.sqrt(d * 300),
-  fallback(node, params) {
-    const style = getComputedStyle(node);
-    const transform = style.transform === 'none' ? '' : style.transform;
-
-    return {
-      duration: 150,
-      tick: (t) => `
-        transform: ${transform};
-      `,
-    };
-  },
+  fallback: null,
 });
 
 export { send, receive };
