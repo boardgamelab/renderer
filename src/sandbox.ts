@@ -14,12 +14,26 @@ export function Init(
 
   // The local state might have some changes that only make
   // sense locally. For example, a dragged object may continuously
-  // update its co-orindates as it is being dragged, but we
+  // update its co-ordinates as it is being dragged, but we
   // only update the master state at the end of the drag in
   // order to not make the network traffic too chatty.
   const localState = writable({ ...get(masterState) });
 
   masterState.subscribe((s) => {
+    // TODO: Should we update the state in a loop here
+    // so that individual actions can be animated?
+    // Consider playing animations *before* a state
+    // update rather than after. The advantage is that
+    // you don't need to keep track of previous_positions.
+    // Just apply the action, animate the element to the
+    // next position and then commit the new state. This
+    // also allows animations for cases where the element
+    // becomes hidden somewhere. The only case that is not
+    // handled is when an element is added to the table
+    // from a hand (say). For this, maybe animate from the
+    // div element in the hand?
+    // Maybe use ghosts everywhere so that you don't have
+    // to worry about elements being present?
     localState.set(s);
   });
 
