@@ -2,7 +2,7 @@
   import { getContext } from 'svelte';
   import { Drop, CheckForDrop } from './moveable.ts';
   import { tweened } from 'svelte/motion';
-  import { send, receive } from './crossfade.js';
+  import { send, receive } from '../utils/crossfade.js';
 
   export let id;
   export let parentPos = null;
@@ -173,16 +173,14 @@
     });
   };
 
-  $: inContainer = parentPos !== null;
-
   let active = false;
   $: active = id in $activeObjects;
 </script>
 
 <g
   transform="translate({$position.x}, {$position.y})"
-  out:send={{ key: id, x: absoluteX, y: absoluteY, inContainer, animate: $state.remote }}
-  in:receive={{ key: id, x: absoluteX, y: absoluteY, inContainer, animate: $state.remote }}
+  out:send={{ key: id, x: absoluteX, y: absoluteY, animate: $state.remote }}
+  in:receive={{ key: id, x: absoluteX, y: absoluteY, animate: $state.remote }}
   data-id={id}
   data-draggable={draggable}
   data-selectable={selectable}

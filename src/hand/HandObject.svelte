@@ -2,12 +2,15 @@
   export let id;
 
   import Card from '../objects/tile/card/Card.svelte';
+  import { send, receive } from '../utils/crossfade.js';
   import { tweened } from 'svelte/motion';
+  import { writable } from 'svelte/store';
   import { getContext } from 'svelte';
   import { ToClientLength, ToSVGLength } from '../utils/svg.ts';
 
-  const { activeObjects, dispatchActions, svg } = getContext('context');
+  const { state, activeObjects, dispatchActions, svg } = getContext('context');
   const schema = getContext('schema');
+  const toSVGPoint = getContext('to-svg-point');
 
   const offset = tweened({ x: 0, y: 0 }, { duration: 0 });
   const scale = tweened(1, { duration: 100 });
@@ -75,11 +78,28 @@
       },
     ]);
   };
+
+  let absoluteX = writable(0);
+  let absoluteY = writable(0);
+
+  $: {
+    if (ref) {
+      const rect = ref.getBoundingClientRect();
+      const x = rect.left;
+      const y = rect.top;
+
+      const t = toSVGPoint({ x, y });
+
+      absoluteX.set(t.x);
+      absoluteY.set(t.y);
+    }
+  }
 </script>
 
 <svg
   bind:this={ref}
   style="transform: translate3d({$offset.x}px, {$offset.y}px, 0) scale({$scale})"
+  in:receive={{ key: id, sx: absoluteX, sy: absoluteY, x: $absoluteX, y: $absoluteY, animate: $state.remote, css: true }}
   data-id={id}
   data-draggable="true"
   on:movestart={DragStart}

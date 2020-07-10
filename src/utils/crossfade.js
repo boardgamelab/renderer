@@ -1,4 +1,5 @@
 import { cubicOut } from 'svelte/easing';
+import { get } from 'svelte/store';
 
 export function crossfade({ fallback, ...defaults }) {
   const to_receive = new Map();
@@ -9,11 +10,22 @@ export function crossfade({ fallback, ...defaults }) {
 
     const duration = params.animate ? 150 : 0;
 
-    const x = params.x;
-    const y = params.y;
+    let ax = params.x;
+    let ay = params.y;
 
-    const dx = from.x - x;
-    const dy = from.y - y;
+    let bx = from.x;
+    let by = from.y;
+
+    if (from.sx) {
+      bx = get(from.sx);
+    }
+
+    if (from.sy) {
+      by = get(from.sy);
+    }
+
+    const dx = bx - ax;
+    const dy = by - ay;
 
     const style = getComputedStyle(node);
     const transform = style.transform === 'none' ? '' : style.transform;
@@ -25,7 +37,11 @@ export function crossfade({ fallback, ...defaults }) {
       tick: (t, u) => {
         const value = `${transform} translate(${u * dx},${u * dy})`;
         if (params.animate) {
-          node.setAttribute('transform', value);
+          if (params.css) {
+            node.style.opacity = t < 1 ? 0 : 1;
+          } else {
+            node.setAttribute('transform', value);
+          }
         }
       },
     };
@@ -34,16 +50,18 @@ export function crossfade({ fallback, ...defaults }) {
   function transition(items, counterparts, intro) {
     return (node, params) => {
       items.set(params.key, {
+        sx: params.sx,
+        sy: params.sy,
         x: params.x,
         y: params.y,
       });
 
       return () => {
         if (counterparts.has(params.key)) {
-          const { x, y } = counterparts.get(params.key);
+          const { x, y, sx, sy } = counterparts.get(params.key);
           counterparts.delete(params.key);
 
-          return crossfade({ x, y }, node, params);
+          return crossfade({ x, y, sx, sy }, node, params);
         }
 
         // if the node is disappearing altogether
