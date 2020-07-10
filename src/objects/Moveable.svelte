@@ -2,6 +2,7 @@
   import { getContext } from 'svelte';
   import { Drop, CheckForDrop } from './moveable.ts';
   import { tweened } from 'svelte/motion';
+  import { send, receive } from './crossfade.js';
 
   export let id;
   export let parentPos = null;
@@ -15,49 +16,24 @@
   const toSVGPoint = getContext('to-svg-point');
   const position = tweened(null, { duration: 0 });
 
-  let x;
-  let y;
+  let x, absoluteX;
+  let y, absoluteY;
   $: {
     if (id in $state.objects) {
-      x = $state.objects[id].x || 0;
-      y = $state.objects[id].y || 0;
+      absoluteX = x = $state.objects[id].x || 0;
+      absoluteY = y = $state.objects[id].y || 0;
 
-      if ($state.remote && $state.latestActions) {
-        $state.latestActions.forEach((action) => {
-          AnimateAction(action);
-        });
+      if ($parentPos) {
+        absoluteX = $parentPos.x;
+        absoluteY = $parentPos.y;
+      }
+
+      if (false && $state.remote) {
+        position.set({ x, y }, { duration: 100 });
       } else {
         position.set({ x, y });
       }
     }
-  }
-
-  async function AnimateAction(action) {
-    if (!action.previousPositions) {
-      return;
-    }
-
-    Object.entries(action.previousPositions).forEach(([key, value]) => {
-      if (key !== id) return;
-
-      let px = value.x || 0;
-      let py = value.y || 0;
-
-      if (value.type === 'in-container') {
-        if (value.x !== undefined || value.y !== undefined) {
-          px = value.x || 0;
-          py = value.y || 0;
-        } else if (value.id in $state.objects) {
-          const { x, y } = $state.objects[value.id];
-          px = x || 0;
-          py = y || 0;
-        }
-      }
-
-      position.set(RelativeToParent({ x: px, y: py }));
-    });
-
-    await position.set({ x, y }, { duration: 100 });
   }
 
   let isDragging = false;
@@ -185,15 +161,17 @@
   $: active = id in $activeObjects;
 </script>
 
-{#if $position}
-  <g
-    transform="translate({$position.x}, {$position.y})"
-    data-id={id}
-    data-draggable={draggable}
-    data-selectable={selectable}
-    on:movestart={DragStart}
-    on:moveend={DragEnd}
-    on:move={Drag}>
-    <slot {active} {isDragging} {position} />
-  </g>
-{/if}
+<g
+  transform="translate({$position.x}, {$position.y})"
+  out:send={{ key: id, animate: $state.remote }}
+  in:receive={{ key: id, animate: $state.remote }}
+  data-x={absoluteX}
+  data-y={absoluteY}
+  data-id={id}
+  data-draggable={draggable}
+  data-selectable={selectable}
+  on:movestart={DragStart}
+  on:moveend={DragEnd}
+  on:move={Drag}>
+  <slot {active} {isDragging} {position} />
+</g>
