@@ -37,7 +37,7 @@ export function crossfade({ fallback, ...defaults }) {
       tick: (t, u) => {
         const value = `${transform} translate(${u * dx},${u * dy})`;
         if (params.animate) {
-          if (params.css) {
+          if (params.hand) {
             node.style.opacity = t < 1 ? 0 : 1;
           } else {
             node.setAttribute('transform', value);

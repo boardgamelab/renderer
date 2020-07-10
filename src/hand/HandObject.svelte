@@ -99,7 +99,8 @@
 <svg
   bind:this={ref}
   style="transform: translate3d({$offset.x}px, {$offset.y}px, 0) scale({$scale})"
-  in:receive={{ key: id, sx: absoluteX, sy: absoluteY, x: $absoluteX, y: $absoluteY, animate: $state.remote, css: true }}
+  out:send={{ key: id, sx: absoluteX, sy: absoluteY, x: $absoluteX, y: $absoluteY, animate: $state.remote, hand: true }}
+  in:receive={{ key: id, sx: absoluteX, sy: absoluteY, x: $absoluteX, y: $absoluteY, animate: $state.remote, hand: true }}
   data-id={id}
   data-draggable="true"
   on:movestart={DragStart}
