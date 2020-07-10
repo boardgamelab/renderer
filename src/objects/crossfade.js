@@ -9,8 +9,8 @@ export function crossfade({ fallback, ...defaults }) {
 
     const duration = params.animate ? 150 : 0;
 
-    const x = node.dataset.x;
-    const y = node.dataset.y;
+    const x = params.x;
+    const y = params.y;
 
     const dx = from.x - x;
     const dy = from.y - y;
@@ -34,8 +34,8 @@ export function crossfade({ fallback, ...defaults }) {
   function transition(items, counterparts, intro) {
     return (node, params) => {
       items.set(params.key, {
-        x: node.dataset.x,
-        y: node.dataset.y,
+        x: params.x,
+        y: params.y,
       });
 
       return () => {

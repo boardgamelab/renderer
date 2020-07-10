@@ -25,8 +25,8 @@
       absoluteY = y = $state.objects[id].y || 0;
 
       if ($parentPos) {
-        absoluteX = $parentPos.x;
-        absoluteY = $parentPos.y;
+        absoluteX += $parentPos.x;
+        absoluteY += $parentPos.y;
       }
 
       if (false && $state.remote) {
@@ -158,16 +158,16 @@
     });
   };
 
+  $: inContainer = parentPos !== null;
+
   let active = false;
   $: active = id in $activeObjects;
 </script>
 
 <g
   transform="translate({$position.x}, {$position.y})"
-  out:send={{ key: id, animate: $state.remote }}
-  in:receive={{ key: id, animate: $state.remote }}
-  data-x={absoluteX}
-  data-y={absoluteY}
+  out:send={{ key: id, x: absoluteX, y: absoluteY, inContainer, animate: $state.remote }}
+  in:receive={{ key: id, x: absoluteX, y: absoluteY, inContainer, animate: $state.remote }}
   data-id={id}
   data-draggable={draggable}
   data-selectable={selectable}
