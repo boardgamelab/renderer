@@ -18,22 +18,37 @@
 
   let x, absoluteX;
   let y, absoluteY;
+  let prevParent = null;
 
   $: {
     if (id in $state.objects) {
-      absoluteX = x = $state.objects[id].x || 0;
-      absoluteY = y = $state.objects[id].y || 0;
+      const newX = $state.objects[id].x || 0;
+      const newY = $state.objects[id].y || 0;
 
-      if ($parentPos) {
-        absoluteX += $parentPos.x;
-        absoluteY += $parentPos.y;
+      let changed = false;
+      if (newX !== x || newY !== y) {
+        changed = true;
       }
 
-      if (false && $state.remote) {
-        position.set({ x, y }, { duration: 100 });
-      } else {
-        position.set({ x, y });
+      absoluteX = x = newX;
+      absoluteY = y = newY;
+
+      const currParent = $state.objects[id].parent || null;
+
+      if (currParent in $state.objects) {
+        absoluteX += $state.objects[currParent].x || 0;
+        absoluteY += $state.objects[currParent].y || 0;
       }
+
+      if (changed) {
+        if ($state.remote && !currParent && !prevParent) {
+          position.set({ x, y }, { duration: 150 });
+        } else {
+          position.set({ x, y });
+        }
+      }
+
+      prevParent = currParent;
     }
   }
 
