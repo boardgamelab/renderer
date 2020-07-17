@@ -1,6 +1,4 @@
 <script>
-  export let handID;
-
   import { getContext } from 'svelte';
 
   import { Component } from '@boardgamelab/components';
