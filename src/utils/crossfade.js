@@ -45,10 +45,10 @@ export function crossfade({ fallback, ...defaults }) {
 
       return () => {
         if (counterparts.has(params.key)) {
-          const { rect } = counterparts.get(params.key);
+          const from = counterparts.get(params.key);
           counterparts.delete(params.key);
 
-          return crossfade({ rect }, node, params);
+          return crossfade(from, node, params);
         }
 
         // if the node is disappearing altogether
