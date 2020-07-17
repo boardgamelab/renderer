@@ -16,8 +16,8 @@
   const toSVGPoint = getContext('to-svg-point');
   const position = tweened(null, { duration: 0 });
 
-  let x, absoluteX;
-  let y, absoluteY;
+  let x;
+  let y;
   let prevParent = null;
 
   $: {
@@ -30,15 +30,10 @@
         changed = true;
       }
 
-      absoluteX = x = newX;
-      absoluteY = y = newY;
+      x = newX;
+      y = newY;
 
       const currParent = $state.objects[id].parent || null;
-
-      if (currParent in $state.objects) {
-        absoluteX += $state.objects[currParent].x || 0;
-        absoluteY += $state.objects[currParent].y || 0;
-      }
 
       if (changed) {
         if ($state.remote && !currParent && !prevParent) {
@@ -179,8 +174,8 @@
 
 <g
   transform="translate({$position.x}, {$position.y})"
-  out:send={{ key: id, x: absoluteX, y: absoluteY, animate: $state.remote }}
-  in:receive={{ key: id, x: absoluteX, y: absoluteY, animate: $state.remote }}
+  out:send={{ key: id, toSVGPoint, animate: $state.remote }}
+  in:receive={{ key: id, toSVGPoint, animate: $state.remote }}
   data-id={id}
   data-draggable={draggable}
   data-selectable={selectable}

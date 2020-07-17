@@ -1,5 +1,4 @@
 import { cubicOut } from 'svelte/easing';
-import { get } from 'svelte/store';
 
 export function crossfade({ fallback, ...defaults }) {
   const to_receive = new Map();
@@ -10,22 +9,13 @@ export function crossfade({ fallback, ...defaults }) {
 
     const duration = params.animate ? 150 : 0;
 
-    let ax = params.x;
-    let ay = params.y;
+    const rect = node.getBoundingClientRect();
 
-    let bx = from.x;
-    let by = from.y;
+    const a = params.toSVGPoint({ x: rect.left, y: rect.top });
+    const b = params.toSVGPoint({ x: from.rect.left, y: from.rect.top });
 
-    if (from.sx) {
-      bx = get(from.sx);
-    }
-
-    if (from.sy) {
-      by = get(from.sy);
-    }
-
-    const dx = bx - ax;
-    const dy = by - ay;
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
 
     const style = getComputedStyle(node);
     const transform = style.transform === 'none' ? '' : style.transform;
@@ -47,28 +37,25 @@ export function crossfade({ fallback, ...defaults }) {
     };
   }
 
-  function transition(items, counterparts, intro) {
+  function transition(items, counterparts, receive) {
     return (node, params) => {
       items.set(params.key, {
-        sx: params.sx,
-        sy: params.sy,
-        x: params.x,
-        y: params.y,
+        rect: node.getBoundingClientRect(),
       });
 
       return () => {
         if (counterparts.has(params.key)) {
-          const { x, y, sx, sy } = counterparts.get(params.key);
+          const { rect } = counterparts.get(params.key);
           counterparts.delete(params.key);
 
-          return crossfade({ x, y, sx, sy }, node, params);
+          return crossfade({ rect }, node, params);
         }
 
         // if the node is disappearing altogether
         // (i.e. wasn't claimed by the other list)
         // then we need to supply an outro
         items.delete(params.key);
-        return fallback && fallback(node, params, intro);
+        return fallback && fallback(node, params, receive);
       };
     };
   }
