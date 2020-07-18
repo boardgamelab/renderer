@@ -81,11 +81,6 @@
     return ToSVGPointWithPan(point, svg.el, $panX, $panY);
   }
   setContext('to-svg-point', ToSVGPoint);
-
-  function CancelSelect() {
-    activeObjects.set({});
-    menu = false;
-  }
 </script>
 
 <svelte:head>
