@@ -26,6 +26,7 @@ export function crossfade({ fallback, ...defaults }) {
       easing,
       tick: (t, u) => {
         const value = `${transform} translate(${u * dx},${u * dy})`;
+
         if (params.animate) {
           if (params.hand) {
             node.style.opacity = t < 1 ? 0 : 1;
@@ -37,7 +38,7 @@ export function crossfade({ fallback, ...defaults }) {
     };
   }
 
-  function transition(items, counterparts, receive) {
+  function transition(items, counterparts) {
     return (node, params) => {
       items.set(params.key, {
         rect: node.getBoundingClientRect(),
@@ -51,19 +52,12 @@ export function crossfade({ fallback, ...defaults }) {
           return crossfade(from, node, params);
         }
 
-        // if the node is disappearing altogether
-        // (i.e. wasn't claimed by the other list)
-        // then we need to supply an outro
         items.delete(params.key);
-        return fallback && fallback(node, params, receive);
       };
     };
   }
 
-  return [
-    transition(to_send, to_receive, false),
-    transition(to_receive, to_send, true),
-  ];
+  return [transition(to_send, to_receive), transition(to_receive, to_send)];
 }
 
 const [send, receive] = crossfade({
