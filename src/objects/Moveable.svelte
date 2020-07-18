@@ -1,6 +1,6 @@
 <script>
   import { getContext } from 'svelte';
-  import { Drop, CheckForDrop } from './moveable.ts';
+  import { Drop } from './moveable.ts';
   import { tweened } from 'svelte/motion';
   import { send, receive } from '../utils/crossfade.js';
 
@@ -9,9 +9,8 @@
   export let draggable = true;
   export let selectable = true;
 
-  const { hand, dispatchActions, state, activeObjects } = getContext('context');
+  const { dispatchActions, state, activeObjects } = getContext('context');
 
-  const schema = getContext('schema');
   const highlight = getContext('highlight');
   const toSVGPoint = getContext('to-svg-point');
   const position = tweened(null, { duration: 0 });
@@ -103,7 +102,7 @@
     return { x: pos.x + dx, y: pos.y + dy };
   }
 
-  async function DragEnd() {
+  async function DragEnd({ detail }) {
     isDragging = false;
 
     highlight.set({});
@@ -113,44 +112,43 @@
     }
 
     const absolutePosition = RelativeToSVG($position);
-    const drop = CheckForDrop(
-      $state,
-      $schema,
-      absolutePosition,
-      id,
-      hand,
-      toSVGPoint
-    );
-    const dropRelativeToParent = RelativeToParent(drop);
 
-    if (drop) {
-      await position.set(
-        {
-          x: dropRelativeToParent.x,
-          y: dropRelativeToParent.y,
-        },
-        { duration: 150 }
-      );
+    let drop = null;
+
+    if (detail.dropID) {
+      drop = {
+        targetID: detail.dropID,
+      };
+
+      // Animate to drop point.
+
+      const dropObject = $state.objects[detail.dropID] || {};
+
+      if (dropObject.x || dropObject.y) {
+        const dropPosition = {
+          x: dropObject.x || 0,
+          y: dropObject.y || 0,
+        };
+        const dropRelativeToParent = RelativeToParent(dropPosition);
+
+        await position.set(
+          {
+            x: dropRelativeToParent.x,
+            y: dropRelativeToParent.y,
+          },
+          { duration: 150 }
+        );
+      }
     }
 
     Drop(id, drop, absolutePosition, dispatchActions, activeObjects);
   }
 
   const Drag = ({ detail }) => {
-    const absolutePosition = RelativeToSVG($position);
-    const drop = CheckForDrop(
-      $state,
-      $schema,
-      absolutePosition,
-      id,
-      hand,
-      toSVGPoint
-    );
-
     let h = {};
-    if (drop && !drop.targetIsCurrentParent) {
+    if (detail.dropID) {
       h = {
-        [drop.targetID]: true,
+        [detail.dropID]: true,
       };
     }
     highlight.set(h);

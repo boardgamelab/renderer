@@ -8,7 +8,9 @@
   import { selectionColor } from '../../defaults.ts';
   import Moveable from '../Moveable.svelte';
   import Card from '../tile/card/Card.svelte';
+  import { GetTemplate } from '../../utils/template.ts';
 
+  const schema = getContext('schema');
   const { state } = getContext('context');
   const highlight = getContext('highlight');
   const { template } = $state.objects[id];
@@ -20,7 +22,7 @@
   const rotation = tweened(0, { duration: 200 });
 
   async function ShuffleAnimation() {
-    await rotation.update(r => r + 359);
+    await rotation.update((r) => r + 359);
     await rotation.set(0, { duration: 1 });
   }
 
@@ -40,8 +42,31 @@
   $: {
     x = $position.x;
     y = $position.y;
-    width = template.geometry.width || 0;
-    height = template.geometry.height || 0;
+
+    width = 0;
+    height = 0;
+
+    if (children.length) {
+      const firstChild = children[0];
+      const template = GetTemplate($schema, $state, firstChild);
+      const { width: w, height: h } = template.geometry;
+
+      if (w) {
+        width = w;
+      }
+
+      if (h) {
+        height = h;
+      }
+    }
+
+    if (template.geometry.width) {
+      width = template.geometry.width;
+    }
+
+    if (template.geometry.height) {
+      height = template.geometry.height;
+    }
   }
 </script>
 
@@ -68,7 +93,7 @@
         parentPos={position}
         let:active
         let:isDragging>
-        <Card id={child} {isDragging} {active} />
+        <Card id={child} droppable={false} {isDragging} {active} />
       </Moveable>
     {/each}
 

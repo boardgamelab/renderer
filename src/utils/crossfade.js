@@ -53,7 +53,10 @@ export function crossfade() {
         }
 
         items.delete(params.key);
-        return null;
+
+        return {
+          duration: 0,
+        };
       };
     };
   }

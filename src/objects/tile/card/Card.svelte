@@ -1,5 +1,6 @@
 <script>
   export let id;
+  export let droppable = true;
   export let isDragging = false;
   export let active = false;
   export let forceFaceUp = false;
@@ -52,7 +53,7 @@
 
 <g
   data-id={id}
-  data-droppable="true"
+  data-droppable={droppable}
   transform="rotate({$rotation}
   {width / 2}
   {height / 2})">

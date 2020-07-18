@@ -95,7 +95,7 @@
         parentPos={position}
         let:active
         let:isDragging>
-        <Card id={child} {isDragging} {active} />
+        <Card id={child} droppable={false} {isDragging} {active} />
       </Moveable>
     {/each}
 
