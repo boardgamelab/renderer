@@ -5,11 +5,12 @@
   import { send, receive } from '../utils/crossfade.js';
   import { tweened } from 'svelte/motion';
   import { getContext } from 'svelte';
-  import { ToClientLength, ToClientPoint, ToSVGLength } from '../utils/svg.ts';
+  import { ToClientLength, ToSVGLength } from '../utils/svg.ts';
 
   const { state, activeObjects, dispatchActions, svg } = getContext('context');
   const schema = getContext('schema');
   const toSVGPoint = getContext('to-svg-point');
+  const toClientPoint = getContext('to-client-point');
   const highlight = getContext('highlight');
 
   const offset = tweened({ x: 0, y: 0 }, { duration: 0 });
@@ -82,7 +83,7 @@
           y: dropObject.y || 0,
         };
 
-        dropPosition = ToClientPoint(dropPosition, svg.el);
+        dropPosition = toClientPoint(dropPosition, svg.el);
 
         // Calculate offset of drop point relative to the
         // current position of the object.

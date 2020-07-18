@@ -53,6 +53,23 @@ export function ToClientPoint(point: Point, svg: SVGSVGElement) {
   return ApplyCTM(point, ctm);
 }
 
+export function ToClientPointWithPan(
+  point: Point,
+  svg: SVGSVGElement,
+  panX?: number,
+  panY?: number
+) {
+  const ctm = svg.getScreenCTM();
+  if (!ctm) {
+    return point;
+  }
+
+  point.x += panX || 0;
+  point.y += panY || 0;
+
+  return ApplyCTM(point, ctm);
+}
+
 export function ToClientLength(length: number, svg: SVGSVGElement) {
   const ctm = svg.getScreenCTM();
   if (!ctm) {
@@ -84,4 +101,3 @@ function ApplyCTMInverse(point: Point, ctm: any): Point {
   const y = ctm.d ? (point.y - ctm.f) / ctm.d : 0;
   return { x, y };
 }
-

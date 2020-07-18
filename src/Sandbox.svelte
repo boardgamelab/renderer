@@ -7,7 +7,7 @@
   import { pan } from './gestures/pan.ts';
   import Hand from './hand/Hand.svelte';
   import ContextMenu from './ui/menu/context/Context.svelte';
-  import { ToSVGPointWithPan } from './utils/svg.ts';
+  import { ToSVGPointWithPan, ToClientPointWithPan } from './utils/svg.ts';
   import { createEventDispatcher, setContext } from 'svelte';
   import { writable } from 'svelte/store';
   import { fade } from 'svelte/transition';
@@ -80,7 +80,11 @@
   function ToSVGPoint(point) {
     return ToSVGPointWithPan(point, svg.el, $panX, $panY);
   }
+  function ToClientPoint(point) {
+    return ToClientPointWithPan(point, svg.el, $panX, $panY);
+  }
   setContext('to-svg-point', ToSVGPoint);
+  setContext('to-client-point', ToClientPoint);
 </script>
 
 <svelte:head>
