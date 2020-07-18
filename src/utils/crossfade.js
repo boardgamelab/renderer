@@ -1,11 +1,11 @@
 import { cubicOut } from 'svelte/easing';
 
-export function crossfade({ fallback, ...defaults }) {
-  const to_receive = new Map();
-  const to_send = new Map();
+export function crossfade() {
+  const receivers = new Map();
+  const senders = new Map();
 
   function crossfade(from, node, params) {
-    const { delay = 0, easing = cubicOut } = { ...defaults, ...params };
+    const { delay = 0, easing = cubicOut } = params;
 
     const duration = params.animate ? 150 : 0;
 
@@ -53,15 +53,14 @@ export function crossfade({ fallback, ...defaults }) {
         }
 
         items.delete(params.key);
+        return null;
       };
     };
   }
 
-  return [transition(to_send, to_receive), transition(to_receive, to_send)];
+  return [transition(senders, receivers), transition(receivers, senders)];
 }
 
-const [send, receive] = crossfade({
-  fallback: null,
-});
+const [send, receive] = crossfade();
 
 export { send, receive };
