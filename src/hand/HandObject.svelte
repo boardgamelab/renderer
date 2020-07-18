@@ -5,11 +5,12 @@
   import { send, receive } from '../utils/crossfade.js';
   import { tweened } from 'svelte/motion';
   import { getContext } from 'svelte';
-  import { ToClientLength, ToSVGLength } from '../utils/svg.ts';
+  import { ToClientLength, ToClientPoint, ToSVGLength } from '../utils/svg.ts';
 
   const { state, activeObjects, dispatchActions, svg } = getContext('context');
   const schema = getContext('schema');
   const toSVGPoint = getContext('to-svg-point');
+  const highlight = getContext('highlight');
 
   const offset = tweened({ x: 0, y: 0 }, { duration: 0 });
   const scale = tweened(1, { duration: 100 });
@@ -52,6 +53,14 @@
   };
 
   const Drag = ({ detail }) => {
+    let h = {};
+    if (detail.dropID) {
+      h = {
+        [detail.dropID]: true,
+      };
+    }
+    highlight.set(h);
+
     activeObjects.set({
       [detail.id]: true,
     });
@@ -62,20 +71,62 @@
     });
   };
 
-  const DragEnd = ({ detail }) => {
-    dispatchActions([
-      {
-        type: 'position',
-        subject: { id: detail.id },
-        x: detail.svg.x - ToSVGLength(cursorOffset.dx, svg.el),
-        y: detail.svg.y - ToSVGLength(cursorOffset.dy, svg.el),
-      },
-      {
-        type: 'add-to',
-        subject: { id: detail.id },
-        dest: null,
-      },
-    ]);
+  const DragEnd = async ({ detail }) => {
+    if (detail.dropID) {
+      // Animate to drop point.
+      const dropObject = $state.objects[detail.dropID] || {};
+
+      if (dropObject.x || dropObject.y) {
+        let dropPosition = {
+          x: dropObject.x || 0,
+          y: dropObject.y || 0,
+        };
+
+        dropPosition = ToClientPoint(dropPosition, svg.el);
+
+        // Calculate offset of drop point relative to the
+        // current position of the object.
+        const rect = ref.getBoundingClientRect();
+        const dropOffset = {
+          x: dropPosition.x - rect.left,
+          y: dropPosition.y - rect.top,
+        };
+
+        await offset.update(
+          (o) => ({
+            x: o.x + dropOffset.x,
+            y: o.y + dropOffset.y,
+          }),
+          { duration: 150 }
+        );
+      }
+
+      activeObjects.set({
+        [detail.dropID]: true,
+      });
+
+      dispatchActions([
+        {
+          type: 'add-to',
+          subject: { id: detail.id },
+          dest: { id: detail.dropID },
+        },
+      ]);
+    } else {
+      dispatchActions([
+        {
+          type: 'position',
+          subject: { id: detail.id },
+          x: detail.svg.x - ToSVGLength(cursorOffset.dx, svg.el),
+          y: detail.svg.y - ToSVGLength(cursorOffset.dy, svg.el),
+        },
+        {
+          type: 'add-to',
+          subject: { id: detail.id },
+          dest: null,
+        },
+      ]);
+    }
   };
 </script>
 
