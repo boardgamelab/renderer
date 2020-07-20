@@ -5,9 +5,7 @@ export function crossfade() {
   const senders = new Map();
 
   function crossfade(from, node, params) {
-    const { delay = 0, easing = cubicOut } = params;
-
-    const duration = params.animate ? 200 : 0;
+    const { delay = 0, duration = 200, easing = cubicOut } = params;
 
     const rect = node.getBoundingClientRect();
 
@@ -30,12 +28,10 @@ export function crossfade() {
         let value = `translate(${ux} ${uy})`;
         value = transform ? `${transform} ${value}` : value;
 
-        if (params.animate) {
-          if (params.hand) {
-            node.style.opacity = t < 1 ? 0 : 1;
-          } else {
-            node.setAttribute('transform', value);
-          }
+        if (params.hand) {
+          node.style.opacity = t < 1 ? 0 : 1;
+        } else {
+          node.setAttribute('transform', value);
         }
       },
     };

@@ -85,22 +85,6 @@
     return { x: pos.x + dx, y: pos.y + dy };
   }
 
-  function RelativeToParent(pos) {
-    if (!pos) {
-      return null;
-    }
-
-    let dx = 0;
-    let dy = 0;
-
-    if ($parentPos) {
-      dx = -$parentPos.x;
-      dy = -$parentPos.y;
-    }
-
-    return { x: pos.x + dx, y: pos.y + dy };
-  }
-
   async function DragEnd({ detail }) {
     isDragging = false;
 
@@ -118,26 +102,6 @@
       drop = {
         targetID: detail.dropID,
       };
-
-      // Animate to drop point.
-
-      const dropObject = $state.objects[detail.dropID] || {};
-
-      if (dropObject.x !== undefined || dropObject.y !== undefined) {
-        const dropPosition = {
-          x: dropObject.x || 0,
-          y: dropObject.y || 0,
-        };
-        const dropRelativeToParent = RelativeToParent(dropPosition);
-
-        await position.set(
-          {
-            x: dropRelativeToParent.x,
-            y: dropRelativeToParent.y,
-          },
-          { duration: 150 }
-        );
-      }
     }
 
     Drop(id, drop, absolutePosition, dispatchActions, activeObjects);
@@ -171,8 +135,8 @@
 
 <g
   transform="translate({$position.x}, {$position.y})"
-  out:send={{ key: id, toSVGPoint, animate: $state.remote }}
-  in:receive={{ key: id, toSVGPoint, animate: $state.remote }}
+  out:send={{ key: id, toSVGPoint }}
+  in:receive={{ key: id, toSVGPoint }}
   data-id={id}
   data-draggable={draggable}
   data-selectable={selectable}

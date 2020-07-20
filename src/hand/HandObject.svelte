@@ -11,7 +11,6 @@
   const { state, activeObjects, dispatchActions, svg } = getContext('context');
   const schema = getContext('schema');
   const toSVGPoint = getContext('to-svg-point');
-  const toClientPoint = getContext('to-client-point');
   const highlight = getContext('highlight');
 
   const offset = tweened({ x: 0, y: 0 }, { duration: 0 });
@@ -75,34 +74,6 @@
 
   const DragEnd = async ({ detail }) => {
     if (detail.dropID) {
-      // Animate to drop point.
-      const dropObject = $state.objects[detail.dropID] || {};
-
-      if (dropObject.x || dropObject.y) {
-        let dropPosition = {
-          x: dropObject.x || 0,
-          y: dropObject.y || 0,
-        };
-
-        dropPosition = toClientPoint(dropPosition, svg.el);
-
-        // Calculate offset of drop point relative to the
-        // current position of the object.
-        const rect = ref.getBoundingClientRect();
-        const dropOffset = {
-          x: dropPosition.x - rect.left,
-          y: dropPosition.y - rect.top,
-        };
-
-        await offset.update(
-          (o) => ({
-            x: o.x + dropOffset.x,
-            y: o.y + dropOffset.y,
-          }),
-          { duration: 150 }
-        );
-      }
-
       activeObjects.set({
         [detail.dropID]: true,
       });
@@ -135,8 +106,8 @@
 <svg
   bind:this={ref}
   style="transform: translate3d({$offset.x}px, {$offset.y}px, 0) scale({$scale})"
-  out:send={{ key: id, toSVGPoint, animate: $state.remote, hand: true }}
-  in:receive={{ key: id, toSVGPoint, animate: $state.remote, hand: true }}
+  out:send={{ key: id, toSVGPoint, hand: true }}
+  in:receive={{ key: id, toSVGPoint, hand: true }}
   data-id={id}
   data-draggable="true"
   on:movestart={DragStart}

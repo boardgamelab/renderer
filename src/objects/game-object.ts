@@ -20,8 +20,8 @@ export function GetGameObject(
   const stateVal = state.objects[id];
   const template = GetTemplate(schema, state, id);
 
-  let childrenID: string[] = (stateVal as any).children || [];
-  let children: GameObject[] = childrenID.map((childID) =>
+  const childrenID: string[] = (stateVal as any).children || [];
+  const children: GameObject[] = childrenID.map((childID) =>
     GetGameObject(schema, state, childID)
   );
 
