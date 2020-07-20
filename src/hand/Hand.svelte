@@ -5,14 +5,17 @@
   import HandObject from './HandObject.svelte';
   import { flip } from 'svelte/animate';
   import { getContext } from 'svelte';
+  import { GetGameObject } from '../objects/game-object.ts';
 
+  const schema = getContext('schema');
+  const { state } = getContext('context');
   const highlight = getContext('highlight');
 
   let list = [];
   $: {
     list = [];
     if (hand && hand.children) {
-      list = hand.children;
+      list = hand.children.map((id) => GetGameObject($schema, $state, id));
     }
   }
 </script>
@@ -40,9 +43,9 @@
     <div class="pb-4">PLAYER HAND</div>
   {/if}
 
-  {#each list as id (id)}
+  {#each list as obj (obj.id)}
     <div animate:flip={{ duration: 100 }}>
-      <HandObject {id} />
+      <HandObject id={obj.id} {obj} />
     </div>
   {/each}
 </div>

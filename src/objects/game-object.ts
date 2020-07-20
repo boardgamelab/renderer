@@ -1,39 +1,35 @@
-import { State, Schema, Component } from '@boardgamelab/components';
-import Anchor from './container/Anchor.svelte';
-import Card from './tile/card/Card.svelte';
-import Deck from './container/Deck.svelte';
+import { State, Schema } from '@boardgamelab/components';
+import { GetTemplate } from '../utils/template';
 
-export function GetComponent(schema: Schema, state: State, id: string) {
-  if (!(id in state.objects)) {
-    return null;
-  }
+export interface GameObject {
+  id: string;
+  stateVal: object;
+  schemaVal: object;
+  template: object | null;
+  children: GameObject[];
+}
 
-  const entry = state.objects[id];
+/**
+ * Retrievs data associated with a game object from an ID.
+ */
+export function GetGameObject(
+  schema: Schema,
+  state: State,
+  id: string
+): GameObject {
+  const stateVal = state.objects[id];
+  const template = GetTemplate(schema, state, id);
 
-  // The object itself might carry a template.
-  // This is the case for ephemeral decks.
-  let template = entry.template;
+  let childrenID: string[] = (stateVal as any).children || [];
+  let children: GameObject[] = childrenID.map((childID) =>
+    GetGameObject(schema, state, childID)
+  );
 
-  // If not, locate it in the schema.
-  if (!template) {
-    if (!(id in schema.objects)) {
-      return null;
-    }
-
-    const templateID = schema.objects[id].templateID;
-    template = schema.templates[templateID];
-  }
-
-  switch (template.type) {
-    case Component.CARD:
-      return Card;
-    case Component.DECK:
-      return Deck;
-    case Component.ANCHOR:
-      return Anchor;
-    case Component.HAND:
-      return null;
-    default:
-      throw new Error(`Invalid template: ${template}`);
-  }
+  return {
+    id,
+    stateVal: state.objects[id],
+    schemaVal: schema.objects[id],
+    template,
+    children,
+  };
 }

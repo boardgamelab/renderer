@@ -3,7 +3,7 @@ import type { createEventDispatcher } from 'svelte';
 import type { Readable } from 'svelte/store';
 import { writable, derived, get } from 'svelte/store';
 import { setContext, onDestroy } from 'svelte';
-import { GetTemplate } from './utils/template';
+import { GetGameObject, GameObject } from './objects/game-object';
 
 export function Init(
   schema: Readable<Schema>,
@@ -71,32 +71,6 @@ export function Init(
     objects,
     activeObjects,
     dispatchActions,
-  };
-}
-
-interface GameObject {
-  id: string;
-  stateVal: object;
-  schemaVal: object;
-  template: object | null;
-  children: GameObject[];
-}
-
-function GetGameObject(schema: Schema, state: State, id: string): GameObject {
-  const stateVal = state.objects[id];
-  const template = GetTemplate(schema, state, id);
-
-  let childrenID: string[] = (stateVal as any).children || [];
-  let children: GameObject[] = childrenID.map((childID) =>
-    GetGameObject(schema, state, childID)
-  );
-
-  return {
-    id,
-    stateVal: state.objects[id],
-    schemaVal: schema.objects[id],
-    template,
-    children,
   };
 }
 

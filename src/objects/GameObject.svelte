@@ -9,7 +9,7 @@
   export let id;
   export let obj;
 
-  let components = {
+  const components = {
     [Component.CARD]: Card,
     [Component.ANCHOR]: Anchor,
     [Component.DECK]: Deck,

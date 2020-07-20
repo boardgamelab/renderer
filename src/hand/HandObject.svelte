@@ -1,5 +1,6 @@
 <script>
   export let id;
+  export let obj;
 
   import Card from '../objects/tile/card/Card.svelte';
   import { send, receive } from '../utils/crossfade.js';
@@ -148,6 +149,7 @@
   xmlns="http://www.w3.org/2000/svg">
   <Card
     {id}
+    {obj}
     forceRotation={0}
     forceFaceUp={true}
     active={id in $activeObjects} />
