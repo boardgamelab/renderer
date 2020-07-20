@@ -44,6 +44,10 @@ export function crossfade() {
       });
 
       return () => {
+        if (params.disable) {
+          return;
+        }
+
         if (counterparts.has(params.key)) {
           const from = counterparts.get(params.key);
           counterparts.delete(params.key);
