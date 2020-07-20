@@ -11,20 +11,13 @@ export function crossfade() {
 
     const rect = node.getBoundingClientRect();
 
-    // if (!from.rect.width || !from.rect.height || !rect.width || !rect.height) {
-    //   return {
-    //     duration: 0,
-    //   };
-    // }
-
     const a = params.toSVGPoint({ x: rect.left, y: rect.top });
     const b = params.toSVGPoint({ x: from.rect.left, y: from.rect.top });
 
     const dx = b.x - a.x;
     const dy = b.y - a.y;
 
-    const style = getComputedStyle(node);
-    const transform = style.transform === 'none' ? '' : style.transform;
+    const transform = node.getAttribute('transform');
 
     return {
       delay,
@@ -33,7 +26,9 @@ export function crossfade() {
       tick: (t, u) => {
         const ux = u * dx;
         const uy = u * dy;
-        const value = `${transform} translate(${ux}, ${uy})`;
+
+        let value = `translate(${ux} ${uy})`;
+        value = transform ? `${transform} ${value}` : value;
 
         if (params.animate) {
           if (params.hand) {
