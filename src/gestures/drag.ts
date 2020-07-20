@@ -58,7 +58,11 @@ export function drag(node: Element, opts: DragOpts) {
 
   function CreateCustomEvent(name: string, target: HTMLElement) {
     const id = target.dataset.id;
-    const dropID = dropTarget?.dataset.id || null;
+
+    let dropID = dropTarget?.dataset.id || null;
+    if (dropID === id) {
+      dropID = null;
+    }
 
     return new CustomEvent(name, {
       detail: {
@@ -85,7 +89,9 @@ export function drag(node: Element, opts: DragOpts) {
     pointSVG = ToSVGPoint(e, opts.svg.el, opts.panX, opts.panY);
     pointScreen = { x: e.clientX, y: e.clientY };
 
-    dropTarget = (e.target as Element).closest('[data-droppable=true]');
+    dropTarget = document
+      .elementFromPoint(e.clientX, e.clientY)
+      ?.closest('[data-droppable=true]');
 
     target!.dispatchEvent(CreateCustomEvent('move', target));
   }
@@ -96,8 +102,8 @@ export function drag(node: Element, opts: DragOpts) {
 
   function TouchMove(e: Event) {
     const touchEvent = e as TouchEvent;
-    e.preventDefault();
     Drag(touchEvent.touches[0]);
+    e.preventDefault();
   }
 
   function Cancel() {
