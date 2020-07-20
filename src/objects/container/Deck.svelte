@@ -14,10 +14,7 @@
   const { state } = getContext('context');
   const highlight = getContext('highlight');
   const { template } = $state.objects[id];
-  let { x, y } = $position;
   let { width, height } = template.geometry;
-  const fill = '#fff';
-  const stroke = '#111';
 
   const rotation = tweened(0, { duration: 200 });
 
@@ -35,37 +32,29 @@
         ShuffleAnimation();
         shuffleID = newID;
       }
-      children = $state.objects[id].children || [];
-    }
-  }
+      children = ($state.objects[id].children || []).slice(-2);
 
-  $: {
-    x = $position.x;
-    y = $position.y;
+      if (children.length) {
+        const firstChild = children[0];
+        const template = GetTemplate($schema, $state, firstChild);
+        const { width: w, height: h } = template.geometry;
 
-    width = 0;
-    height = 0;
+        if (w) {
+          width = w;
+        }
 
-    if (children.length) {
-      const firstChild = children[0];
-      const template = GetTemplate($schema, $state, firstChild);
-      const { width: w, height: h } = template.geometry;
-
-      if (w) {
-        width = w;
+        if (h) {
+          height = h;
+        }
       }
 
-      if (h) {
-        height = h;
+      if (template.geometry.width) {
+        width = template.geometry.width;
       }
-    }
 
-    if (template.geometry.width) {
-      width = template.geometry.width;
-    }
-
-    if (template.geometry.height) {
-      height = template.geometry.height;
+      if (template.geometry.height) {
+        height = template.geometry.height;
+      }
     }
   }
 </script>
@@ -86,7 +75,7 @@
         stroke={selectionColor} />
     {/if}
 
-    {#each children.slice(-2) as child (child)}
+    {#each children as child (child)}
       <Moveable
         id={child}
         selectable={false}
