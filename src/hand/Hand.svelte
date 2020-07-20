@@ -45,7 +45,7 @@
 
   {#each list as obj (obj.id)}
     <div animate:flip={{ duration: 100 }}>
-      <HandObject id={obj.id} {obj} />
+      <HandObject {handID} id={obj.id} {obj} />
     </div>
   {/each}
 </div>

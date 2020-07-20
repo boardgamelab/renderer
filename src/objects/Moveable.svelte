@@ -6,6 +6,7 @@
 
   export let id;
   export let obj;
+  export let parentID = null;
   export let parentPos = null;
   export let draggable = true;
   export let selectable = true;
@@ -102,6 +103,19 @@
       drop = {
         targetID: detail.dropID,
       };
+
+      // If we're dropping the object back on its existing parent,
+      // the undo any position changes.
+      if (detail.dropID === parentID) {
+        position.set(
+          {
+            x: obj.stateVal.x || 0,
+            y: obj.stateVal.y || 0,
+          },
+          { duration: 150 }
+        );
+        return;
+      }
     }
 
     Drop(id, drop, absolutePosition, dispatchActions, activeObjects);
@@ -109,7 +123,7 @@
 
   const Drag = ({ detail }) => {
     let h = {};
-    if (detail.dropID) {
+    if (detail.dropID && detail.dropID !== parentID) {
       h = {
         [detail.dropID]: true,
       };

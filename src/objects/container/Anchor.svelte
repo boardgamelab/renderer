@@ -77,6 +77,7 @@
         id={child.id}
         obj={child}
         selectable={false}
+        parentID={id}
         parentPos={position}
         let:active
         let:isDragging>

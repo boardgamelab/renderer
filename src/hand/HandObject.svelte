@@ -1,4 +1,5 @@
 <script>
+  export let handID;
   export let id;
   export let obj;
 
@@ -55,7 +56,7 @@
 
   const Drag = ({ detail }) => {
     let h = {};
-    if (detail.dropID) {
+    if (detail.dropID && detail.dropID !== handID) {
       h = {
         [detail.dropID]: true,
       };
@@ -73,7 +74,7 @@
   };
 
   const DragEnd = async ({ detail }) => {
-    if (detail.dropID) {
+    if (detail.dropID && detail.dropID !== handID) {
       activeObjects.set({
         [detail.dropID]: true,
       });

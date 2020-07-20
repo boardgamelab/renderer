@@ -2,7 +2,6 @@ import type { Writable } from 'svelte/store';
 
 interface DropInfo {
   targetID: string;
-  targetIsCurrentParent: boolean;
 }
 
 export function Drop(
@@ -13,10 +12,6 @@ export function Drop(
   activeObjects: Writable<object>
 ) {
   if (drop) {
-    if (drop.targetIsCurrentParent) {
-      return;
-    }
-
     activeObjects.set({
       [drop.targetID]: true,
     });
