@@ -41,7 +41,8 @@
     }
   }
 
-  const { dispatchActions, renderingOrder, stateStore, activeObjects } = Init(
+  const { dispatchActions, objects, stateStore, activeObjects } = Init(
+    schema,
     state,
     svg,
     hand,
@@ -108,10 +109,12 @@
     on:touchmove|preventDefault={() => {}}
     on:contextmenu|preventDefault={() => {}}
     xmlns="http://www.w3.org/2000/svg">
+
     <Effects />
+
     <g transform="translate({$panX}, {$panY})">
-      {#each $renderingOrder as id (id)}
-        <GameObject {id} />
+      {#each $objects as obj (obj.id)}
+        <GameObject id={obj.id} {obj} />
       {/each}
     </g>
 
@@ -125,6 +128,7 @@
         width={$selectBox.width}
         height={$selectBox.height} />
     {/if}
+
   </svg>
 
   {#if handID}

@@ -1,10 +1,12 @@
-import { State, Action } from '@boardgamelab/components';
+import { State, Schema, Action } from '@boardgamelab/components';
 import type { createEventDispatcher } from 'svelte';
 import type { Readable } from 'svelte/store';
 import { writable, derived, get } from 'svelte/store';
 import { setContext, onDestroy } from 'svelte';
+import { GetTemplate } from './utils/template';
 
 export function Init(
+  schema: Readable<Schema>,
   masterState: Readable<State>,
   svg: { el: SVGGraphicsElement },
   hand: { el: HTMLElement },
@@ -19,7 +21,7 @@ export function Init(
   // order to not make the network traffic too chatty.
   const localState = writable({ ...get(masterState) });
 
-  const unsub = masterState.subscribe((s) => {
+  const u1 = masterState.subscribe((s) => {
     // TODO: Should we update the state in a loop here
     // so that individual actions can be animated?
     // Consider playing animations *before* a state
@@ -37,8 +39,12 @@ export function Init(
     localState.set(s);
   });
 
+  const objects = derived([schema, localState], ([$schema, $s]) => {
+    return ComputeRenderingOrder($schema, $s);
+  });
+
   onDestroy(() => {
-    unsub();
+    u1();
   });
 
   const dispatchActions = (actions: Action[]) => {
@@ -62,9 +68,35 @@ export function Init(
 
   return {
     stateStore: localState,
-    renderingOrder: derived(localState, ($s) => ComputeRenderingOrder($s)),
+    objects,
     activeObjects,
     dispatchActions,
+  };
+}
+
+interface GameObject {
+  id: string;
+  stateVal: object;
+  schemaVal: object;
+  template: object | null;
+  children: GameObject[];
+}
+
+function GetGameObject(schema: Schema, state: State, id: string): GameObject {
+  const stateVal = state.objects[id];
+  const template = GetTemplate(schema, state, id);
+
+  let childrenID: string[] = (stateVal as any).children || [];
+  let children: GameObject[] = childrenID.map((childID) =>
+    GetGameObject(schema, state, childID)
+  );
+
+  return {
+    id,
+    stateVal: state.objects[id],
+    schemaVal: schema.objects[id],
+    template,
+    children,
   };
 }
 
@@ -73,7 +105,7 @@ export function Init(
  * Higher numbers mean that the object will appear later
  * in the returned array.
  */
-function ComputeRenderingOrder(s: State): string[] {
+function ComputeRenderingOrder(schema: Schema, s: State): GameObject[] {
   return Object.keys(s.objects)
     .filter((key) => {
       return !s.objects[key].parent;
@@ -82,5 +114,6 @@ function ComputeRenderingOrder(s: State): string[] {
       const aOrder = s.objects[a].order || 0;
       const bOrder = s.objects[b].order || 0;
       return aOrder < bOrder ? -1 : 1;
-    });
+    })
+    .map((id) => GetGameObject(schema, s, id));
 }

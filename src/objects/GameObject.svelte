@@ -1,18 +1,29 @@
 <script>
-  import { getContext } from 'svelte';
-  import { GetComponent } from './game-object.ts';
   import Moveable from './Moveable.svelte';
   import { Component } from '@boardgamelab/components';
 
+  import Anchor from './container/Anchor.svelte';
+  import Card from './tile/card/Card.svelte';
+  import Deck from './container/Deck.svelte';
+
   export let id;
+  export let obj;
 
-  const { state } = getContext('context');
-  const schema = getContext('schema');
-
-  let component = null;
-  $: component = GetComponent($schema, $state, id);
+  let components = {
+    [Component.CARD]: Card,
+    [Component.ANCHOR]: Anchor,
+    [Component.DECK]: Deck,
+  };
 </script>
 
-<Moveable {id} let:active let:isDragging let:position>
-  <svelte:component this={component} {id} {active} {isDragging} {position} />
-</Moveable>
+{#if obj.template}
+  <Moveable {id} {obj} let:active let:isDragging let:position>
+    <svelte:component
+      this={components[obj.template.type]}
+      {obj}
+      {id}
+      {active}
+      {isDragging}
+      {position} />
+  </Moveable>
+{/if}

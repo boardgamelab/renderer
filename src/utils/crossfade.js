@@ -11,23 +11,17 @@ export function crossfade() {
 
     const rect = node.getBoundingClientRect();
 
-    if (!from.rect.width || !from.rect.height || !rect.width || !rect.height) {
-      return {
-        duration: 0,
-      };
-    }
+    // if (!from.rect.width || !from.rect.height || !rect.width || !rect.height) {
+    //   return {
+    //     duration: 0,
+    //   };
+    // }
 
     const a = params.toSVGPoint({ x: rect.left, y: rect.top });
     const b = params.toSVGPoint({ x: from.rect.left, y: from.rect.top });
 
     const dx = b.x - a.x;
     const dy = b.y - a.y;
-
-    if (!dx && !dy) {
-      return {
-        duration: 0,
-      };
-    }
 
     const style = getComputedStyle(node);
     const transform = style.transform === 'none' ? '' : style.transform;
@@ -52,33 +46,20 @@ export function crossfade() {
     };
   }
 
-  function log(key, msg) {
-    if (key === 'FpeQ11RIG') {
-      console.log(msg);
-    }
-  }
-
-  function transition(items, counterparts, type) {
+  function transition(items, counterparts) {
     return (node, params) => {
       items.set(params.key, {
         rect: node.getBoundingClientRect(),
       });
 
-      log(params.key, 'add ' + type);
-
       return () => {
-        log(type, params.key);
-
         if (counterparts.has(params.key)) {
           const from = counterparts.get(params.key);
           counterparts.delete(params.key);
-          log(params.key, 'del ' + type);
-          log(params.key, 'crossfade ' + JSON.stringify(from));
 
           return crossfade(from, node, params);
         }
 
-        log(params.key, 'del ' + type);
         items.delete(params.key);
 
         return {
@@ -88,10 +69,7 @@ export function crossfade() {
     };
   }
 
-  return [
-    transition(senders, receivers, 'S'),
-    transition(receivers, senders, 'R'),
-  ];
+  return [transition(senders, receivers), transition(receivers, senders)];
 }
 
 const [send, receive] = crossfade();

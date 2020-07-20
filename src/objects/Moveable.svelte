@@ -5,6 +5,7 @@
   import { send, receive } from '../utils/crossfade.js';
 
   export let id;
+  export let obj;
   export let parentPos = null;
   export let draggable = true;
   export let selectable = true;
@@ -20,30 +21,28 @@
   let prevParent = null;
 
   $: {
-    if (id in $state.objects) {
-      const newX = $state.objects[id].x || 0;
-      const newY = $state.objects[id].y || 0;
+    const newX = obj.stateVal.x || 0;
+    const newY = obj.stateVal.y || 0;
 
-      let changed = false;
-      if (newX !== x || newY !== y) {
-        changed = true;
-      }
-
-      x = newX;
-      y = newY;
-
-      const currParent = $state.objects[id].parent || null;
-
-      if (changed) {
-        if ($state.remote && !currParent && !prevParent) {
-          position.set({ x, y }, { duration: 150 });
-        } else {
-          position.set({ x, y });
-        }
-      }
-
-      prevParent = currParent;
+    let changed = false;
+    if (newX !== x || newY !== y) {
+      changed = true;
     }
+
+    x = newX;
+    y = newY;
+
+    const currParent = obj.stateVal.parent || null;
+
+    if (changed) {
+      if ($state.remote && !currParent && !prevParent) {
+        position.set({ x, y }, { duration: 150 });
+      } else {
+        position.set({ x, y });
+      }
+    }
+
+    prevParent = currParent;
   }
 
   let isDragging = false;
@@ -55,8 +54,8 @@
     snapshot = $position;
 
     let toRaise = id;
-    if ($state.objects[id].parent) {
-      toRaise = $state.objects[id].parent;
+    if (obj.stateVal.parent) {
+      toRaise = obj.stateVal.parent;
     }
 
     // Raise object so that it appears rendered above
@@ -124,7 +123,7 @@
 
       const dropObject = $state.objects[detail.dropID] || {};
 
-      if (dropObject.x || dropObject.y) {
+      if (dropObject.x !== undefined || dropObject.y !== undefined) {
         const dropPosition = {
           x: dropObject.x || 0,
           y: dropObject.y || 0,

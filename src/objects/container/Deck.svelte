@@ -1,5 +1,6 @@
 <script>
   export let id;
+  export let obj;
   export let position;
   export let active = false;
 
@@ -8,13 +9,9 @@
   import { selectionColor } from '../../defaults.ts';
   import Moveable from '../Moveable.svelte';
   import Card from '../tile/card/Card.svelte';
-  import { GetTemplate } from '../../utils/template.ts';
 
-  const schema = getContext('schema');
-  const { state } = getContext('context');
   const highlight = getContext('highlight');
-  const { template } = $state.objects[id];
-  let { width, height } = template.geometry;
+  let { width, height } = obj.template.geometry;
 
   const rotation = tweened(0, { duration: 200 });
 
@@ -24,37 +21,32 @@
   }
 
   let shuffleID = null;
-  let children = [];
   $: {
-    if (id in $state.objects) {
-      const newID = $state.objects[id].shuffleID;
-      if (newID && newID !== shuffleID) {
-        ShuffleAnimation();
-        shuffleID = newID;
-      }
-      children = ($state.objects[id].children || []).slice(-2);
+    const newID = obj.stateVal.shuffleID;
+    if (newID && newID !== shuffleID) {
+      ShuffleAnimation();
+      shuffleID = newID;
+    }
 
-      if (children.length) {
-        const firstChild = children[0];
-        const template = GetTemplate($schema, $state, firstChild);
-        const { width: w, height: h } = template.geometry;
+    if (obj.children.length) {
+      const firstChild = obj.children[0];
+      const { width: w, height: h } = firstChild.template.geometry;
 
-        if (w) {
-          width = w;
-        }
-
-        if (h) {
-          height = h;
-        }
+      if (w) {
+        width = w;
       }
 
-      if (template.geometry.width) {
-        width = template.geometry.width;
+      if (h) {
+        height = h;
       }
+    }
 
-      if (template.geometry.height) {
-        height = template.geometry.height;
-      }
+    if (obj.template.geometry.width) {
+      width = obj.template.geometry.width;
+    }
+
+    if (obj.template.geometry.height) {
+      height = obj.template.geometry.height;
     }
   }
 </script>
@@ -63,7 +55,7 @@
   data-id={id}
   data-droppable="true"
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
-  {#if children.length}
+  {#if obj.children.length}
     {#if id in $highlight || active}
       <rect
         x={-10}
@@ -75,14 +67,20 @@
         stroke={selectionColor} />
     {/if}
 
-    {#each children as child (child)}
+    {#each obj.children as child (child.id)}
       <Moveable
-        id={child}
+        id={child.id}
+        obj={child}
         selectable={false}
         parentPos={position}
         let:active
         let:isDragging>
-        <Card id={child} droppable={false} {isDragging} {active} />
+        <Card
+          id={child.id}
+          obj={child}
+          droppable={false}
+          {isDragging}
+          {active} />
       </Moveable>
     {/each}
 
@@ -94,7 +92,7 @@
               style="font-size: 3rem; color: white; background-color: {selectionColor}"
               class="rounded-full shadow-xl w-full h-full flex items-center
               justify-center select-none font-bold text-white">
-              {children.length}
+              {obj.children.length}
             </div>
           </div>
         </foreignObject>

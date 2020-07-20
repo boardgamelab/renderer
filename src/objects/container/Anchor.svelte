@@ -1,5 +1,6 @@
 <script>
   export let id;
+  export let obj;
   export let position;
   export let active = false;
 
@@ -11,14 +12,11 @@
 
   const renderer = getContext('renderer');
   const schema = getContext('schema');
-  const { state } = getContext('context');
   const highlight = getContext('highlight');
-  const { template } = $state.objects[id];
-  let { x, y } = $position;
-  let width = 0;
-  let height = 0;
-  const fill = '#fff';
-  const stroke = '#111';
+
+  const template = obj.template;
+  const width = template.geometry.width;
+  const height = template.geometry.height;
 
   const rotation = tweened(0, { duration: 200 });
 
@@ -28,22 +26,11 @@
   }
 
   let shuffleID = null;
-  let children = [];
   $: {
-    if (id in $schema.objects) {
-      const { templateID } = $schema.objects[id];
-      const template = $schema.templates[templateID];
-      width = template.geometry.width;
-      height = template.geometry.height;
-    }
-
-    if (id in $state.objects) {
-      const newID = $state.objects[id].shuffleID;
-      if (newID && newID !== shuffleID) {
-        ShuffleAnimation();
-        shuffleID = newID;
-      }
-      children = $state.objects[id].children || [];
+    const newID = obj.stateVal.shuffleID;
+    if (newID && newID !== shuffleID) {
+      ShuffleAnimation();
+      shuffleID = newID;
     }
   }
 
@@ -87,15 +74,21 @@
       stroke={selectionColor} />
   {/if}
 
-  {#if children.length}
-    {#each children.slice(-2) as child (child)}
+  {#if obj.children.length}
+    {#each obj.children.slice(-2) as child (child.id)}
       <Moveable
-        id={child}
+        id={child.id}
+        obj={child}
         selectable={false}
         parentPos={position}
         let:active
         let:isDragging>
-        <Card id={child} droppable={false} {isDragging} {active} />
+        <Card
+          id={child.id}
+          obj={child}
+          droppable={false}
+          {isDragging}
+          {active} />
       </Moveable>
     {/each}
 
@@ -107,7 +100,7 @@
               style="font-size: 3rem; color: white; background-color: {selectionColor}"
               class="rounded-full shadow-xl w-full h-full flex items-center
               justify-center select-none font-bold text-white">
-              {children.length}
+              {obj.children.length}
             </div>
           </div>
         </foreignObject>

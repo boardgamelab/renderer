@@ -1,5 +1,6 @@
 <script>
   export let id;
+  export let obj;
   export let droppable = true;
   export let isDragging = false;
   export let active = false;
@@ -11,42 +12,34 @@
   import { selectionColor } from '../../../defaults.ts';
   import Back from './Back.svelte';
 
-  const { state } = getContext('context');
   const schema = getContext('schema');
   const renderer = getContext('renderer');
   const highlight = getContext('highlight');
 
-  let geometry = { width: 0, height: 0 };
+  const template = obj.template;
+  const width = template.geometry.width;
+  const height = template.geometry.height;
 
-  let { width, height } = geometry;
   const fill = '#fff';
   const stroke = '#111';
   let faceDown = false;
   let rotation = tweened(0, { duration: 100 });
 
   $: {
-    if (id in $schema.objects) {
-      const { templateID } = $schema.objects[id];
-      const template = $schema.templates[templateID];
-      width = template.geometry.width;
-      height = template.geometry.height;
+    const card = obj.stateVal;
+
+    faceDown = false;
+    if (card.faceDown) {
+      faceDown = true;
+    }
+    if (card.rotation !== undefined) {
+      rotation.set(card.rotation);
+    } else {
+      rotation.set(0);
     }
 
-    if (id in $state.objects) {
-      const card = $state.objects[id];
-      faceDown = false;
-      if (card.faceDown) {
-        faceDown = true;
-      }
-      if (card.rotation !== undefined) {
-        rotation.set(card.rotation);
-      } else {
-        rotation.set(0);
-      }
-
-      if (forceRotation !== undefined) {
-        rotation.set(forceRotation);
-      }
+    if (forceRotation !== undefined) {
+      rotation.set(forceRotation);
     }
   }
 </script>
