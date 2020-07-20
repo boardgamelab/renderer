@@ -118,7 +118,7 @@
       }
     }
 
-    Drop(id, drop, absolutePosition, dispatchActions, activeObjects);
+    Drop(id, drop, absolutePosition, dispatchActions);
   }
 
   const Drag = ({ detail }) => {

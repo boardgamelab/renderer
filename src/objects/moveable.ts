@@ -1,5 +1,3 @@
-import type { Writable } from 'svelte/store';
-
 interface DropInfo {
   targetID: string;
 }
@@ -8,13 +6,9 @@ export function Drop(
   id: string,
   drop: DropInfo | null,
   absolutePosition: any,
-  dispatchActions: any,
-  activeObjects: Writable<object>
+  dispatchActions: any
 ) {
   if (drop) {
-    activeObjects.set({
-      [drop.targetID]: true,
-    });
     dispatchActions([
       {
         type: 'add-to',
