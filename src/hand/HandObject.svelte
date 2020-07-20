@@ -121,6 +121,7 @@
   <Card
     {id}
     {obj}
+    droppable={false}
     forceRotation={0}
     forceFaceUp={true}
     active={id in $activeObjects} />
