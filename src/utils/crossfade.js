@@ -5,7 +5,7 @@ export function crossfade() {
   const senders = new Map();
 
   function crossfade(from, node, params) {
-    const { delay = 0, duration = 200, easing = cubicOut } = params;
+    const { delay = 0, duration = 250, easing = cubicOut } = params;
 
     const rect = node.getBoundingClientRect();
 
@@ -14,6 +14,8 @@ export function crossfade() {
 
     const dx = b.x - a.x;
     const dy = b.y - a.y;
+    const dw = from.rect.width / rect.width;
+    const dh = from.rect.height / rect.height;
 
     const transform = node.getAttribute('transform');
 
@@ -24,8 +26,10 @@ export function crossfade() {
       tick: (t, u) => {
         const ux = u * dx;
         const uy = u * dy;
+        const uw = t + u * dw;
+        const uh = t + u * dh;
 
-        let value = `translate(${ux} ${uy})`;
+        let value = `translate(${ux} ${uy}) scale(${uw} ${uh})`;
         value = transform ? `${transform} ${value}` : value;
 
         if (params.hand) {
