@@ -6,6 +6,7 @@
 
   import { getContext } from 'svelte';
   import { tweened } from 'svelte/motion';
+  import { fade } from 'svelte/transition';
   import { selectionColor } from '../../defaults.ts';
   import Moveable from '../Moveable.svelte';
   import Card from '../tile/card/Card.svelte';
@@ -58,6 +59,7 @@
   {#if obj.children.length}
     {#if id in $highlight || active}
       <rect
+        in:fade|local={{ duration: 150 }}
         x={-10}
         y={-10}
         width={width + 20}
@@ -67,7 +69,7 @@
         stroke={selectionColor} />
     {/if}
 
-    {#each obj.children as child (child.id)}
+    {#each obj.children.slice(-2) as child (child.id)}
       <Moveable
         id={child.id}
         obj={child}

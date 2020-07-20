@@ -6,6 +6,7 @@
 
   import { getContext } from 'svelte';
   import { tweened } from 'svelte/motion';
+  import { fade } from 'svelte/transition';
   import { selectionColor } from '../../defaults.ts';
   import Moveable from '../Moveable.svelte';
   import Card from '../tile/card/Card.svelte';
@@ -32,11 +33,6 @@
       ShuffleAnimation();
       shuffleID = newID;
     }
-  }
-
-  $: {
-    x = $position.x;
-    y = $position.y;
   }
 </script>
 
@@ -65,6 +61,7 @@
 
   {#if id in $highlight || active}
     <rect
+      in:fade|local={{ duration: 150 }}
       x={-10}
       y={-10}
       width={width + 20}

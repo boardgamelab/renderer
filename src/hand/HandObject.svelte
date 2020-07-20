@@ -8,7 +8,7 @@
   import { getContext } from 'svelte';
   import { ToClientLength, ToSVGLength } from '../utils/svg.ts';
 
-  const { state, activeObjects, dispatchActions, svg } = getContext('context');
+  const { activeObjects, dispatchActions, svg } = getContext('context');
   const schema = getContext('schema');
   const toSVGPoint = getContext('to-svg-point');
   const highlight = getContext('highlight');

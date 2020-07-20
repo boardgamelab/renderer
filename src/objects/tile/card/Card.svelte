@@ -9,6 +9,7 @@
 
   import { getContext } from 'svelte';
   import { tweened } from 'svelte/motion';
+  import { fade } from 'svelte/transition';
   import { selectionColor } from '../../../defaults.ts';
   import Back from './Back.svelte';
 
@@ -78,6 +79,7 @@
 
   {#if id in $highlight || active}
     <rect
+      in:fade|local={{ duration: 150 }}
       x={-10}
       y={-10}
       width={width + 20}
