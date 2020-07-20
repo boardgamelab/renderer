@@ -89,9 +89,41 @@ export function drag(node: Element, opts: DragOpts) {
     pointSVG = ToSVGPoint(e, opts.svg.el, opts.panX, opts.panY);
     pointScreen = { x: e.clientX, y: e.clientY };
 
-    dropTarget = document
-      .elementFromPoint(e.clientX, e.clientY)
-      ?.closest('[data-droppable=true]');
+    const targetRect = target!.getBoundingClientRect();
+
+    const pointsToCheck = [
+      {
+        x: e.clientX,
+        y: e.clientY,
+      },
+      {
+        x: targetRect!.left,
+        y: targetRect!.top,
+      },
+      {
+        x: targetRect!.left + targetRect!.width,
+        y: targetRect!.top,
+      },
+      {
+        x: targetRect!.left + targetRect!.width,
+        y: targetRect!.top + targetRect!.height,
+      },
+      {
+        x: targetRect!.left,
+        y: targetRect!.top + targetRect!.height,
+      },
+    ];
+
+    dropTarget = null;
+    pointsToCheck.forEach((point) => {
+      const t = document
+        .elementFromPoint(point.x, point.y)
+        ?.closest('[data-droppable=true]');
+
+      if (t) {
+        dropTarget = t;
+      }
+    });
 
     target!.dispatchEvent(CreateCustomEvent('move', target));
   }
@@ -113,12 +145,25 @@ export function drag(node: Element, opts: DragOpts) {
     anchorSVG = null;
     target = null;
     dropTarget = null;
+
     window.removeEventListener('mousemove', MouseMove);
     window.removeEventListener('touchmove', TouchMove);
     window.removeEventListener('mouseup', Cancel);
     window.removeEventListener('touchend', Cancel);
     window.removeEventListener('touchcancel', Cancel);
     window.removeEventListener('touchleave', Cancel);
+  }
+
+  function Start(e: MouseEvent | Touch) {
+    pointSVG = anchorSVG = ToSVGPoint(e, opts.svg.el, opts.panX, opts.panY);
+
+    pointScreen = anchorScreen = {
+      x: e.clientX,
+      y: e.clientY,
+    };
+
+    target!.dispatchEvent(CreateCustomEvent('movestart', target));
+    target!.style.pointerEvents = 'none';
   }
 
   function MouseDown(e: Event) {
@@ -132,20 +177,7 @@ export function drag(node: Element, opts: DragOpts) {
     target = (e.target as Element).closest('[data-draggable=true]');
 
     if (target) {
-      pointSVG = anchorSVG = ToSVGPoint(
-        mouseEvent,
-        opts.svg.el,
-        opts.panX,
-        opts.panY
-      );
-      pointScreen = anchorScreen = {
-        x: mouseEvent.clientX,
-        y: mouseEvent.clientY,
-      };
-
-      target!.dispatchEvent(CreateCustomEvent('movestart', target));
-      target!.style.pointerEvents = 'none';
-
+      Start(mouseEvent);
       window.addEventListener('mousemove', MouseMove);
       window.addEventListener('mouseup', Cancel);
     }
@@ -158,17 +190,7 @@ export function drag(node: Element, opts: DragOpts) {
 
     if (target) {
       const touch = touchEvent.touches[0];
-      pointSVG = anchorSVG = ToSVGPoint(
-        touch,
-        opts.svg.el,
-        opts.panX,
-        opts.panY
-      );
-      pointScreen = anchorScreen = { x: touch.clientX, y: touch.clientY };
-
-      target!.dispatchEvent(CreateCustomEvent('movestart', target));
-      target!.style.pointerEvents = 'none';
-
+      Start(touch);
       window.addEventListener('touchmove', TouchMove, { passive: false });
       window.addEventListener('touchend', Cancel);
       window.addEventListener('touchcancel', Cancel);
