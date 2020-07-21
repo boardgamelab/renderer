@@ -94,6 +94,11 @@
     content="width=device-width,initial-scale=1.0,user-scalable=no" />
 </svelte:head>
 
+<svelte:window
+  on:error={(e) => {
+    dispatch('error', e);
+  }} />
+
 <span use:drag={{ dispatchActions, svg, panX: $panX, panY: $panY }}>
   <svg
     id="root"
