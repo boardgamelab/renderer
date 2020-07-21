@@ -108,7 +108,7 @@
     {zoomOffsetY}
     {$zoomLevel * cardWidth}
     {$zoomLevel * cardHeight}"
-    use:pan={{ panX, panY }}
+    use:pan={{ panX, panY, activeObjects }}
     use:select={{ panX: $panX, panY: $panY, activeObjects, selectBox, schema: $schema, state: $stateStore }}
     use:zoom={{ zoomLevel }}
     on:touchmove|preventDefault={() => {}}

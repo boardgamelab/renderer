@@ -15,6 +15,7 @@
  */
 
 import { ToSVGPoint } from '../utils/svg';
+import { Writable } from 'svelte/store';
 import throttle from 'lodash.throttle';
 
 interface Point {
@@ -32,6 +33,8 @@ interface Opts {
   panX: Tweened<number>;
   // Top-left Y coordinate.
   panY: Tweened<number>;
+  // The current selected objects.
+  activeObjects: Writable<object>;
 }
 
 const PAN_DELTA_X = 2000;
@@ -72,6 +75,7 @@ export function pan(node: Element, opts: Opts) {
     anchor = point;
     opts.panX.update((v) => v + dx, { duration: 0 });
     opts.panY.update((v) => v + dy, { duration: 0 });
+    opts.activeObjects.set({});
   }
 
   function MouseMove(e: Event) {
