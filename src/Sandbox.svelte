@@ -14,12 +14,14 @@
   import { Init } from './sandbox.ts';
   import { tweened } from 'svelte/motion';
   import { cubicOut, linear } from 'svelte/easing';
+  import PlayerPanel from './player/PlayerPanel.svelte';
 
   // A Svelte component that can render a game object.
   export let renderer = null;
   export let schema;
   export let state;
   export let seatID = null;
+  export let players;
 
   const dispatch = createEventDispatcher();
 
@@ -144,6 +146,8 @@
       <Hand ref={hand} {handID} hand={$stateStore.objects[handID]} />
     </div>
   {/if}
+
+  <PlayerPanel {state} {players} {seatID} />
 </span>
 
 {#if menu}
