@@ -18,6 +18,7 @@
   const scale = tweened(1, { duration: 100 });
   let ref;
   let snapshot = null;
+  let scaled = false;
   let cursorOffset = null;
 
   let geometry = { width: 0 };
@@ -28,19 +29,18 @@
   }
 
   const DragStart = ({ detail }) => {
-    const rect = ref.getBoundingClientRect();
-
     snapshot = {
       x: detail.client.x,
       y: detail.client.y,
     };
+
+    const rect = ref.getBoundingClientRect();
 
     // Scale the object so that it appears the same
     // size as equivalent objects in the SVG viewport.
     const targetWidth = ToClientLength(geometry.width, svg.el);
     const currentWidth = rect.width;
     const s = targetWidth / currentWidth;
-    scale.set(s);
 
     // Calculate the distance between the cursor and the
     // top-left of the object. It's important to take into
@@ -52,6 +52,8 @@
       dx: snapshot.x - scaledX,
       dy: snapshot.y - scaledY,
     };
+
+    scaled = false;
   };
 
   const Drag = ({ detail }) => {
@@ -63,6 +65,10 @@
     }
     highlight.set(h);
 
+    if (detail.dropID !== handID) {
+      Scale();
+    }
+
     activeObjects.set({
       [detail.id]: true,
     });
@@ -73,35 +79,73 @@
     });
   };
 
-  const DragEnd = async ({ detail }) => {
-    if (detail.dropID && detail.dropID !== handID) {
-      activeObjects.set({
-        [detail.dropID]: true,
-      });
+  const DragEnd = ({ detail }) => {
+    if (detail.dropID !== handID) {
+      if (detail.dropID) {
+        activeObjects.set({
+          [detail.dropID]: true,
+        });
 
-      dispatchActions([
-        {
-          type: 'add-to',
-          subject: { id: detail.id },
-          dest: { id: detail.dropID },
-        },
-      ]);
+        dispatchActions([
+          {
+            type: 'add-to',
+            subject: { id: detail.id },
+            dest: { id: detail.dropID },
+          },
+        ]);
+      } else if (cursorOffset) {
+        dispatchActions([
+          {
+            type: 'position',
+            subject: { id: detail.id },
+            x: detail.svg.x - ToSVGLength(cursorOffset.dx, svg.el),
+            y: detail.svg.y - ToSVGLength(cursorOffset.dy, svg.el),
+          },
+          {
+            type: 'add-to',
+            subject: { id: detail.id },
+            dest: null,
+          },
+        ]);
+      }
     } else {
-      dispatchActions([
-        {
-          type: 'position',
-          subject: { id: detail.id },
-          x: detail.svg.x - ToSVGLength(cursorOffset.dx, svg.el),
-          y: detail.svg.y - ToSVGLength(cursorOffset.dy, svg.el),
-        },
-        {
-          type: 'add-to',
-          subject: { id: detail.id },
-          dest: null,
-        },
-      ]);
+      Reorder(detail);
     }
   };
+
+  function Reorder(detail) {
+    offset.set(
+      {
+        x: 0,
+        y: 0,
+      },
+      { duration: 150 }
+    );
+    Unscale();
+  }
+
+  // Scale the object to the size it would become on the table.
+  function Scale() {
+    if (scaled) {
+      return;
+    }
+
+    const rect = ref.getBoundingClientRect();
+
+    // Scale the object so that it appears the same
+    // size as equivalent objects in the SVG viewport.
+    const targetWidth = ToClientLength(geometry.width, svg.el);
+    const currentWidth = rect.width;
+    const s = targetWidth / currentWidth;
+    scale.set(s);
+
+    scaled = true;
+  }
+
+  function Unscale() {
+    scale.set(1);
+    scaled = false;
+  }
 </script>
 
 <svg

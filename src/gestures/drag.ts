@@ -68,6 +68,7 @@ export function drag(node: Element, opts: DragOpts) {
       detail: {
         id,
         dropID,
+        target,
         svg: {
           x: pointSVG!.x,
           y: pointSVG!.y,
