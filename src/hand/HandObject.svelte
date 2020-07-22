@@ -14,6 +14,10 @@
   const toSVGPoint = getContext('to-svg-point');
   const highlight = getContext('highlight');
 
+  // Add a margin around the SVG container so that things
+  // like borders can be seen.
+  const margin = 20;
+
   const offset = tweened({ x: 0, y: 0 }, { duration: 0 });
   const scale = tweened(1, { duration: 100 });
   let ref;
@@ -149,25 +153,28 @@
 </script>
 
 <svg
-  bind:this={ref}
   style="transform: translate3d({$offset.x}px, {$offset.y}px, 0) scale({$scale})"
   out:send={{ key: id, toSVGPoint, hand: true }}
   in:receive={{ key: id, toSVGPoint, hand: true }}
   data-id={id}
+  data-selectable="true"
   data-draggable="true"
   on:movestart={DragStart}
   on:moveend={DragEnd}
   on:move={Drag}
-  class="mx-2 shadow-lg"
+  class="mx-2"
   width="100"
-  viewBox="0 0 {geometry.width}
-  {geometry.height}"
+  viewBox="-{margin} -{margin}
+  {geometry.width + 2 * margin}
+  {geometry.height + 2 * margin}"
   xmlns="http://www.w3.org/2000/svg">
-  <Card
-    {id}
-    {obj}
-    droppable={false}
-    forceRotation={0}
-    forceFaceUp={true}
-    active={id in $activeObjects} />
+  <g bind:this={ref}>
+    <Card
+      {id}
+      {obj}
+      droppable={false}
+      forceRotation={0}
+      forceFaceUp={true}
+      active={id in $activeObjects} />
+  </g>
 </svg>
