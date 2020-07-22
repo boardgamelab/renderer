@@ -101,7 +101,9 @@
     dispatch('error', e);
   }} />
 
-<span use:drag={{ dispatchActions, svg, panX: $panX, panY: $panY }}>
+<span
+  use:drag={{ dispatchActions, svg, panX: $panX, panY: $panY }}
+  use:select={{ panX: $panX, panY: $panY, svg, activeObjects, selectBox, schema: $schema, state: $stateStore }}>
   <svg
     id="root"
     bind:this={svg.el}
@@ -111,7 +113,6 @@
     {$zoomLevel * cardWidth}
     {$zoomLevel * cardHeight}"
     use:pan={{ panX, panY, activeObjects }}
-    use:select={{ panX: $panX, panY: $panY, activeObjects, selectBox, schema: $schema, state: $stateStore }}
     use:zoom={{ zoomLevel }}
     on:touchmove|preventDefault={() => {}}
     on:contextmenu|preventDefault={() => {}}

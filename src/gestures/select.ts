@@ -26,6 +26,7 @@ interface Opts {
   panY: number;
   schema: Schema;
   state: State;
+  svg: { el: SVGGraphicsElement };
 }
 
 interface Point {
@@ -36,7 +37,7 @@ interface Point {
 /**
  * Svelte directive that allows elements to be selected.
  */
-export function select(svg: SVGSVGElement, opts: Opts) {
+export function select(node: HTMLElement, opts: Opts) {
   let o = opts;
   let selectBoxAnchor: Point | null = null;
   let selectBox = false;
@@ -48,7 +49,7 @@ export function select(svg: SVGSVGElement, opts: Opts) {
   }
 
   function Drag(e: MouseEvent | Touch) {
-    const point = ToSVGPoint(e as MouseEvent, svg);
+    const point = ToSVGPoint(e as MouseEvent, opts.svg.el);
 
     selectBox = true;
 
@@ -98,7 +99,7 @@ export function select(svg: SVGSVGElement, opts: Opts) {
       const id = (target as HTMLElement).dataset.id as string;
       o.activeObjects.set({ [id]: true });
     } else {
-      selectBoxAnchor = ToSVGPoint(e as MouseEvent, svg);
+      selectBoxAnchor = ToSVGPoint(e as MouseEvent, opts.svg.el);
       window.addEventListener('mousemove', Drag);
       window.addEventListener('mouseup', Cancel);
     }
@@ -116,11 +117,11 @@ export function select(svg: SVGSVGElement, opts: Opts) {
       const id = (target as HTMLElement).dataset.id as string;
       o.activeObjects.set({ [id]: true });
     } else {
-      selectBoxAnchor = ToSVGPoint(touch, svg);
-      svg.addEventListener('touchmove', TouchDrag);
-      svg.addEventListener('touchend', Cancel);
-      svg.addEventListener('touchcancel', Cancel);
-      svg.addEventListener('touchleave', Cancel);
+      selectBoxAnchor = ToSVGPoint(touch, opts.svg.el);
+      node.addEventListener('touchmove', TouchDrag);
+      node.addEventListener('touchend', Cancel);
+      node.addEventListener('touchcancel', Cancel);
+      node.addEventListener('touchleave', Cancel);
     }
   }
 
@@ -136,22 +137,22 @@ export function select(svg: SVGSVGElement, opts: Opts) {
     o.selectBox.set(null);
     window.removeEventListener('mousemove', Drag);
     window.removeEventListener('mouseup', Cancel);
-    svg.removeEventListener('touchmove', TouchDrag);
-    svg.removeEventListener('touchend', Cancel);
-    svg.removeEventListener('touchcancel', Cancel);
-    svg.removeEventListener('touchleave', Cancel);
+    node.removeEventListener('touchmove', TouchDrag);
+    node.removeEventListener('touchend', Cancel);
+    node.removeEventListener('touchcancel', Cancel);
+    node.removeEventListener('touchleave', Cancel);
   }
 
-  svg.addEventListener('touchstart', TouchStart);
-  svg.addEventListener('mousedown', MouseDown);
+  node.addEventListener('touchstart', TouchStart);
+  node.addEventListener('mousedown', MouseDown);
 
   return {
     destroy() {
       if (selectBoxAnchor) {
         Cancel();
       }
-      svg.removeEventListener('mousedown', MouseDown);
-      svg.removeEventListener('touchstart', TouchStart);
+      node.removeEventListener('mousedown', MouseDown);
+      node.removeEventListener('touchstart', TouchStart);
     },
 
     update(opts: Opts) {
