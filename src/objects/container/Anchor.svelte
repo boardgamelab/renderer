@@ -38,6 +38,7 @@
 
 <g
   data-id={id}
+  data-selectable="long"
   data-droppable="true"
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
   <rect
@@ -61,7 +62,6 @@
 
   {#if id in $highlight || active}
     <rect
-      in:fade|local={{ duration: 150 }}
       x={-10}
       y={-10}
       width={width + 20}
@@ -72,11 +72,10 @@
   {/if}
 
   {#if obj.children.length}
-    {#each obj.children.slice(-2) as child (child.id)}
+    {#each obj.children.slice(-2) as child, i (child.id)}
       <Moveable
         id={child.id}
         obj={child}
-        selectable={false}
         parentID={id}
         parentPos={position}
         let:active
@@ -84,6 +83,7 @@
         <Card
           id={child.id}
           obj={child}
+          selectable={obj.children.length < 2 || i == 1}
           droppable={false}
           {isDragging}
           {active} />
@@ -91,7 +91,10 @@
     {/each}
 
     {#if active}
-      <g class="cursor-move" transform="translate(-100, -100)">
+      <g
+        class="cursor-move"
+        transform="translate(-100, -100)"
+        in:fade|local={{ duration: 150 }}>
         <foreignObject width="200" height="200">
           <div class="w-full h-full p-8">
             <div

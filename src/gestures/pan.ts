@@ -75,7 +75,6 @@ export function pan(node: Element, opts: Opts) {
     anchor = point;
     opts.panX.update((v) => v + dx, { duration: 0 });
     opts.panY.update((v) => v + dy, { duration: 0 });
-    opts.activeObjects.set({});
   }
 
   function MouseMove(e: Event) {
@@ -88,6 +87,7 @@ export function pan(node: Element, opts: Opts) {
 
     if (touchEvent.touches.length === 2) {
       e.stopPropagation();
+      opts.activeObjects.set({});
       Drag(touchEvent.touches[0]);
     }
   }

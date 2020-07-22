@@ -106,6 +106,7 @@
   use:select={{ panX: $panX, panY: $panY, svg, activeObjects, selectBox, schema: $schema, state: $stateStore }}>
   <svg
     id="root"
+    data-selectable="box"
     bind:this={svg.el}
     class="w-full h-full"
     viewBox="{zoomOffsetX}

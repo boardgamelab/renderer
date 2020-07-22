@@ -6,6 +6,7 @@
   export let active = false;
   export let forceFaceUp = false;
   export let forceRotation;
+  export let selectable = true;
 
   import { getContext } from 'svelte';
   import { tweened } from 'svelte/motion';
@@ -47,6 +48,7 @@
 
 <g
   data-id={id}
+  data-selectable={selectable}
   data-droppable={droppable}
   transform="rotate({$rotation}
   {width / 2}

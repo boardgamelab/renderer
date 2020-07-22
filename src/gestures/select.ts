@@ -41,14 +41,15 @@ export function select(node: HTMLElement, opts: Opts) {
   let o = opts;
   let selectBoxAnchor: Point | null = null;
   let selectBox = false;
+  let longPressHandle: any = null;
 
-  function TouchDrag(e: TouchEvent) {
+  function TouchMultiSelectDrag(e: TouchEvent) {
     if (e.touches.length === 1) {
-      Drag(e.touches[0]);
+      MultiSelectDrag(e.touches[0]);
     }
   }
 
-  function Drag(e: MouseEvent | Touch) {
+  function MultiSelectDrag(e: MouseEvent | Touch) {
     const point = ToSVGPoint(e as MouseEvent, opts.svg.el);
 
     selectBox = true;
@@ -87,21 +88,58 @@ export function select(node: HTMLElement, opts: Opts) {
     o.activeObjects.set(selected);
   }
 
+  function LongSelect(target: Element) {
+    target.dispatchEvent(new CustomEvent('select'));
+    const id = (target as HTMLElement).dataset.id as string;
+    o.activeObjects.set({ [id]: true });
+  }
+
+  function CheckLongSelect(e: MouseEvent | Touch) {
+    const target = (e.target as Element).closest('[data-selectable=long]');
+
+    if (target) {
+      target.dispatchEvent(new CustomEvent('select'));
+      longPressHandle = setTimeout(() => LongSelect(target), 500);
+      return target;
+    }
+
+    return null;
+  }
+
+  function CheckSelect(e: MouseEvent | Touch) {
+    const target = (e.target as Element).closest('[data-selectable=true]');
+
+    if (target) {
+      const id = (target as HTMLElement).dataset.id as string;
+      o.activeObjects.set({ [id]: true });
+      target.dispatchEvent(new CustomEvent('select'));
+      return target;
+    }
+
+    return null;
+  }
+
+  function CheckMultiSelect(e: MouseEvent | Touch) {
+    return (e.target as HTMLElement)?.dataset.selectable === 'box';
+  }
+
   function MouseDown(e: MouseEvent) {
     if (e.button !== 0) {
       return;
     }
 
-    const target = (e.target as Element).closest('[data-selectable=true]');
+    CheckSelect(e);
 
-    if (target) {
-      target.dispatchEvent(new CustomEvent('select'));
-      const id = (target as HTMLElement).dataset.id as string;
-      o.activeObjects.set({ [id]: true });
-    } else {
+    if (CheckLongSelect(e)) {
+      window.addEventListener('mousemove', CancelLongSelect);
+      window.addEventListener('mouseup', CancelLongSelect);
+    }
+
+    if (CheckMultiSelect(e)) {
+      window.addEventListener('mousemove', MultiSelectDrag);
+      window.addEventListener('mouseup', CancelMultiSelect);
+
       selectBoxAnchor = ToSVGPoint(e as MouseEvent, opts.svg.el);
-      window.addEventListener('mousemove', Drag);
-      window.addEventListener('mouseup', Cancel);
     }
   }
 
@@ -109,23 +147,29 @@ export function select(node: HTMLElement, opts: Opts) {
     if (e.touches.length !== 1) {
       return;
     }
-    const touch = e.touches[0];
-    const target = (touch.target as Element).closest('[data-selectable=true]');
 
-    if (target) {
-      target.dispatchEvent(new CustomEvent('select'));
-      const id = (target as HTMLElement).dataset.id as string;
-      o.activeObjects.set({ [id]: true });
-    } else {
+    const touch = e.touches[0];
+
+    CheckSelect(touch);
+
+    if (CheckLongSelect(touch)) {
+      node.addEventListener('touchmove', CancelLongSelect);
+      node.addEventListener('touchend', CancelLongSelect);
+      node.addEventListener('touchcancel', CancelLongSelect);
+      node.addEventListener('touchleave', CancelLongSelect);
+    }
+
+    if (CheckMultiSelect(touch)) {
+      node.addEventListener('touchmove', TouchMultiSelectDrag);
+      node.addEventListener('touchend', CancelMultiSelect);
+      node.addEventListener('touchcancel', CancelMultiSelect);
+      node.addEventListener('touchleave', CancelMultiSelect);
+
       selectBoxAnchor = ToSVGPoint(touch, opts.svg.el);
-      node.addEventListener('touchmove', TouchDrag);
-      node.addEventListener('touchend', Cancel);
-      node.addEventListener('touchcancel', Cancel);
-      node.addEventListener('touchleave', Cancel);
     }
   }
 
-  function Cancel() {
+  function CancelMultiSelect() {
     // No select box was created and no element was selected.
     // Cancel any existing selection.
     if (!selectBox) {
@@ -134,13 +178,27 @@ export function select(node: HTMLElement, opts: Opts) {
 
     selectBox = false;
     selectBoxAnchor = null;
+
+    clearTimeout(longPressHandle);
+    longPressHandle = null;
     o.selectBox.set(null);
-    window.removeEventListener('mousemove', Drag);
-    window.removeEventListener('mouseup', Cancel);
-    node.removeEventListener('touchmove', TouchDrag);
-    node.removeEventListener('touchend', Cancel);
-    node.removeEventListener('touchcancel', Cancel);
-    node.removeEventListener('touchleave', Cancel);
+
+    window.removeEventListener('mousemove', MultiSelectDrag);
+    window.removeEventListener('mouseup', CancelMultiSelect);
+    node.removeEventListener('touchmove', TouchMultiSelectDrag);
+    node.removeEventListener('touchend', CancelMultiSelect);
+    node.removeEventListener('touchcancel', CancelMultiSelect);
+    node.removeEventListener('touchleave', CancelMultiSelect);
+  }
+
+  function CancelLongSelect() {
+    clearTimeout(longPressHandle);
+    window.removeEventListener('mouseup', CancelLongSelect);
+    window.removeEventListener('mousemove', CancelLongSelect);
+    node.removeEventListener('touchmove', CancelLongSelect);
+    node.removeEventListener('touchend', CancelLongSelect);
+    node.removeEventListener('touchcancel', CancelLongSelect);
+    node.removeEventListener('touchleave', CancelLongSelect);
   }
 
   node.addEventListener('touchstart', TouchStart);
@@ -149,7 +207,7 @@ export function select(node: HTMLElement, opts: Opts) {
   return {
     destroy() {
       if (selectBoxAnchor) {
-        Cancel();
+        CancelMultiSelect();
       }
       node.removeEventListener('mousedown', MouseDown);
       node.removeEventListener('touchstart', TouchStart);

@@ -9,7 +9,6 @@
   export let parentID = null;
   export let parentPos = null;
   export let draggable = true;
-  export let selectable = true;
 
   const { dispatchActions, state, activeObjects } = getContext('context');
 
@@ -153,7 +152,6 @@
   in:receive={{ key: id, toSVGPoint }}
   data-id={id}
   data-draggable={draggable}
-  data-selectable={selectable}
   on:movestart={DragStart}
   on:moveend={DragEnd}
   on:move={Drag}>
