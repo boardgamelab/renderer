@@ -85,11 +85,7 @@ export function drag(node: Element, opts: DragOpts) {
     });
   }
 
-  function Drag(e: MouseEvent | Touch) {
-    // Update the current drag point.
-    pointSVG = ToSVGPoint(e, opts.svg.el, opts.panX, opts.panY);
-    pointScreen = { x: e.clientX, y: e.clientY };
-
+  function CheckDrop(e: MouseEvent | Touch) {
     const targetRect = target!.getBoundingClientRect();
 
     const pointsToCheck = [
@@ -125,7 +121,13 @@ export function drag(node: Element, opts: DragOpts) {
         dropTarget = t;
       }
     });
+  }
 
+  function Drag(e: MouseEvent | Touch) {
+    // Update the current drag point.
+    pointSVG = ToSVGPoint(e, opts.svg.el, opts.panX, opts.panY);
+    pointScreen = { x: e.clientX, y: e.clientY };
+    CheckDrop(e);
     target!.dispatchEvent(CreateCustomEvent('move', target));
   }
 
@@ -163,6 +165,7 @@ export function drag(node: Element, opts: DragOpts) {
       y: e.clientY,
     };
 
+    CheckDrop(e);
     target!.dispatchEvent(CreateCustomEvent('movestart', target));
     target!.style.pointerEvents = 'none';
   }
