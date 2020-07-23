@@ -21,7 +21,7 @@
   export let schema;
   export let state;
   export let seatID = null;
-  export let players;
+  export let players = null;
 
   const dispatch = createEventDispatcher();
 
@@ -144,7 +144,9 @@
     </div>
   {/if}
 
-  <PlayerPanel {state} {players} {seatID} />
+  {#if players}
+    <PlayerPanel {state} {players} {seatID} />
+  {/if}
 </span>
 
 {#if menu}
