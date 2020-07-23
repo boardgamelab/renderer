@@ -1,5 +1,8 @@
 import { cubicOut } from 'svelte/easing';
 
+// TODO: Maybe export a function that allows adding things
+// to senders / receivers outside of a Svelte transition directive// (from example, from drag.ts).
+
 export function crossfade() {
   const receivers = new Map();
   const senders = new Map();
@@ -32,7 +35,11 @@ export function crossfade() {
         let value = `translate(${ux} ${uy}) scale(${uw} ${uh})`;
         value = transform ? `${transform} ${value}` : value;
 
-        if (params.hand) {
+        if (params.ghost) {
+          const style = getComputedStyle(node);
+          const transform = style.transform === 'none' ? '' : style.transform;
+          node.style.transform = `${transform} translate3d(${ux}px, ${uy}px, 0`;
+        } else if (params.hand) {
           node.style.opacity = t < 1 ? 0 : 1;
         } else {
           node.setAttribute('transform', value);
@@ -43,13 +50,18 @@ export function crossfade() {
 
   function transition(items, counterparts) {
     return (node, params) => {
+      if (params.nuke) {
+        return { duration: 0 };
+      }
+
       items.set(params.key, {
         rect: node.getBoundingClientRect(),
+        ...params,
       });
 
       return () => {
         if (params.disable) {
-          return;
+          return { duration: 0 };
         }
 
         if (counterparts.has(params.key)) {
@@ -59,7 +71,9 @@ export function crossfade() {
           return crossfade(from, node, params);
         }
 
-        items.delete(params.key);
+        if (!params.ghost) {
+          items.delete(params.key);
+        }
 
         return {
           duration: 0,

@@ -104,7 +104,7 @@
       };
 
       // If we're dropping the object back on its existing parent,
-      // the undo any position changes.
+      // undo any position changes.
       if (detail.dropID === parentID) {
         position.set(
           {

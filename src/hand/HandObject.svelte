@@ -1,28 +1,30 @@
 <script>
+  // The ID of the hand container.
   export let handID;
+  // The index of this object in the hand container.
+  export let index;
+  // The ID of the object.
   export let id;
+  // The state value of the object.
   export let obj;
 
   import Card from '../objects/tile/card/Card.svelte';
   import { send, receive } from '../utils/crossfade.js';
-  import { tweened } from 'svelte/motion';
-  import { getContext } from 'svelte';
-  import { ToClientLength, ToSVGLength } from '../utils/svg.ts';
+  import { createEventDispatcher, getContext } from 'svelte';
+  import { ToSVGLength } from '../utils/svg.ts';
 
   const { activeObjects, dispatchActions, svg } = getContext('context');
   const schema = getContext('schema');
   const toSVGPoint = getContext('to-svg-point');
   const highlight = getContext('highlight');
+  const dispatch = createEventDispatcher();
 
   // Add a margin around the SVG container so that things
   // like borders can be seen.
   const margin = 20;
 
-  const offset = tweened({ x: 0, y: 0 }, { duration: 0 });
-  const scale = tweened(1, { duration: 100 });
   let ref;
-  let snapshot = null;
-  let scaled = false;
+  let isDragging = false;
   let cursorOffset = null;
 
   let geometry = { width: 0 };
@@ -32,35 +34,27 @@
     geometry = $schema.templates[templateID].geometry;
   }
 
-  const DragStart = ({ detail }) => {
-    snapshot = {
-      x: detail.client.x,
-      y: detail.client.y,
-    };
+  function DragStart({ detail }) {
+    isDragging = true;
 
     const rect = ref.getBoundingClientRect();
 
-    // Scale the object so that it appears the same
-    // size as equivalent objects in the SVG viewport.
-    const targetWidth = ToClientLength(geometry.width, svg.el);
-    const currentWidth = rect.width;
-    const s = targetWidth / currentWidth;
-
-    // Calculate the distance between the cursor and the
-    // top-left of the object. It's important to take into
-    // consideration any scaling that may be applied to the
-    // object here.
-    const scaledX = rect.x - (rect.width * (s - 1)) / 2;
-    const scaledY = rect.y - (rect.height * (s - 1)) / 2;
     cursorOffset = {
-      dx: snapshot.x - scaledX,
-      dy: snapshot.y - scaledY,
+      dx: rect.x - detail.client.x,
+      dy: rect.y - detail.client.y,
     };
 
-    scaled = false;
-  };
+    dispatch('movestart', {
+      ...detail,
+      index,
+      id,
+      ref: this,
+    });
+  }
 
   const Drag = ({ detail }) => {
+    dispatch('move', detail);
+
     let h = {};
     if (detail.dropID && detail.dropID !== handID) {
       h = {
@@ -69,21 +63,14 @@
     }
     highlight.set(h);
 
-    if (detail.dropID !== handID) {
-      Scale();
-    }
-
     activeObjects.set({
       [detail.id]: true,
-    });
-
-    offset.set({
-      x: detail.client.dx,
-      y: detail.client.dy,
     });
   };
 
   const DragEnd = ({ detail }) => {
+    dispatch('moveend', { index });
+
     if (detail.dropID !== handID) {
       if (detail.dropID) {
         activeObjects.set({
@@ -102,8 +89,8 @@
           {
             type: 'position',
             subject: { id: detail.id },
-            x: detail.svg.x - ToSVGLength(cursorOffset.dx, svg.el),
-            y: detail.svg.y - ToSVGLength(cursorOffset.dy, svg.el),
+            x: detail.svg.x + ToSVGLength(cursorOffset.dx, svg.el),
+            y: detail.svg.y + ToSVGLength(cursorOffset.dy, svg.el),
           },
           {
             type: 'add-to',
@@ -113,68 +100,37 @@
         ]);
       }
     } else {
-      Reorder(detail);
+      isDragging = false;
+      // setTimeout(() => {
+      //   isDragging = null;
+      // }, 200);
     }
   };
-
-  function Reorder(detail) {
-    offset.set(
-      {
-        x: 0,
-        y: 0,
-      },
-      { duration: 150 }
-    );
-    Unscale();
-  }
-
-  // Scale the object to the size it would become on the table.
-  function Scale() {
-    if (scaled) {
-      return;
-    }
-
-    const rect = ref.getBoundingClientRect();
-
-    // Scale the object so that it appears the same
-    // size as equivalent objects in the SVG viewport.
-    const targetWidth = ToClientLength(geometry.width, svg.el);
-    const currentWidth = rect.width;
-    const s = targetWidth / currentWidth;
-    scale.set(s);
-
-    scaled = true;
-  }
-
-  function Unscale() {
-    scale.set(1);
-    scaled = false;
-  }
 </script>
 
-<svg
-  style="transform: translate3d({$offset.x}px, {$offset.y}px, 0) scale({$scale})"
-  out:send={{ key: id, toSVGPoint, hand: true }}
-  in:receive={{ key: id, toSVGPoint, hand: true }}
-  data-id={id}
-  data-selectable="true"
-  data-draggable="true"
-  on:movestart={DragStart}
-  on:moveend={DragEnd}
-  on:move={Drag}
-  class="mx-2"
-  width="100"
-  viewBox="-{margin} -{margin}
-  {geometry.width + 2 * margin}
-  {geometry.height + 2 * margin}"
-  xmlns="http://www.w3.org/2000/svg">
-  <g bind:this={ref}>
-    <Card
-      {id}
-      {obj}
-      droppable={false}
-      forceRotation={0}
-      forceFaceUp={true}
-      active={id in $activeObjects} />
-  </g>
-</svg>
+<div class="mx-2" class:opacity-0={isDragging}>
+  <svg
+    out:send={{ key: id, toSVGPoint, hand: true, nuke: isDragging }}
+    in:receive={{ key: id, toSVGPoint, hand: true }}
+    data-id={id}
+    data-selectable="true"
+    data-draggable="true"
+    on:movestart={DragStart}
+    on:moveend={DragEnd}
+    on:move={Drag}
+    width="100"
+    viewBox="-{margin} -{margin}
+    {geometry.width + 2 * margin}
+    {geometry.height + 2 * margin}"
+    xmlns="http://www.w3.org/2000/svg">
+    <g bind:this={ref}>
+      <Card
+        {id}
+        {obj}
+        droppable={false}
+        forceRotation={0}
+        forceFaceUp={true}
+        active={id in $activeObjects} />
+    </g>
+  </svg>
+</div>
