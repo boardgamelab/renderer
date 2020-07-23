@@ -85,36 +85,14 @@ export function drag(node: Element, opts: DragOpts) {
     });
   }
 
+  let pointsToCheck: Point[] = [];
+
   function CheckDrop(e: MouseEvent | Touch) {
-    const targetRect = target!.getBoundingClientRect();
-
-    const pointsToCheck = [
-      {
-        x: e.clientX,
-        y: e.clientY,
-      },
-      {
-        x: targetRect!.left,
-        y: targetRect!.top,
-      },
-      {
-        x: targetRect!.left + targetRect!.width,
-        y: targetRect!.top,
-      },
-      {
-        x: targetRect!.left + targetRect!.width,
-        y: targetRect!.top + targetRect!.height,
-      },
-      {
-        x: targetRect!.left,
-        y: targetRect!.top + targetRect!.height,
-      },
-    ];
-
     dropTarget = null;
+
     pointsToCheck.forEach((point) => {
       const t = document
-        .elementFromPoint(point.x, point.y)
+        .elementFromPoint(point.x + e.clientX, point.y + e.clientY)
         ?.closest('[data-droppable=true]');
 
       if (t) {
@@ -164,6 +142,31 @@ export function drag(node: Element, opts: DragOpts) {
       x: e.clientX,
       y: e.clientY,
     };
+
+    const targetRect = target!.getBoundingClientRect();
+
+    pointsToCheck = [
+      {
+        x: 0,
+        y: 0,
+      },
+      {
+        x: targetRect!.left - e.clientX,
+        y: targetRect!.top - e.clientY,
+      },
+      {
+        x: targetRect!.left + targetRect!.width - e.clientX,
+        y: targetRect!.top - e.clientY,
+      },
+      {
+        x: targetRect!.left + targetRect!.width - e.clientX,
+        y: targetRect!.top + targetRect!.height - e.clientY,
+      },
+      {
+        x: targetRect!.left - e.clientX,
+        y: targetRect!.top + targetRect!.height - e.clientY,
+      },
+    ];
 
     CheckDrop(e);
     target!.dispatchEvent(CreateCustomEvent('movestart', target));
