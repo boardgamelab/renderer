@@ -9,7 +9,6 @@ export function Init(
   schema: Readable<Schema>,
   masterState: Readable<State>,
   svg: { el: SVGGraphicsElement },
-  hand: { el: HTMLElement },
   dispatch: ReturnType<typeof createEventDispatcher>
 ) {
   const activeObjects = writable({});
@@ -63,7 +62,6 @@ export function Init(
     dispatchActions,
     activeObjects,
     svg,
-    hand,
   });
 
   return {

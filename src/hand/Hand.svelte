@@ -22,7 +22,7 @@
 
 <style>
   .hand {
-    @apply relative select-none h-16 py-1 transform duration-100 text-xl border-t-2 border-dashed text-gray-500 font-bold flex flex-row items-end justify-center w-full;
+    @apply relative select-none h-16 py-1 text-xl border-t-2 border-dashed text-gray-500 font-bold flex flex-row items-end justify-center w-full;
     background: rgba(200, 200, 200, 0.1);
   }
 

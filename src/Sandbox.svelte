@@ -31,7 +31,6 @@
 
   let debug = false;
   let svg = { el: null };
-  let hand = { el: null };
 
   let handID = null;
   let menu = null;
@@ -47,7 +46,6 @@
     schema,
     state,
     svg,
-    hand,
     dispatch
   );
 
@@ -141,11 +139,8 @@
   </svg>
 
   {#if handID}
-    <div
-      bind:this={hand.el}
-      data-handid={handID}
-      class="fixed bottom-0 left-0 w-full">
-      <Hand ref={hand} {handID} hand={$stateStore.objects[handID]} />
+    <div data-handid={handID} class="fixed bottom-0 left-0 w-full">
+      <Hand {handID} hand={$stateStore.objects[handID]} />
     </div>
   {/if}
 
