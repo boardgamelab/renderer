@@ -23,6 +23,8 @@
 
 <div
   title={player.nickname}
+  data-id={player.seatID}
+  data-droppable={me ? 'false' : 'true'}
   class="cursor-pointer m-4 flex flex-row items-center">
   <div
     style="border-color: {color}; background: linear-gradient(45deg, #ddd 0%,

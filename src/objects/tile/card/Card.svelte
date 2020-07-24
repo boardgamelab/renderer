@@ -53,17 +53,6 @@
   transform="rotate({$rotation}
   {width / 2}
   {height / 2})">
-  {#if isDragging}
-    <rect
-      filter="url(#blur)"
-      x={10}
-      y={10}
-      {width}
-      {height}
-      fill="#111"
-      fill-opacity="50%" />
-  {/if}
-
   {#if faceDown && !forceFaceUp}
     <Back {id} {width} {height} />
   {:else}
