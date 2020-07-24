@@ -113,7 +113,7 @@
   }
 </style>
 
-<div class="mx-2" class:hide-0={isDragging}>
+<div class="mx-2" class:hide={isDragging}>
   <svg
     use:ghost={{ api: $ghostAPI, parentID: handID }}
     out:send={{ key: id, toSVGPoint, hand: true, disable: isDragging }}
