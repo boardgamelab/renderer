@@ -20,14 +20,22 @@ export interface DragEvent {
   // ID of the object being dragged.
   id: string;
 
+  dropID: string | null;
+
+  target: Element;
+
   // Coordinates relative to the SVG viewport.
   svg: {
+    x: number;
+    y: number;
     dx: number;
     dy: number;
   };
 
   // Coordinates relative to the client viewport.
   client: {
+    x: number;
+    y: number;
     dx: number;
     dy: number;
   };
@@ -121,7 +129,6 @@ export function drag(node: Element, opts: DragOpts) {
 
   function Cancel() {
     target!.dispatchEvent(CreateCustomEvent('moveend', target));
-    target!.style.pointerEvents = 'auto';
 
     anchorSVG = null;
     target = null;
@@ -170,7 +177,6 @@ export function drag(node: Element, opts: DragOpts) {
 
     CheckDrop(e);
     target!.dispatchEvent(CreateCustomEvent('movestart', target));
-    target!.style.pointerEvents = 'none';
   }
 
   function MouseDown(e: Event) {

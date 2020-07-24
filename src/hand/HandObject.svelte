@@ -9,6 +9,7 @@
   export let obj;
 
   import Card from '../objects/tile/card/Card.svelte';
+  import { ghost } from '../ghost/ghost.ts';
   import { send, receive } from '../utils/crossfade.ts';
   import { createEventDispatcher, getContext } from 'svelte';
   import { ToSVGLength } from '../utils/svg.ts';
@@ -17,6 +18,7 @@
   const schema = getContext('schema');
   const toSVGPoint = getContext('to-svg-point');
   const highlight = getContext('highlight');
+  const ghostAPI = getContext('ghost');
   const dispatch = createEventDispatcher();
 
   // Add a margin around the SVG container so that things
@@ -101,15 +103,13 @@
       }
     } else {
       isDragging = false;
-      // setTimeout(() => {
-      //   isDragging = null;
-      // }, 200);
     }
   };
 </script>
 
 <div class="mx-2" class:opacity-0={isDragging}>
   <svg
+    use:ghost={{ api: $ghostAPI, parentID: handID }}
     out:send={{ key: id, toSVGPoint, hand: true, nuke: isDragging }}
     in:receive={{ key: id, toSVGPoint, hand: true }}
     data-id={id}

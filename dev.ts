@@ -22,6 +22,8 @@ const schema: Schema = {
     'card-2': { id: 'card-2', templateID: 'card' },
     'card-3': { id: 'card-3', templateID: 'card' },
   },
+
+  version: 0,
 };
 
 const state: State = {
@@ -33,7 +35,7 @@ const state: State = {
 };
 
 new Sandbox({
-  target: document.getElementById('root'),
+  target: document.getElementById('root') as HTMLElement,
   props: {
     schema: writable(schema),
     state: writable(state),

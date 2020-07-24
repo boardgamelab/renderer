@@ -7,6 +7,7 @@
   import { pan } from './gestures/pan.ts';
   import Hand from './hand/Hand.svelte';
   import ContextMenu from './ui/menu/context/Context.svelte';
+  import Ghost from './ghost/Ghost.svelte';
   import { ToSVGPointWithPan, ToClientPointWithPan } from './utils/svg.ts';
   import { createEventDispatcher, setContext } from 'svelte';
   import { writable } from 'svelte/store';
@@ -86,6 +87,9 @@
   }
   setContext('to-svg-point', ToSVGPoint);
   setContext('to-client-point', ToClientPoint);
+
+  let ghostAPI = writable({});
+  setContext('ghost', ghostAPI);
 </script>
 
 <svelte:head>
@@ -148,6 +152,8 @@
     <PlayerPanel {state} {players} {seatID} />
   {/if}
 </span>
+
+<Ghost api={ghostAPI} />
 
 {#if menu}
   <div

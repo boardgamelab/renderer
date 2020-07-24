@@ -148,6 +148,7 @@
 
 <g
   transform="translate({$position.x}, {$position.y})"
+  class:pointer-events-none={isDragging}
   out:send={{ key: id, toSVGPoint }}
   in:receive={{ key: id, toSVGPoint }}
   data-id={id}
