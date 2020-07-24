@@ -5,7 +5,7 @@
   export let color = '#aaa';
 
   import IconPerson from 'svelte-icons/md/MdPerson.svelte';
-  import { send, receive } from '../utils/crossfade.js';
+  import { send, receive } from '../utils/crossfade.ts';
 
   let children = [];
 

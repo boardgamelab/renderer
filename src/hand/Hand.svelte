@@ -3,7 +3,7 @@
   export let hand = {};
 
   import HandObject from './HandObject.svelte';
-  import { send } from '../utils/crossfade.js';
+  import { send } from '../utils/crossfade.ts';
   import { flip } from 'svelte/animate';
   import { getContext, tick } from 'svelte';
   import { tweened } from 'svelte/motion';

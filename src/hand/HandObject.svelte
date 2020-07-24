@@ -9,7 +9,7 @@
   export let obj;
 
   import Card from '../objects/tile/card/Card.svelte';
-  import { send, receive } from '../utils/crossfade.js';
+  import { send, receive } from '../utils/crossfade.ts';
   import { createEventDispatcher, getContext } from 'svelte';
   import { ToSVGLength } from '../utils/svg.ts';
 

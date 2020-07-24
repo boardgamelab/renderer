@@ -10,7 +10,7 @@ export interface GameObject {
 }
 
 /**
- * Retrievs data associated with a game object from an ID.
+ * Retrieves data associated with a game object from an ID.
  */
 export function GetGameObject(
   schema: Schema,

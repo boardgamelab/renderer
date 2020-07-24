@@ -2,7 +2,7 @@
   import { getContext } from 'svelte';
   import { Drop } from './moveable.ts';
   import { tweened } from 'svelte/motion';
-  import { send, receive } from '../utils/crossfade.js';
+  import { send, receive } from '../utils/crossfade.ts';
 
   export let id;
   export let obj;

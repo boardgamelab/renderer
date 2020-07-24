@@ -3,11 +3,32 @@ import { cubicOut } from 'svelte/easing';
 // TODO: Maybe export a function that allows adding things
 // to senders / receivers outside of a Svelte transition directive// (from example, from drag.ts).
 
+interface Point {
+  x: number;
+  y: number;
+}
+
+interface Params {
+  key: string;
+  toSVGPoint: (point: Point) => Point;
+  ghost?: boolean;
+  nuke?: boolean;
+  hand?: boolean;
+  disable?: boolean;
+  delay?: number;
+  duration?: number;
+  easing?: (t: number) => number;
+}
+
+type NodeInfo = Params & {
+  rect: DOMRect;
+};
+
 export function crossfade() {
   const receivers = new Map();
   const senders = new Map();
 
-  function crossfade(from, node, params) {
+  function crossfade(from: NodeInfo, node: Element, params: Params) {
     const { delay = 0, duration = 250, easing = cubicOut } = params;
 
     const rect = node.getBoundingClientRect();
@@ -26,7 +47,7 @@ export function crossfade() {
       delay,
       duration,
       easing,
-      tick: (t, u) => {
+      tick: (t: number, u: number) => {
         const ux = u * dx;
         const uy = u * dy;
         const uw = t + u * dw;
@@ -38,9 +59,9 @@ export function crossfade() {
         if (params.ghost) {
           const style = getComputedStyle(node);
           const transform = style.transform === 'none' ? '' : style.transform;
-          node.style.transform = `${transform} translate3d(${ux}px, ${uy}px, 0`;
+          (node as HTMLElement).style.transform = `${transform} translate3d(${ux}px, ${uy}px, 0`;
         } else if (params.hand) {
-          node.style.opacity = t < 1 ? 0 : 1;
+          (node as HTMLElement).style.opacity = t < 1 ? '0' : '1';
         } else {
           node.setAttribute('transform', value);
         }
@@ -48,8 +69,8 @@ export function crossfade() {
     };
   }
 
-  function transition(items, counterparts) {
-    return (node, params) => {
+  function transition(items: typeof senders, counterparts: typeof receivers) {
+    return (node: Element, params: Params) => {
       if (params.nuke) {
         return { duration: 0 };
       }
