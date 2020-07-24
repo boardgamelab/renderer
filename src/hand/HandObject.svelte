@@ -107,7 +107,13 @@
   };
 </script>
 
-<div class="mx-2" class:opacity-0={isDragging}>
+<style>
+  .hide {
+    @apply opacity-0 pointer-events-none;
+  }
+</style>
+
+<div class="mx-2" class:hide-0={isDragging}>
   <svg
     use:ghost={{ api: $ghostAPI, parentID: handID }}
     out:send={{ key: id, toSVGPoint, hand: true, disable: isDragging }}

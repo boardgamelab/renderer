@@ -152,11 +152,16 @@
   $: active = id in $activeObjects;
 </script>
 
+<style>
+  .hide {
+    @apply opacity-0 pointer-events-none;
+  }
+</style>
+
 <g
   use:ghost={{ api: $ghostAPI, onTable: true, parentID }}
   transform="translate({$position.x}, {$position.y})"
-  class:opacity-0={isDragging}
-  class:pointer-events-none={isDragging}
+  class:hide={isDragging}
   out:send={{ key: id, toSVGPoint, disable: isDragging }}
   in:receive={{ key: id, toSVGPoint }}
   data-id={id}
