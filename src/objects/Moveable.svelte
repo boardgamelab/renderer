@@ -3,6 +3,7 @@
   import { Drop } from './moveable.ts';
   import { tweened } from 'svelte/motion';
   import { send, receive } from '../utils/crossfade.ts';
+  import { ghost } from '../ghost/ghost.ts';
 
   export let id;
   export let obj;
@@ -14,6 +15,8 @@
 
   const highlight = getContext('highlight');
   const toSVGPoint = getContext('to-svg-point');
+  const ghostAPI = getContext('ghost');
+
   const position = tweened(null, { duration: 0 });
 
   let x;
@@ -50,6 +53,7 @@
   let snapshot = null;
   function DragStart() {
     dragged = false;
+    isDragging = true;
 
     snapshot = $position;
 
@@ -86,9 +90,11 @@
   }
 
   async function DragEnd({ detail }) {
-    isDragging = false;
-
     highlight.set({});
+
+    if (detail.dropID === parentID) {
+      isDragging = false;
+    }
 
     if (!dragged) {
       return;
@@ -113,6 +119,7 @@
           },
           { duration: 150 }
         );
+
         return;
       }
     }
@@ -130,7 +137,6 @@
     highlight.set(h);
 
     dragged = true;
-    isDragging = true;
 
     activeObjects.set({
       [id]: true,
@@ -147,9 +153,11 @@
 </script>
 
 <g
+  use:ghost={{ api: $ghostAPI, onTable: true, parentID }}
   transform="translate({$position.x}, {$position.y})"
+  class:opacity-0={isDragging}
   class:pointer-events-none={isDragging}
-  out:send={{ key: id, toSVGPoint }}
+  out:send={{ key: id, toSVGPoint, disable: isDragging }}
   in:receive={{ key: id, toSVGPoint }}
   data-id={id}
   data-draggable={draggable}

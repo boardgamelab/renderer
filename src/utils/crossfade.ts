@@ -1,8 +1,5 @@
 import { cubicOut } from 'svelte/easing';
 
-// TODO: Maybe export a function that allows adding things
-// to senders / receivers outside of a Svelte transition directive// (from example, from drag.ts).
-
 interface Point {
   x: number;
   y: number;
@@ -33,15 +30,29 @@ export function crossfade() {
 
     const rect = node.getBoundingClientRect();
 
-    const a = params.toSVGPoint({ x: rect.left, y: rect.top });
-    const b = params.toSVGPoint({ x: from.rect.left, y: from.rect.top });
+    let a = { x: rect.left, y: rect.top };
+    let b = { x: from.rect.left, y: from.rect.top };
+
+    if (!params.hand && !params.ghost) {
+      a = params.toSVGPoint(a);
+      b = params.toSVGPoint(b);
+    }
 
     const dx = b.x - a.x;
     const dy = b.y - a.y;
     const dw = from.rect.width / rect.width;
     const dh = from.rect.height / rect.height;
 
-    const transform = node.getAttribute('transform');
+    let transform: string | null = null;
+
+    if (params.hand || params.ghost) {
+      const style = getComputedStyle(node);
+      if (style.transform !== 'none') {
+        transform = style.transform;
+      }
+    } else {
+      transform = node.getAttribute('transform');
+    }
 
     return {
       delay,
@@ -53,16 +64,13 @@ export function crossfade() {
         const uw = t + u * dw;
         const uh = t + u * dh;
 
-        let value = `translate(${ux} ${uy}) scale(${uw} ${uh})`;
-        value = transform ? `${transform} ${value}` : value;
-
-        if (params.ghost) {
-          const style = getComputedStyle(node);
-          const transform = style.transform === 'none' ? '' : style.transform;
-          (node as HTMLElement).style.transform = `${transform} translate3d(${ux}px, ${uy}px, 0`;
-        } else if (params.hand) {
-          (node as HTMLElement).style.opacity = t < 1 ? '0' : '1';
+        if (params.ghost || params.hand) {
+          let value = `translate3d(${ux}px, ${uy}px, 0) scale(${uw}, ${uh})`;
+          value = transform ? `${transform} ${value}` : value;
+          (node as HTMLElement).style.transform = value;
         } else {
+          let value = `translate(${ux} ${uy}) scale(${uw} ${uh})`;
+          value = transform ? `${transform} ${value}` : value;
           node.setAttribute('transform', value);
         }
       },
@@ -81,14 +89,14 @@ export function crossfade() {
       });
 
       return () => {
-        if (params.animate) {
+        if (params.animate === false) {
           return { duration: 0 };
         }
 
         if (counterparts.has(params.key)) {
           const from = counterparts.get(params.key);
           counterparts.delete(params.key);
-
+          items.delete(params.key);
           return crossfade(from, node, params);
         }
 

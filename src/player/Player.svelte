@@ -43,8 +43,8 @@
     <span>
       {#each children as child (child)}
         <span
-          out:send={{ key: child, animate: true }}
-          in:receive={{ key: child, animate: true }} />
+          out:send={{ key: child, animate: false }}
+          in:receive={{ key: child, animate: false }} />
       {/each}
     </span>
   {/if}

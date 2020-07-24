@@ -4,29 +4,37 @@
 
   import { getContext } from 'svelte';
 
+  import { ToSVGLength } from '../utils/svg.ts';
   const toSVGPoint = getContext('to-svg-point');
   import { onMount, tick } from 'svelte';
   import { tweened } from 'svelte/motion';
   import { send } from '../utils/crossfade';
 
+  const { svg } = getContext('context');
   let ref;
   let ghostPos = { x: 0, y: 0 };
   let ghostOffset = tweened({ dx: 0, dy: 0 }, { duration: 0 });
   let ghostID = null;
   let width = 100;
   let height = 100;
+  let viewBox = '';
 
   onMount(() => {
     api.set({
-      show: async (target) => {
+      show: async (target, onTable) => {
         const rect = target.getBoundingClientRect();
         width = rect.width;
         height = rect.height;
 
+        const w = ToSVGLength(width, svg.el);
+        const h = ToSVGLength(height, svg.el);
+        viewBox = onTable ? `0 0 ${w} ${h}` : '';
+
         ghostID = target.dataset.id;
         show = true;
         await tick();
-        ref.innerHTML = target.outerHTML;
+
+        ref.innerHTML = onTable ? target.innerHTML : target.outerHTML;
       },
 
       revert: async () => {
@@ -53,6 +61,7 @@
   <svg
     {width}
     {height}
+    viewBox={viewBox ? viewBox : undefined}
     bind:this={ref}
     out:send={{ key: ghostID, toSVGPoint, ghost: true }}
     style="transform: translate3d({ghostPos.x + $ghostOffset.dx}px, {ghostPos.y + $ghostOffset.dy}px,

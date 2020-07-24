@@ -18,11 +18,12 @@ import { DragEvent } from '../gestures/drag';
 
 interface Opts {
   api: Ghost;
+  onTable?: boolean;
   parentID: string | null;
 }
 
 interface Ghost {
-  show: (e: Element) => void;
+  show: (e: Element, onTable?: boolean) => void;
   revert: () => Promise<void>;
   hide: () => void;
   setPosition: (x: number, y: number) => void;
@@ -35,7 +36,7 @@ export function ghost(node: Element, opts: Opts) {
   function MoveStart({ detail }: Detail) {
     const rect = detail.target.getBoundingClientRect();
     opts.api.setPosition(Math.round(rect.x), Math.round(rect.y));
-    opts.api.show(detail.target);
+    opts.api.show(detail.target, opts.onTable);
   }
 
   function Move({ detail }: Detail) {
