@@ -20,6 +20,7 @@
   }
 
   let movedIndex = null;
+  let swapTarget = null;
 
   async function MoveStart({ detail }) {
     movedIndex = detail.index;
@@ -27,13 +28,30 @@
 
   async function MoveEnd() {
     movedIndex = null;
+    swapTarget = null;
+  }
+
+  function CheckElementEnter(e) {
+    const touch = e.touches[0];
+
+    let el = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (el) {
+      el = el.closest('[data-sortable=true]');
+    }
+
+    if (el) {
+      const index = Number(el.dataset.index);
+      ElementEnter(index);
+    }
   }
 
   // Swap element with another in hand that we just moved over.
   function ElementEnter(index) {
-    if (movedIndex === null || movedIndex === index) {
+    if (movedIndex === null || movedIndex === index || index === swapTarget) {
       return;
     }
+
+    swapTarget = index;
 
     let indices = [...Array(list.length).keys()];
 
@@ -73,6 +91,7 @@
   data-id={handID}
   data-droppable="true"
   on:contextmenu|preventDefault={() => {}}
+  on:touchmove={CheckElementEnter}
   class:active={handID in $highlight}
   data-hand="true"
   class="hand">
@@ -82,6 +101,8 @@
 
   {#each list as obj, index (obj.id)}
     <div
+      data-index={index}
+      data-sortable="true"
       on:mouseenter={() => ElementEnter(index)}
       animate:flip={{ duration: 300 }}>
       <HandObject
