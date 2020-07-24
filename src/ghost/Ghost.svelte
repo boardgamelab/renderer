@@ -13,17 +13,20 @@
   let ghostPos = { x: 0, y: 0 };
   let ghostOffset = tweened({ dx: 0, dy: 0 }, { duration: 0 });
   let ghostID = null;
+  let width = 100;
+  let height = 100;
 
   onMount(() => {
     api.set({
-      show: async (content) => {
+      show: async (target) => {
+        const rect = target.getBoundingClientRect();
+        width = rect.width;
+        height = rect.height;
+
+        ghostID = target.dataset.id;
         show = true;
         await tick();
-        ref.innerHTML = content;
-      },
-
-      setID: (id) => {
-        ghostID = id;
+        ref.innerHTML = target.outerHTML;
       },
 
       revert: async () => {
@@ -47,7 +50,9 @@
 </script>
 
 {#if show}
-  <div
+  <svg
+    {width}
+    {height}
     bind:this={ref}
     out:send={{ key: ghostID, toSVGPoint, ghost: true }}
     style="transform: translate3d({ghostPos.x + $ghostOffset.dx}px, {ghostPos.y + $ghostOffset.dy}px,

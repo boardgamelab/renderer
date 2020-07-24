@@ -31,7 +31,6 @@
 
   // Swap element with another in hand that we just moved over.
   function ElementEnter(index) {
-    console.log(movedIndex, index);
     if (movedIndex === null || movedIndex === index) {
       return;
     }

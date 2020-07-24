@@ -22,10 +22,9 @@ interface Opts {
 }
 
 interface Ghost {
-  show: (s: string) => void;
+  show: (e: Element) => void;
   revert: () => Promise<void>;
   hide: () => void;
-  setID: (id?: string) => void;
   setPosition: (x: number, y: number) => void;
   move: (dx: number, dy: number) => void;
 }
@@ -36,8 +35,7 @@ export function ghost(node: Element, opts: Opts) {
   function MoveStart({ detail }: Detail) {
     const rect = detail.target.getBoundingClientRect();
     opts.api.setPosition(Math.round(rect.x), Math.round(rect.y));
-    opts.api.setID((detail.target as HTMLElement)?.dataset.id);
-    opts.api.show(detail.target.outerHTML);
+    opts.api.show(detail.target);
   }
 
   function Move({ detail }: Detail) {
