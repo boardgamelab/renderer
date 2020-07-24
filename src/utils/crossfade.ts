@@ -12,9 +12,9 @@ interface Params {
   key: string;
   toSVGPoint: (point: Point) => Point;
   ghost?: boolean;
-  nuke?: boolean;
-  hand?: boolean;
   disable?: boolean;
+  hand?: boolean;
+  animate?: boolean;
   delay?: number;
   duration?: number;
   easing?: (t: number) => number;
@@ -71,7 +71,7 @@ export function crossfade() {
 
   function transition(items: typeof senders, counterparts: typeof receivers) {
     return (node: Element, params: Params) => {
-      if (params.nuke) {
+      if (params.disable) {
         return { duration: 0 };
       }
 
@@ -81,7 +81,7 @@ export function crossfade() {
       });
 
       return () => {
-        if (params.disable) {
+        if (params.animate) {
           return { duration: 0 };
         }
 

@@ -110,7 +110,7 @@
 <div class="mx-2" class:opacity-0={isDragging}>
   <svg
     use:ghost={{ api: $ghostAPI, parentID: handID }}
-    out:send={{ key: id, toSVGPoint, hand: true, nuke: isDragging }}
+    out:send={{ key: id, toSVGPoint, hand: true, disable: isDragging }}
     in:receive={{ key: id, toSVGPoint, hand: true }}
     data-id={id}
     data-selectable="true"
