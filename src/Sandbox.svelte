@@ -149,7 +149,7 @@
   </svg>
 
   {#if handID}
-    <div data-handid={handID} class="fixed bottom-0 left-0 w-full">
+    <div data-handid={handID} class="fixed bottom-0 w-full">
       <Hand {handID} hand={$stateStore.objects[handID]} />
     </div>
   {/if}
