@@ -31,14 +31,17 @@
 
     if (obj.children.length) {
       const firstChild = obj.children[0];
-      const { width: w, height: h } = firstChild.template.geometry;
 
-      if (w) {
-        width = w;
-      }
+      if (firstChild.template) {
+        const { width: w, height: h } = firstChild.template.geometry;
 
-      if (h) {
-        height = h;
+        if (w) {
+          width = w;
+        }
+
+        if (h) {
+          height = h;
+        }
       }
     }
 
