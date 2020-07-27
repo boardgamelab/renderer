@@ -5,6 +5,7 @@
   export let isDragging = false;
   export let active = false;
   export let forceFaceUp = false;
+  export let forceFaceDown = false;
   export let forceRotation;
   export let selectable = true;
 
@@ -53,7 +54,7 @@
   transform="rotate({$rotation}
   {width / 2}
   {height / 2})">
-  {#if faceDown && !forceFaceUp}
+  {#if forceFaceDown || (faceDown && !forceFaceUp)}
     <Back {id} {width} {height} />
   {:else}
     <rect data-id={id} {width} {height} {fill} {stroke} />

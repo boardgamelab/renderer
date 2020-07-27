@@ -8,6 +8,12 @@
   // The state value of the object.
   export let obj;
 
+  export let small = false;
+
+  export let forceFaceUp = true;
+
+  export let forceFaceDown = false;
+
   import Card from '../objects/tile/card/Card.svelte';
   import { ghost } from '../ghost/ghost.ts';
   import { send, receive } from '../utils/crossfade.ts';
@@ -111,9 +117,13 @@
   .hide {
     @apply opacity-0 pointer-events-none;
   }
+
+  .small {
+    margin-left: -50px;
+  }
 </style>
 
-<div class="mx-2" class:hide={isDragging}>
+<div class="mx-2" class:small class:hide={isDragging}>
   <svg
     use:ghost={{ api: $ghostAPI, parentID: handID }}
     out:send={{ key: id, toSVGPoint, hand: true, disable: isDragging }}
@@ -124,7 +134,7 @@
     on:movestart={DragStart}
     on:moveend={DragEnd}
     on:move={Drag}
-    width="100"
+    width={small ? 50 : 100}
     viewBox="-{margin} -{margin}
     {geometry.width + 2 * margin}
     {geometry.height + 2 * margin}"
@@ -135,7 +145,8 @@
         {obj}
         droppable={false}
         forceRotation={0}
-        forceFaceUp={true}
+        {forceFaceUp}
+        {forceFaceDown}
         active={id in $activeObjects} />
     </g>
   </svg>

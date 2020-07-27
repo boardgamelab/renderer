@@ -3,6 +3,7 @@
 
   import { Component } from '@boardgamelab/components';
   import { GetTemplate } from '../../../utils/template.ts';
+  import { fade } from 'svelte/transition';
   import shortid from 'shortid';
   const schema = getContext('schema');
   const seatID = getContext('seatID');
@@ -165,7 +166,7 @@
   }
 
   .item:hover {
-    @apply bg-gray-100;
+    @apply bg-gray-200;
   }
 
   .item:active {
@@ -174,30 +175,34 @@
 </style>
 
 {#if menu}
-  <div class="p-4 flex flex-row justify-center">
-    {#if menu === DECK}
-      <div on:click={Shuffle} class="item">shuffle</div>
-      <div on:click={FlipDeck} class="item">flip</div>
-    {/if}
+  <div
+    transition:fade|local={{ duration: 200 }}
+    class="absolute z-50 select-none pointer-events-none left-0 bottom-0">
+    <div class="p-4 flex flex-col justify-center">
+      {#if menu === DECK}
+        <div on:click={Shuffle} class="item">shuffle</div>
+        <div on:click={FlipDeck} class="item">flip</div>
+      {/if}
 
-    {#if menu === ANCHOR}
-      <div on:click={Shuffle} class="item">shuffle</div>
-      <div on:click={FlipDeck} class="item">flip</div>
-    {/if}
+      {#if menu === ANCHOR}
+        <div on:click={Shuffle} class="item">shuffle</div>
+        <div on:click={FlipDeck} class="item">flip</div>
+      {/if}
 
-    {#if menu === CARDS}
-      <div on:click={MakeDeck} class="item">group</div>
-    {/if}
+      {#if menu === CARDS}
+        <div on:click={MakeDeck} class="item">group</div>
+      {/if}
 
-    {#if menu === CARD}
-      <div on:click={RotateCard} class="item">rotate</div>
-      <div on:click={FlipCard} class="item">flip</div>
-    {/if}
+      {#if menu === CARD}
+        <div on:click={RotateCard} class="item">rotate</div>
+        <div on:click={FlipCard} class="item">flip</div>
+      {/if}
 
-    {#each behaviors as behavior}
-      <div on:click={() => Behavior(behavior)} class="item">
-        {behavior.name}
-      </div>
-    {/each}
+      {#each behaviors as behavior}
+        <div on:click={() => Behavior(behavior)} class="item">
+          {behavior.name}
+        </div>
+      {/each}
+    </div>
   </div>
 {/if}

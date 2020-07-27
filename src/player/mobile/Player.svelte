@@ -1,11 +1,10 @@
 <script>
-  export let me = false;
   export let state;
   export let player;
   export let color = '#aaa';
 
   import IconPerson from 'svelte-icons/md/MdPerson.svelte';
-  import { send, receive } from '../utils/crossfade.ts';
+  import { send, receive } from '../../utils/crossfade.ts';
 
   let children = [];
 
@@ -24,7 +23,7 @@
 <div
   title={player.nickname}
   data-id={player.seatID}
-  data-droppable={me ? 'false' : 'true'}
+  data-droppable="true"
   class="cursor-pointer m-4 flex flex-row items-center">
   <div
     style="border-color: {color}; background: linear-gradient(45deg, #ddd 0%,
@@ -41,13 +40,11 @@
     {children.length}
   </div>
 
-  {#if !me}
-    <span>
-      {#each children as child (child)}
-        <span
-          out:send={{ key: child, animate: false }}
-          in:receive={{ key: child, animate: false }} />
-      {/each}
-    </span>
-  {/if}
+  <span>
+    {#each children as child (child)}
+      <span
+        out:send={{ key: child, animate: false }}
+        in:receive={{ key: child, animate: false }} />
+    {/each}
+  </span>
 </div>

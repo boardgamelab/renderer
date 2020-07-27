@@ -5,17 +5,17 @@
   import { zoom } from './gestures/zoom.ts';
   import { select } from './gestures/select.ts';
   import { pan } from './gestures/pan.ts';
+  import { sm } from './utils/breakpoints.ts';
   import Hand from './hand/Hand.svelte';
   import ContextMenu from './ui/menu/context/Context.svelte';
   import Ghost from './ghost/Ghost.svelte';
   import { ToSVGPointWithPan, ToClientPointWithPan } from './utils/svg.ts';
   import { createEventDispatcher, setContext } from 'svelte';
   import { writable } from 'svelte/store';
-  import { fade } from 'svelte/transition';
   import { Init } from './sandbox.ts';
   import { tweened } from 'svelte/motion';
   import { cubicOut, linear } from 'svelte/easing';
-  import PlayerPanel from './player/PlayerPanel.svelte';
+  import Players from './player/Players.svelte';
 
   // A Svelte component that can render a game object.
   export let renderer = null;
@@ -32,10 +32,7 @@
 
   let debug = false;
   let svg = { el: null };
-
   let handID = null;
-  let menu = null;
-  $: menu = Object.keys($activeObjects).length;
 
   $: {
     if ($state.seats && seatID in $state.seats) {
@@ -90,6 +87,14 @@
 
   let ghostAPI = writable({});
   setContext('ghost', ghostAPI);
+
+  let clientWidth;
+  let isMobile = writable(false);
+  setContext('isMobile', isMobile);
+
+  $: {
+    isMobile.set(clientWidth < sm);
+  }
 </script>
 
 <svelte:head>
@@ -99,6 +104,7 @@
 </svelte:head>
 
 <svelte:window
+  bind:innerWidth={clientWidth}
   on:error={(e) => {
     dispatch('error', e);
   }} />
@@ -149,19 +155,13 @@
   {/if}
 
   {#if players}
-    <PlayerPanel {state} {players} {seatID} />
+    <Players {state} {players} {seatID} />
   {/if}
 </span>
 
 <Ghost api={ghostAPI} />
 
-{#if menu}
-  <div
-    transition:fade|local={{ duration: 200 }}
-    class="absolute z-50 select-none pointer-events-none left-0 top-0 w-full">
-    <ContextMenu {activeObjects} {handID} />
-  </div>
-{/if}
+<ContextMenu />
 
 {#if debug}
   <div
