@@ -87,5 +87,6 @@ function ComputeRenderingOrder(schema: Schema, s: State): GameObject[] {
       const bOrder = s.objects[b].order || 0;
       return aOrder < bOrder ? -1 : 1;
     })
-    .map((id) => GetGameObject(schema, s, id));
+    .map((id) => GetGameObject(schema, s, id))
+    .filter((obj) => obj && obj.template);
 }

@@ -19,9 +19,15 @@
   const renderer = getContext('renderer');
   const highlight = getContext('highlight');
 
+  let width = 0;
+  let height = 0;
+
   const template = obj.template;
-  const width = template.geometry.width;
-  const height = template.geometry.height;
+
+  if (template) {
+    width = template.geometry.width;
+    height = template.geometry.height;
+  }
 
   const fill = '#fff';
   const stroke = '#111';
