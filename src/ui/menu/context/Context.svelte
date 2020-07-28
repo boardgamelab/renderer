@@ -178,7 +178,7 @@
   <div
     transition:fade|local={{ duration: 200 }}
     class="fixed z-50 select-none pointer-events-none w-full top-0 right-0">
-    <div class="p-4 flex flex-row justify-center">
+    <div class="h-12 flex flex-row items-center justify-center">
       {#if menu === DECK}
         <div on:click={Shuffle} class="item">shuffle</div>
         <div on:click={FlipDeck} class="item">flip</div>
