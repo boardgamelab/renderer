@@ -162,23 +162,23 @@
 
 <style>
   .item {
-    @apply text-xs uppercase rounded text-gray-800 font-bold select-none p-1 px-4 cursor-pointer transition duration-200 pointer-events-auto;
+    @apply text-xs uppercase rounded text-gray-100 font-bold select-none px-4 cursor-pointer transition duration-200 pointer-events-auto;
   }
 
   .item:hover {
-    @apply bg-gray-200;
+    @apply text-gray-400;
   }
 
   .item:active {
-    @apply bg-gray-300;
+    @apply bg-gray-700;
   }
 </style>
 
 {#if menu}
   <div
     transition:fade|local={{ duration: 200 }}
-    class="absolute z-50 select-none pointer-events-none left-0 bottom-0">
-    <div class="p-4 flex flex-col justify-center">
+    class="fixed z-50 select-none pointer-events-none w-full top-0 right-0">
+    <div class="p-4 flex flex-row justify-center">
       {#if menu === DECK}
         <div on:click={Shuffle} class="item">shuffle</div>
         <div on:click={FlipDeck} class="item">flip</div>
