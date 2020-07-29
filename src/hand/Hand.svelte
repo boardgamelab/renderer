@@ -73,8 +73,7 @@
 
 <style>
   .hand {
-    @apply relative select-none h-16 py-1 text-xl border-t-2 border-dashed text-gray-500 font-bold flex flex-row items-end justify-center w-full;
-    background: rgba(200, 200, 200, 0.1);
+    @apply relative select-none h-16 py-1 border-t font-bold flex flex-row items-end justify-center w-full bg-white;
   }
 
   .show {
@@ -82,37 +81,42 @@
   }
 
   .active {
-    border: none;
-    background: rgba(200, 200, 200, 0.6);
+    @apply bg-gray-600;
   }
 </style>
 
 <div
+  class="w-3/4 mx-auto shadow-lg border rounded-tl-lg rounded-tr-lg"
   data-id={handID}
-  data-droppable="true"
-  on:contextmenu|preventDefault={() => {}}
-  on:touchmove={CheckElementEnter}
-  class:active={handID in $highlight}
-  data-hand="true"
-  class="hand">
-  {#if list.length === 0}
-    <div class="pb-4">PLAYER HAND</div>
-  {/if}
+  data-droppable="true">
+  <div
+    class:active={handID in $highlight}
+    class="h-6 center text-xs text-white rounded-tl-lg rounded-tr-lg bg-gray-300" />
 
-  {#each list as obj, index (obj.id)}
-    <div
-      data-index={index}
-      data-sortable="true"
-      on:mouseenter={() => ElementEnter(index)}
-      animate:flip={{ duration: 300 }}>
-      <HandObject
-        on:movestart={MoveStart}
-        on:moveend={MoveEnd}
-        {handID}
-        {index}
-        id={obj.id}
-        {obj} />
-    </div>
-  {/each}
+  <div
+    on:contextmenu|preventDefault={() => {}}
+    on:touchmove={CheckElementEnter}
+    data-hand="true"
+    class="hand">
+    {#if list.length === 0}
+      <div class="text-gray-500 pb-4">PLAYER HAND</div>
+    {/if}
 
+    {#each list as obj, index (obj.id)}
+      <div
+        data-index={index}
+        data-sortable="true"
+        on:mouseenter={() => ElementEnter(index)}
+        animate:flip={{ duration: 300 }}>
+        <HandObject
+          on:movestart={MoveStart}
+          on:moveend={MoveEnd}
+          {handID}
+          {index}
+          id={obj.id}
+          {obj} />
+      </div>
+    {/each}
+
+  </div>
 </div>
