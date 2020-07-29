@@ -81,7 +81,7 @@
   }
 
   .active {
-    @apply bg-gray-600;
+    @apply bg-gray-600 h-8;
   }
 </style>
 
@@ -91,7 +91,8 @@
   data-droppable="true">
   <div
     class:active={handID in $highlight}
-    class="h-6 center text-xs text-white rounded-tl-lg rounded-tr-lg bg-gray-300" />
+    class="transform duration-200 h-6 center text-xs text-white rounded-tl-lg
+    rounded-tr-lg bg-gray-300" />
 
   <div
     on:contextmenu|preventDefault={() => {}}
