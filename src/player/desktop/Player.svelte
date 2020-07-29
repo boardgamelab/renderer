@@ -8,6 +8,7 @@
   import { getContext } from 'svelte';
 
   const schema = getContext('schema');
+  const highlight = getContext('highlight');
 
   let children = [];
 
@@ -22,6 +23,12 @@
     }
   }
 </script>
+
+<style>
+  .active {
+    @apply h-8;
+  }
+</style>
 
 <div
   class="select-none mx-2 border border-t-0 rounded-bl-lg rounded-br-lg w-3/4
@@ -44,7 +51,9 @@
   </div>
 
   <div
-    class="h-6 center text-xs text-white rounded-bl-lg rounded-br-lg"
+    class:active={player.seatID in $highlight}
+    class="transform duration-200 h-6 center text-xs text-white rounded-bl-lg
+    rounded-br-lg"
     style="background-color: {color}">
     {player.nickname || ''}
   </div>
