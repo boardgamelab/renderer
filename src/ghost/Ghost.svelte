@@ -4,13 +4,11 @@
 
   import { getContext } from 'svelte';
 
-  import { ToSVGLength } from '../utils/svg.ts';
   const toSVGPoint = getContext('to-svg-point');
   import { onMount, tick } from 'svelte';
   import { tweened } from 'svelte/motion';
   import { send } from '../utils/crossfade';
 
-  const { svg } = getContext('context');
   let ref;
   let ghostPos = { x: 0, y: 0 };
   let ghostOffset = tweened({ dx: 0, dy: 0 }, { duration: 0 });
@@ -26,9 +24,10 @@
         width = rect.width;
         height = rect.height;
 
-        const w = ToSVGLength(width, svg.el);
-        const h = ToSVGLength(height, svg.el);
-        viewBox = onTable ? `0 0 ${w} ${h}` : '';
+        const bbox = target.getBBox();
+        viewBox = onTable
+          ? `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`
+          : '';
 
         ghostID = target.dataset.id;
         show = true;
