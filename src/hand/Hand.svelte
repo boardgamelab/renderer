@@ -73,7 +73,7 @@
 
 <style>
   .hand {
-    @apply relative select-none h-16 py-1 border-t font-bold flex flex-row items-end justify-center w-full bg-white;
+    @apply relative select-none h-8 py-1 border-t font-bold flex flex-row items-end justify-center w-full bg-white;
   }
 
   .show {
@@ -81,7 +81,7 @@
   }
 
   .active {
-    @apply bg-gray-600 h-8;
+    @apply bg-gray-600 h-6;
   }
 </style>
 
@@ -91,7 +91,7 @@
   data-droppable="true">
   <div
     class:active={handID in $highlight}
-    class="transform duration-200 h-6 center text-xs text-white rounded-tl-lg
+    class="transform duration-200 h-4 center text-xs text-white rounded-tl-lg
     rounded-tr-lg bg-gray-300" />
 
   <div
@@ -100,7 +100,7 @@
     data-hand="true"
     class="hand">
     {#if list.length === 0}
-      <div class="text-gray-500 pb-4">PLAYER HAND</div>
+      <div class="text-gray-500 text-xs">PLAYER HAND</div>
     {/if}
 
     {#each list as obj, index (obj.id)}
