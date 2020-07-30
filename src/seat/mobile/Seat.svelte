@@ -5,6 +5,15 @@
 
   import IconPerson from 'svelte-icons/md/MdPerson.svelte';
   import { send, receive } from '../../utils/crossfade.ts';
+  import { getContext } from 'svelte';
+
+  $: {
+    if (!seat.player) {
+      color = '#aaa';
+    }
+  }
+
+  const highlight = getContext('highlight');
 
   let children = [];
   let nickname = '';
@@ -26,11 +35,18 @@
   }
 </script>
 
+<style>
+  .active {
+    @apply scale-110;
+  }
+</style>
+
 <div
   title={nickname}
   data-id={seat.seatID}
   data-droppable="true"
-  class="cursor-pointer m-4 flex flex-row items-center">
+  class:active={seat.seatID in $highlight}
+  class="cursor-pointer transform duration-100 m-4 flex flex-row items-center">
   <div
     style="border-color: {color}; background: linear-gradient(45deg, #ddd 0%,
     #fff 100%);"

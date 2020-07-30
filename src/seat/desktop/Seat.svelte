@@ -1,7 +1,7 @@
 <script>
   export let state;
   export let seat;
-  export let color;
+  export let color = '#aaa';
 
   import HandObject from '../../hand/HandObject.svelte';
   import { GetGameObject } from '../../objects/game-object.ts';
@@ -12,6 +12,12 @@
 
   let children = [];
   let nickname = '';
+
+  $: {
+    if (!seat.player) {
+      color = '#aaa';
+    }
+  }
 
   $: {
     children = [];
