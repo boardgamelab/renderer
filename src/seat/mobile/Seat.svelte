@@ -1,28 +1,34 @@
 <script>
   export let state;
-  export let player;
+  export let seat;
   export let color = '#aaa';
 
   import IconPerson from 'svelte-icons/md/MdPerson.svelte';
   import { send, receive } from '../../utils/crossfade.ts';
 
   let children = [];
+  let nickname = '';
 
   $: {
     children = [];
-    const { seatID } = player;
+    const { seatID } = seat;
     if ($state && $state.seats && seatID in $state.seats) {
       const { handID } = $state.seats[seatID];
       if (handID in $state.objects) {
         children = $state.objects[handID].children;
       }
     }
+
+    nickname = '';
+    if (seat.player && seat.player.nickname) {
+      nickname = seat.player.nickname;
+    }
   }
 </script>
 
 <div
-  title={player.nickname}
-  data-id={player.seatID}
+  title={nickname}
+  data-id={seat.seatID}
   data-droppable="true"
   class="cursor-pointer m-4 flex flex-row items-center">
   <div

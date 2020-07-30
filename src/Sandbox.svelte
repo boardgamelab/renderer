@@ -15,14 +15,14 @@
   import { Init } from './sandbox.ts';
   import { tweened } from 'svelte/motion';
   import { cubicOut, linear } from 'svelte/easing';
-  import Players from './player/Players.svelte';
+  import Seats from './seat/Seats.svelte';
 
   // A Svelte component that can render a game object.
   export let renderer = null;
   export let schema;
   export let state;
   export let seatID = null;
-  export let players = null;
+  export let seats = null;
 
   const dispatch = createEventDispatcher();
 
@@ -154,8 +154,8 @@
     </div>
   {/if}
 
-  {#if players}
-    <Players {state} {players} {seatID} />
+  {#if seats}
+    <Seats {state} {seats} {seatID} />
   {/if}
 </span>
 

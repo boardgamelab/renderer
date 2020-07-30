@@ -1,11 +1,11 @@
 <script>
-  export let players;
+  export let seats;
   export let state;
   export let seatID;
 
   import { getContext, setContext } from 'svelte';
-  import PlayersM from './mobile/Players.svelte';
-  import Players from './desktop/Players.svelte';
+  import Mobile from './mobile/Seats.svelte';
+  import Desktop from './desktop/Seats.svelte';
 
   const colors = [
     '#ff8700',
@@ -22,7 +22,7 @@
 </script>
 
 {#if $isMobile}
-  <PlayersM {players} {state} {seatID} />
+  <Mobile {seats} {state} {seatID} />
 {:else}
-  <Players {players} {state} {seatID} />
+  <Desktop {seats} {state} {seatID} />
 {/if}
