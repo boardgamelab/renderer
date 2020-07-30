@@ -97,9 +97,9 @@
       <foreignObject width="200" height="200">
         <div class="w-full h-full p-8">
           <div
-            style="font-size: 3rem; color: white; background-color: #777"
-            class="rounded-full shadow-xl w-full h-full flex items-center
-            justify-center select-none font-bold text-white">
+            style="font-size: 3rem"
+            class="text-gray-600 bg-white rounded-full shadow-xl w-full h-full
+            flex items-center justify-center select-none font-bold text-white">
             {obj.children.length}
           </div>
         </div>
