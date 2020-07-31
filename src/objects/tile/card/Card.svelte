@@ -60,19 +60,28 @@
   transform="rotate({$rotation}
   {width / 2}
   {height / 2})">
-  {#if forceFaceDown || (faceDown && !forceFaceUp)}
-    <Back {id} {width} {height} />
-  {:else}
-    <rect data-id={id} {width} {height} {fill} {stroke} />
 
-    {#if renderer && id in $schema.objects}
+  <rect data-id={id} {width} {height} {fill} {stroke} />
+
+  {#if forceFaceDown || (faceDown && !forceFaceUp)}
+    {#if !template.back || !template.back.parts || !Object.values(template.back.parts).length}
+      <Back {id} {width} {height} />
+    {:else if renderer && id in $schema.objects}
       <svelte:component
         this={renderer}
         {width}
         {height}
+        faceDown={true}
         templates={$schema.templates}
         object={$schema.objects[id]} />
     {/if}
+  {:else if renderer && id in $schema.objects}
+    <svelte:component
+      this={renderer}
+      {width}
+      {height}
+      templates={$schema.templates}
+      object={$schema.objects[id]} />
   {/if}
 
   {#if id in $highlight || active}

@@ -6,8 +6,6 @@
   const stroke = '#111';
 </script>
 
-<rect data-id={id} {width} {height} fill="#fff" {stroke} />
-
 <rect
   data-id={id}
   x="50"
