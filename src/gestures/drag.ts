@@ -128,9 +128,10 @@ export function drag(node: Element, opts: DragOpts) {
   }
 
   function Cancel() {
-    target!.dispatchEvent(CreateCustomEvent('moveend', target));
+    target?.dispatchEvent(CreateCustomEvent('moveend', target));
 
     anchorSVG = null;
+    anchorScreen = null;
     target = null;
     dropTarget = null;
 
@@ -198,6 +199,16 @@ export function drag(node: Element, opts: DragOpts) {
 
   function TouchStart(e: Event) {
     const touchEvent = e as TouchEvent;
+
+    if (touchEvent.touches.length !== 1) {
+      Cancel();
+      return;
+    }
+
+    if (anchorScreen) {
+      Cancel();
+      return;
+    }
 
     target = (e.target as Element).closest('[data-draggable=true]');
 

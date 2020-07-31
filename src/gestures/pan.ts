@@ -86,7 +86,6 @@ export function pan(node: Element, opts: Opts) {
     e.preventDefault();
 
     if (touchEvent.touches.length === 2) {
-      e.stopPropagation();
       opts.activeObjects.set({});
       Drag(touchEvent.touches[0]);
     }
@@ -108,10 +107,6 @@ export function pan(node: Element, opts: Opts) {
     const touchEvent = e as TouchEvent;
 
     if (touchEvent.touches.length === 2) {
-      // prevent other gestures like 'select' from being triggered.
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-
       anchor = ToSVGPoint(touchEvent.touches[0], node as SVGGraphicsElement);
       node.addEventListener('touchmove', TouchMove);
       node.addEventListener('touchcancel', Cancel);
