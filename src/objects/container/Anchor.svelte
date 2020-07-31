@@ -38,7 +38,7 @@
 
 <g
   data-id={id}
-  data-selectable="long"
+  data-selectable="true"
   data-droppable="true"
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
   <rect
