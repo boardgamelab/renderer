@@ -149,9 +149,7 @@
         if (!template) {
           return false;
         }
-        return (
-          template.type === Component.CARD || template.type === Component.DECK
-        );
+        return template.type === Component.CARD;
       });
       if (allCards) {
         menu = CARDS;
