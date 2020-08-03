@@ -28,7 +28,7 @@ const ZOOM_OUT_MULTIPLIER = 0.7;
 /**
  * Svelte directive that allows the viewport to be zoomed.
  */
-export function zoom(_: Element, opts: Opts) {
+export function zoom(node: HTMLElement, opts: Opts) {
   function MouseWheel(e: WheelEvent) {
     if (e.deltaY > 0) {
       opts.zoomLevel.update((v) => Math.min(v * ZOOM_IN_MULTIPLIER, MAX_ZOOM));
@@ -37,11 +37,11 @@ export function zoom(_: Element, opts: Opts) {
     }
   }
 
-  window.addEventListener('wheel', MouseWheel);
+  node.addEventListener('wheel', MouseWheel);
 
   return {
     destroy() {
-      window.removeEventListener('wheel', MouseWheel);
+      node.removeEventListener('wheel', MouseWheel);
     },
 
     update(newOpts: Opts) {
