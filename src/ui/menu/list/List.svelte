@@ -1,5 +1,6 @@
 <script>
   export let items = [];
+  export let hotkeys = true;
 
   import Icon from './Icon.svelte';
 
@@ -13,16 +14,22 @@
       expanded = false;
     }
 
-    let hotkey = 1;
-    items = items.map((item) => {
-      if (!item.section) {
-        item.hotkey = (hotkey++).toString();
-      }
-      return item;
-    });
+    if (hotkeys) {
+      let hotkey = 1;
+      items = items.map((item) => {
+        if (!item.section) {
+          item.hotkey = (hotkey++).toString();
+        }
+        return item;
+      });
+    }
   }
 
   function OnKey(e) {
+    if (!hotkeys) {
+      return;
+    }
+
     items
       .filter((item) => item.fn && item.hotkey === e.key)
       .forEach((item) => {
@@ -63,7 +70,7 @@
       {:else}
         <div
           class="cursor-pointer p-2 flex flex-row items-center hover:bg-gray-200">
-          <div class="mr-2 font-bold">
+          <div class="hidden md:block mr-2 font-bold">
             {#if item.hotkey}{item.hotkey}{/if}
           </div>
           <div class="w-6 mr-2">
