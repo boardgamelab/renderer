@@ -121,6 +121,8 @@
         );
 
         return;
+      } else {
+        activeObjects.set({ [detail.dropID]: true });
       }
     }
 

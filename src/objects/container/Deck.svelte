@@ -73,7 +73,7 @@
         stroke={selectionColor} />
     {/if}
 
-    {#each obj.children.slice(-2) as child, i (child.id)}
+    {#each obj.children.slice(-2) as child (child.id)}
       <Moveable
         id={child.id}
         obj={child}
@@ -84,7 +84,7 @@
         <Card
           id={child.id}
           obj={child}
-          selectable={obj.children.length < 2 || i == 1}
+          selectable={false}
           droppable={false}
           {isDragging}
           {active} />

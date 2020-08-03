@@ -1,18 +1,13 @@
 <script>
   import { getContext } from 'svelte';
 
+  import List from '../list/List.svelte';
   import { Component } from '@boardgamelab/components';
   import { GetTemplate } from '../../../utils/template.ts';
-  import { fade } from 'svelte/transition';
   import shortid from 'shortid';
   const schema = getContext('schema');
   const seatID = getContext('seatID');
   const { state, dispatchActions, activeObjects } = getContext('context');
-
-  const DECK = 'deck';
-  const ANCHOR = 'anchor';
-  const CARDS = 'cards';
-  const CARD = 'card';
 
   function MakeDeck() {
     const firstCardID = Object.keys($activeObjects)[0];
@@ -57,8 +52,7 @@
     activeObjects.set({ [newID]: true });
   }
 
-  function FlipCard() {
-    const id = Object.keys($activeObjects)[0];
+  function FlipCard(id) {
     dispatchActions([
       {
         context: { seatID },
@@ -69,8 +63,7 @@
     ]);
   }
 
-  function RotateCard() {
-    const id = Object.keys($activeObjects)[0];
+  function RotateCard(id) {
     dispatchActions([
       {
         context: { seatID },
@@ -81,8 +74,7 @@
     ]);
   }
 
-  function FlipDeck() {
-    const id = Object.keys($activeObjects)[0];
+  function FlipDeck(id) {
     dispatchActions([
       {
         context: { seatID },
@@ -93,8 +85,7 @@
     ]);
   }
 
-  function Shuffle() {
-    const id = Object.keys($activeObjects)[0];
+  function Shuffle(id) {
     dispatchActions([
       {
         context: { seatID },
@@ -106,8 +97,7 @@
     ]);
   }
 
-  function Behavior(behavior) {
-    const id = Object.keys($activeObjects)[0];
+  function Behavior(behavior, id) {
     dispatchActions([
       {
         context: { seatID, subject: { id } },
@@ -118,29 +108,85 @@
     ]);
   }
 
-  let menu = null;
-  let behaviors = [];
+  let items = [];
+
+  function GetBehaviors(id) {
+    const template = GetTemplate($schema, $state, id);
+    let items = [];
+    if (template && template.behaviors) {
+      template.behaviors.forEach((behavior) => {
+        items.push({
+          text: behavior.name,
+          fn: () => Behavior(behavior, id),
+          color: '#93c3ec',
+        });
+      });
+    }
+    return items;
+  }
+
+  function GetTopItemActions(id) {
+    let items = [];
+    if (id in $state.objects) {
+      const children = $state.objects[id].children;
+      const topItem = children[children.length - 1];
+
+      items = [
+        { text: 'rotate', fn: () => RotateCard(topItem) },
+        { text: 'flip', fn: () => FlipCard(topItem) },
+        ...GetBehaviors(topItem),
+      ];
+    }
+    return items;
+  }
+
   $: {
-    menu = null;
-    behaviors = [];
+    items = [];
 
     if (Object.keys($activeObjects).length === 1) {
       const id = Object.keys($activeObjects)[0];
       const template = GetTemplate($schema, $state, id);
 
-      if (template && template.behaviors) {
-        behaviors = template.behaviors;
-      }
-
       if (template && template.type === Component.DECK) {
-        menu = DECK;
+        items = [
+          { text: 'shuffle', fn: () => Shuffle(id) },
+          { text: 'flip', fn: () => FlipDeck(id) },
+        ];
+
+        const topItem = GetTopItemActions(id);
+        if (topItem.length) {
+          items = [
+            { section: 'top item' },
+            ...topItem,
+            { section: 'container' },
+            ...items,
+          ];
+        }
       }
       if (template && template.type === Component.ANCHOR) {
-        menu = ANCHOR;
+        items = [
+          { text: 'shuffle', fn: () => Shuffle(id) },
+          { text: 'flip', fn: () => FlipDeck(id) },
+        ];
+
+        const topItem = GetTopItemActions(id);
+        if (topItem.length) {
+          items = [
+            { section: 'top item' },
+            ...topItem,
+            { section: 'container' },
+            ...items,
+          ];
+        }
       }
       if (template && template.type === Component.CARD) {
-        menu = CARD;
+        items = [
+          { text: 'rotate', fn: () => RotateCard(id) },
+          { text: 'flip', fn: () => FlipCard(id) },
+        ];
       }
+
+      items = [...items, ...GetBehaviors(id)];
     }
 
     if (Object.keys($activeObjects).length > 1) {
@@ -152,55 +198,30 @@
         return template.type === Component.CARD;
       });
       if (allCards) {
-        menu = CARDS;
+        items = [{ text: 'group', fn: MakeDeck }];
       }
     }
   }
 </script>
 
 <style>
-  .item {
-    @apply text-xs uppercase rounded text-gray-100 font-bold select-none px-4 cursor-pointer transition duration-200 pointer-events-auto;
+  .menu {
+    @apply transform duration-100 translate-x-32 fixed z-50 top-0 right-0 h-full m-2 pointer-events-none flex flex-col justify-center;
   }
 
-  .item:hover {
-    @apply text-gray-400;
+  .menu.show {
+    @apply translate-x-0;
   }
 
-  .item:active {
-    @apply bg-gray-700;
+  @screen md {
+    .menu {
+      @apply h-full;
+    }
   }
 </style>
 
-{#if menu}
-  <div
-    transition:fade|local={{ duration: 200 }}
-    class="fixed z-50 select-none pointer-events-none w-full top-0 right-0">
-    <div class="h-12 flex flex-row items-center justify-center">
-      {#if menu === DECK}
-        <div on:click={Shuffle} class="item">shuffle</div>
-        <div on:click={FlipDeck} class="item">flip</div>
-      {/if}
-
-      {#if menu === ANCHOR}
-        <div on:click={Shuffle} class="item">shuffle</div>
-        <div on:click={FlipDeck} class="item">flip</div>
-      {/if}
-
-      {#if menu === CARDS}
-        <div on:click={MakeDeck} class="item">group</div>
-      {/if}
-
-      {#if menu === CARD}
-        <div on:click={RotateCard} class="item">rotate</div>
-        <div on:click={FlipCard} class="item">flip</div>
-      {/if}
-
-      {#each behaviors as behavior}
-        <div on:click={() => Behavior(behavior)} class="item">
-          {behavior.name}
-        </div>
-      {/each}
-    </div>
-  </div>
-{/if}
+<div class="menu" class:show={items.length}>
+  <span class="pointer-events-auto">
+    <List {items} />
+  </span>
+</div>
