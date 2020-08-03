@@ -12,6 +12,22 @@
     if (!items.length) {
       expanded = false;
     }
+
+    let hotkey = 1;
+    items = items.map((item) => {
+      if (!item.section) {
+        item.hotkey = (hotkey++).toString();
+      }
+      return item;
+    });
+  }
+
+  function OnKey(e) {
+    items
+      .filter((item) => item.fn && item.hotkey === e.key)
+      .forEach((item) => {
+        item.fn();
+      });
   }
 </script>
 
@@ -24,6 +40,8 @@
     @apply block;
   }
 </style>
+
+<svelte:window on:keypress={OnKey} />
 
 <div
   on:click={Expand}
@@ -45,6 +63,9 @@
       {:else}
         <div
           class="cursor-pointer p-2 flex flex-row items-center hover:bg-gray-200">
+          <div class="mr-2 font-bold">
+            {#if item.hotkey}{item.hotkey}{/if}
+          </div>
           <div class="w-6 mr-2">
             {#if item.icon}
               <svelte:component this={item.icon} />
