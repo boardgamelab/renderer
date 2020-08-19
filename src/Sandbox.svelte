@@ -10,7 +10,7 @@
   import ContextMenu from './ui/menu/context/Context.svelte';
   import Ghost from './ghost/Ghost.svelte';
   import { ToSVGPointWithPan, ToClientPointWithPan } from './utils/svg.ts';
-  import { createEventDispatcher, setContext } from 'svelte';
+  import { onMount, createEventDispatcher, setContext } from 'svelte';
   import { writable } from 'svelte/store';
   import { Init } from './sandbox.ts';
   import { tweened } from 'svelte/motion';
@@ -47,33 +47,49 @@
     dispatch
   );
 
-  // TODO: Need to use something other than card dimensions to
-  // determine initial zoom.
-  const cardWidth = 600;
-  const cardHeight = 720;
-
   const selectBox = writable(null);
 
-  const zoomLevel = tweened(7, {
+  const zoomLevel = tweened(5, {
     duration: 200,
     easing: cubicOut,
   });
 
+  // A multiplier to translate the current zoom level into a length.
+  const zoomLength = 800;
+
   let zoomOffsetX = 0;
   let zoomOffsetY = 0;
   $: {
-    zoomOffsetX = (cardWidth * (1 - $zoomLevel)) / 2;
-    zoomOffsetY = (cardHeight * (1 - $zoomLevel)) / 2;
+    zoomOffsetX = (zoomLength * (1 - $zoomLevel)) / 2;
+    zoomOffsetY = (zoomLength * (1 - $zoomLevel)) / 2;
   }
 
   const panX = tweened(0, {
-    duration: 200,
+    duration: 0,
     easing: linear,
   });
 
   const panY = tweened(0, {
-    duration: 200,
+    duration: 0,
     easing: linear,
+  });
+
+  onMount(() => {
+    const bbox = svg.el.getBBox();
+
+    const z1 = bbox.width / zoomLength;
+    const z2 = bbox.height / zoomLength;
+    const z = Math.max(z1, z2);
+
+    const actualZoom = Math.max(5, z * 1.5);
+
+    zoomLevel.set(actualZoom, { duration: 0 });
+
+    zoomOffsetX = (zoomLength * (1 - z)) / 2;
+    zoomOffsetY = (zoomLength * (1 - z)) / 2;
+
+    panX.set(zoomOffsetX);
+    panY.set(zoomOffsetY);
   });
 
   function ToSVGPoint(point) {
@@ -119,8 +135,8 @@
     class="w-full h-full"
     viewBox="{zoomOffsetX}
     {zoomOffsetY}
-    {$zoomLevel * cardWidth}
-    {$zoomLevel * cardHeight}"
+    {$zoomLevel * zoomLength}
+    {$zoomLevel * zoomLength}"
     use:pan={{ panX, panY, activeObjects }}
     use:zoom={{ zoomLevel }}
     on:touchmove|preventDefault={() => {}}
