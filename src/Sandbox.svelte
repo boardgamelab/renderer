@@ -49,7 +49,7 @@
 
   const selectBox = writable(null);
 
-  const zoomLevel = tweened(5, {
+  const zoomLevel = tweened(1, {
     duration: 200,
     easing: cubicOut,
   });
