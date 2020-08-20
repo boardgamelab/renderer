@@ -25,6 +25,8 @@
     nickname = '';
     if (player && player.nickname) {
       nickname = player.nickname;
+    } else {
+      color = '#aaa';
     }
   }
 </script>

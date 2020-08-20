@@ -31,7 +31,7 @@
         seatID={index}
         player={seatMap[index]}
         {seat}
-        color={seatMap[index] && colors[index]} />
+        color={colors[index]} />
     {/if}
   {/each}
 </div>
