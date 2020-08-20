@@ -22,7 +22,7 @@
   export let schema;
   export let state;
   export let seatID = null;
-  export let seats = null;
+  export let players = null;
 
   const dispatch = createEventDispatcher();
 
@@ -170,8 +170,8 @@
     </div>
   {/if}
 
-  {#if seats}
-    <Seats {state} {seats} {seatID} />
+  {#if players}
+    <Seats {players} {seatID} />
   {/if}
 </span>
 

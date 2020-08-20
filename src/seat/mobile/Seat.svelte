@@ -1,18 +1,13 @@
 <script>
-  export let state;
   export let seat;
+  export let player;
   export let color = '#aaa';
 
   import IconPerson from 'svelte-icons/md/MdPerson.svelte';
   import { send, receive } from '../../utils/crossfade.ts';
   import { getContext } from 'svelte';
 
-  $: {
-    if (!seat.player) {
-      color = '#aaa';
-    }
-  }
-
+  const state = getContext('state');
   const highlight = getContext('highlight');
 
   let children = [];
@@ -20,17 +15,16 @@
 
   $: {
     children = [];
-    const { seatID } = seat;
-    if ($state && $state.seats && seatID in $state.seats) {
-      const { handID } = $state.seats[seatID];
+    if (seat && seat.handID) {
+      const handID = seat.handID;
       if (handID in $state.objects) {
         children = $state.objects[handID].children;
       }
     }
 
     nickname = '';
-    if (seat.player && seat.player.nickname) {
-      nickname = seat.player.nickname;
+    if (player && player.nickname) {
+      nickname = player.nickname;
     }
   }
 </script>
@@ -43,9 +37,9 @@
 
 <div
   title={nickname}
-  data-id={seat.seatID}
+  data-id={seat.handID}
   data-droppable="true"
-  class:active={seat.seatID in $highlight}
+  class:active={seat.handID in $highlight}
   class="cursor-pointer transform duration-100 m-4 flex flex-row items-center">
   <div
     style="border-color: {color}; background: linear-gradient(45deg, #ddd 0%,

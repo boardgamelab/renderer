@@ -1,6 +1,5 @@
 <script>
-  export let seats;
-  export let state;
+  export let players;
   export let seatID;
 
   import { getContext, setContext } from 'svelte';
@@ -22,7 +21,7 @@
 </script>
 
 {#if $isMobile}
-  <Mobile {seats} {state} {seatID} />
+  <Mobile {players} {seatID} />
 {:else}
-  <Desktop {seats} {state} {seatID} />
+  <Desktop {players} {seatID} />
 {/if}
