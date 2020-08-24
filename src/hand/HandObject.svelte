@@ -79,6 +79,8 @@
   const DragEnd = ({ detail }) => {
     dispatch('moveend', { index });
 
+    highlight.set({});
+
     if (detail.dropID !== handID) {
       if (detail.dropID) {
         activeObjects.set({
