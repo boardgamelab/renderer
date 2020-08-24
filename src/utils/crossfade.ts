@@ -100,9 +100,20 @@ export function crossfade() {
           return crossfade(from, node, params);
         }
 
-        if (!params.ghost) {
-          items.delete(params.key);
-        }
+        // If the item just deleted is the ghost, then keep it around
+        // for a little while so that if the object subsequently
+        // reappears, it can animate itself from the ghost's position.
+        // The reason that this hack is necessary is because the ghost
+        // disappears in one microtask before the actual element is
+        // killed and transferred to its new location.
+        // TODO: Explore an alternative where the ghost can be killed
+        // in the same microtask as the element that it substitutes.
+        setTimeout(
+          () => {
+            items.delete(params.key);
+          },
+          params.ghost ? 500 : 0
+        );
 
         return {
           duration: 0,
