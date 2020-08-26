@@ -54,7 +54,12 @@ export function Init(
 
   // ID's of objects that should be highlighted.
   const highlight = writable({});
+
+  // If true, then the user is not allowed to make any changes to the table.
+  const viewOnly = writable(false);
+
   setContext('highlight', highlight);
+  setContext('viewOnly', viewOnly);
 
   setContext('state', localState);
 

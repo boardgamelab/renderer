@@ -7,6 +7,7 @@
   import { pan } from './gestures/pan.ts';
   import { sm } from './utils/breakpoints.ts';
   import Hand from './hand/Hand.svelte';
+  import Turn from './Turn.svelte';
   import ContextMenu from './ui/menu/context/Context.svelte';
   import Ghost from './ghost/Ghost.svelte';
   import { ToSVGPointWithPan, ToClientPointWithPan } from './utils/svg.ts';
@@ -172,6 +173,10 @@
 
   {#if players}
     <Seats {players} {seatID} />
+  {/if}
+
+  {#if players && Object.keys(players).length && $stateStore.ctx}
+    <Turn {seatID} ctx={$stateStore.ctx} />
   {/if}
 </span>
 

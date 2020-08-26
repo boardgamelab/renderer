@@ -86,7 +86,7 @@
 </style>
 
 <div
-  class="w-3/4 mx-auto shadow-lg border rounded-tl-lg rounded-tr-lg"
+  class="w-3/4 max-w-2xl mx-auto shadow-lg border rounded-tl-lg rounded-tr-lg"
   data-id={handID}
   data-droppable="true">
   <div
