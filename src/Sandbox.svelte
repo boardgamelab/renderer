@@ -24,6 +24,7 @@
   export let state;
   export let seatID = null;
   export let players = null;
+  export let multiplayer = false;
 
   const dispatch = createEventDispatcher();
 
@@ -171,11 +172,11 @@
     </div>
   {/if}
 
-  {#if players}
+  {#if players && multiplayer}
     <Seats {players} {seatID} />
   {/if}
 
-  {#if players && Object.keys(players).length && $stateStore.ctx}
+  {#if multiplayer && $stateStore.ctx}
     <Turn {seatID} ctx={$stateStore.ctx} />
   {/if}
 </span>

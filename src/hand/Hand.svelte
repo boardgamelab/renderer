@@ -86,13 +86,13 @@
 </style>
 
 <div
-  class="w-3/4 max-w-2xl mx-auto shadow-lg border rounded-tl-lg rounded-tr-lg"
+  class="w-3/4 max-w-2xl mx-auto border shadow-lg rounded-t"
   data-id={handID}
   data-droppable="true">
   <div
     class:active={handID in $highlight}
-    class="transform duration-200 h-4 center text-xs text-white rounded-tl-lg
-    rounded-tr-lg bg-gray-300" />
+    class="transform duration-200 h-4 center text-xs text-white rounded-t
+    bg-gray-300" />
 
   <div
     on:contextmenu|preventDefault={() => {}}

@@ -47,7 +47,7 @@
       <div
         on:click={EndTurn}
         class="rounded transition duration-200 cursor-pointer hover:opacity-75
-        p-2 bg-primary font-bold text-white shadow-lg">
+        p-2 bg-gray-700 font-bold text-white shadow-lg">
         <div>End Turn</div>
       </div>
     </div>

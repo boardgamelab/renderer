@@ -26,7 +26,8 @@
 </script>
 
 <div
-  class="absolute top-0 left-0 w-full flex flex-row items-start justify-center">
+  class="absolute top-0 left-0 w-full p-4 flex flex-row items-start
+  justify-center">
   {#each entries as seat, index (index)}
     {#if index !== seatID}
       <Seat
