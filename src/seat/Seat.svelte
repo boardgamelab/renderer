@@ -3,8 +3,8 @@
   export let player;
   export let color = '#aaa';
 
-  import HandObject from '../../hand/HandObject.svelte';
-  import { GetGameObject } from '../../objects/game-object.ts';
+  import HandObject from '../hand/HandObject.svelte';
+  import { GetGameObject } from '../objects/game-object.ts';
   import { getContext } from 'svelte';
 
   const schema = getContext('schema');
@@ -36,6 +36,18 @@
   .active {
     @apply bg-blue-200 shadow-xl;
   }
+
+  .hand {
+    @apply p-2 bg-white rounded-t flex flex-row items-center justify-center;
+    padding-left: 50px;
+    height: 2rem;
+  }
+
+  @screen md {
+    .hand {
+      height: 5rem;
+    }
+  }
 </style>
 
 <div
@@ -46,9 +58,7 @@
   data-seat="true"
   data-droppable="true"
   data-id={seat.handID}>
-  <div
-    style="padding-left: 50px; height: 5rem"
-    class="p-2 bg-white rounded-t flex flex-row items-center justify-center">
+  <div class="hand">
     {#each children as child, index (child)}
       <HandObject
         small={true}
