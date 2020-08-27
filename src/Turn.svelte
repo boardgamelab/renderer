@@ -63,7 +63,7 @@
     {/if}
   {/if}
 
-  <div class="absolute top-0 right-0 m-4">
+  <div class="hidden md:block absolute top-0 right-0 m-4">
     <div>Turn {ctx.turn + 1}</div>
   </div>
 {/if}
