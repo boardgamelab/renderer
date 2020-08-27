@@ -19,6 +19,7 @@ import { DragEvent } from '../gestures/drag';
 interface Opts {
   api: Ghost;
   onTable?: boolean;
+  disable?: boolean;
   parentID: string | null;
 }
 
@@ -34,6 +35,10 @@ type Detail = { detail: DragEvent };
 
 export function ghost(node: Element, opts: Opts) {
   function MoveStart({ detail }: Detail) {
+    if (opts.disable) {
+      return;
+    }
+
     const rect = detail.target.getBoundingClientRect();
     opts.api.setPosition(Math.round(rect.x), Math.round(rect.y));
     opts.api.show(detail.target, opts.onTable);

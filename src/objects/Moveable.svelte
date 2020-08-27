@@ -16,6 +16,7 @@
   const highlight = getContext('highlight');
   const toSVGPoint = getContext('to-svg-point');
   const ghostAPI = getContext('ghost');
+  const viewOnly = getContext('viewOnly');
 
   const position = tweened(null, { duration: 0 });
 
@@ -159,15 +160,15 @@
 </style>
 
 <g
-  use:ghost={{ api: $ghostAPI, onTable: true, parentID }}
+  use:ghost={{ api: $ghostAPI, disable: $viewOnly, onTable: true, parentID }}
   transform="translate({$position.x}, {$position.y})"
   class:hide={isDragging}
   out:send={{ key: id, toSVGPoint, disable: isDragging }}
   in:receive={{ key: id, toSVGPoint }}
   data-id={id}
   data-draggable={draggable}
-  on:movestart={DragStart}
-  on:moveend={DragEnd}
-  on:move={Drag}>
+  on:movestart={!$viewOnly && DragStart}
+  on:moveend={!$viewOnly && DragEnd}
+  on:move={!$viewOnly && Drag}>
   <slot {active} {isDragging} {position} />
 </g>

@@ -7,6 +7,7 @@
   import shortid from 'shortid';
   const schema = getContext('schema');
   const seatID = getContext('seatID');
+  const viewOnly = getContext('viewOnly');
   const { state, dispatchActions, activeObjects } = getContext('context');
 
   function MakeDeck() {
@@ -220,8 +221,10 @@
   }
 </style>
 
-<div class="menu" class:show={items.length}>
-  <span class="pointer-events-auto">
-    <List {items} />
-  </span>
-</div>
+{#if !$viewOnly}
+  <div class="menu" class:show={items.length}>
+    <span class="pointer-events-auto">
+      <List {items} />
+    </span>
+  </div>
+{/if}

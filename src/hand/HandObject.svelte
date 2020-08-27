@@ -25,6 +25,7 @@
   const toSVGPoint = getContext('to-svg-point');
   const highlight = getContext('highlight');
   const ghostAPI = getContext('ghost');
+  const viewOnly = getContext('viewOnly');
   const dispatch = createEventDispatcher();
 
   // Add a margin around the SVG container so that things
@@ -81,7 +82,7 @@
 
     highlight.set({});
 
-    if (detail.dropID !== handID) {
+    if (!$viewOnly && detail.dropID !== handID) {
       if (detail.dropID) {
         activeObjects.set({
           [detail.dropID]: true,
@@ -128,8 +129,8 @@
 <div class="mx-2" class:small class:hide={isDragging}>
   <svg
     use:ghost={{ api: $ghostAPI, parentID: handID }}
-    out:send={{ key: id, toSVGPoint, hand: true, disable: isDragging }}
-    in:receive={{ key: id, toSVGPoint, hand: true }}
+    out:send|local={{ key: id, toSVGPoint, hand: true, disable: isDragging }}
+    in:receive|local={{ key: id, toSVGPoint, hand: true }}
     data-id={id}
     data-selectable="true"
     data-draggable="true"

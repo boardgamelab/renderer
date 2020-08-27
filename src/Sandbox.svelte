@@ -36,9 +36,16 @@
   let svg = { el: null };
   let handID = null;
 
+  const viewOnly = writable(false);
+  setContext('viewOnly', viewOnly);
+
   $: {
     if ($state.seats && seatID in $state.seats) {
       handID = $state.seats[seatID].handID;
+    }
+
+    if ($state.ctx && $state.ctx.currentPlayer !== undefined) {
+      viewOnly.set($state.ctx.currentPlayer !== seatID);
     }
   }
 
