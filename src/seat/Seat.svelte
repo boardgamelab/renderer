@@ -62,6 +62,7 @@
     {#each children as child, index (child)}
       <HandObject
         small={true}
+        splay={true}
         id={child}
         handID={seat.handID}
         forceFaceDown={true}

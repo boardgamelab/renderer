@@ -10,6 +10,8 @@
 
   export let small = false;
 
+  export let splay = false;
+
   export let forceFaceUp = true;
 
   export let forceFaceDown = false;
@@ -26,11 +28,14 @@
   const highlight = getContext('highlight');
   const ghostAPI = getContext('ghost');
   const viewOnly = getContext('viewOnly');
+  const isMobile = getContext('isMobile');
   const dispatch = createEventDispatcher();
 
   // Add a margin around the SVG container so that things
   // like borders can be seen.
   const margin = 20;
+
+  const mobileMultiplier = $isMobile ? 0.5 : 1;
 
   let ref;
   let isDragging = false;
@@ -121,13 +126,20 @@
     @apply opacity-0 pointer-events-none;
   }
 
-  .small {
-    margin-left: -50px;
+  .splay {
+    margin-left: -20px;
+  }
+
+  @screen md {
+    .splay {
+      margin-left: -40px;
+    }
   }
 </style>
 
-<div class="mx-2" class:small class:hide={isDragging}>
+<div class:splay class:small class:hide={isDragging}>
   <svg
+    class="hand-object"
     use:ghost={{ api: $ghostAPI, parentID: handID }}
     out:send|local={{ key: id, toSVGPoint, hand: true, disable: isDragging }}
     in:receive|local={{ key: id, toSVGPoint, hand: true }}
@@ -137,7 +149,7 @@
     on:movestart={DragStart}
     on:moveend={DragEnd}
     on:move={Drag}
-    width={small ? 50 : 100}
+    width={(small ? 50 : 100) * mobileMultiplier}
     viewBox="-{margin} -{margin}
     {geometry.width + 2 * margin}
     {geometry.height + 2 * margin}"
