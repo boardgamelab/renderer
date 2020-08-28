@@ -19,13 +19,13 @@
 
   onMount(() => {
     api.set({
-      show: async (target, onTable) => {
+      show: async (target, opts = {}) => {
         const rect = target.getBoundingClientRect();
         width = rect.width;
         height = rect.height;
 
         const bbox = target.getBBox();
-        viewBox = onTable
+        viewBox = opts.onTable
           ? `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`
           : '';
 
@@ -33,7 +33,7 @@
         show = true;
         await tick();
 
-        ref.innerHTML = onTable ? target.innerHTML : target.outerHTML;
+        ref.innerHTML = opts.onTable ? target.innerHTML : target.outerHTML;
       },
 
       revert: async () => {

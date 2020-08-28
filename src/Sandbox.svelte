@@ -4,12 +4,15 @@
   import { drag } from './gestures/drag.ts';
   import { zoom } from './gestures/zoom.ts';
   import { select } from './gestures/select.ts';
+  import { preview } from './gestures/preview.ts';
   import { pan } from './gestures/pan.ts';
   import { sm } from './utils/breakpoints.ts';
+  import Controls from './Controls.svelte';
   import Hand from './hand/Hand.svelte';
   import Turn from './Turn.svelte';
   import ContextMenu from './ui/menu/context/Context.svelte';
   import Ghost from './ghost/Ghost.svelte';
+  import Preview from './preview/Preview.svelte';
   import { ToSVGPointWithPan, ToClientPointWithPan } from './utils/svg.ts';
   import { onMount, createEventDispatcher, setContext } from 'svelte';
   import { writable } from 'svelte/store';
@@ -111,6 +114,8 @@
   setContext('to-client-point', ToClientPoint);
 
   let ghostAPI = writable({});
+  let previewAPI = writable({});
+
   setContext('ghost', ghostAPI);
 
   let clientWidth;
@@ -135,6 +140,7 @@
   }} />
 
 <span
+  use:preview={{ api: $previewAPI }}
   use:drag={{ dispatchActions, svg, panX: $panX, panY: $panY }}
   use:select={{ panX: $panX, panY: $panY, svg, activeObjects, selectBox, schema: $schema, state: $stateStore }}>
   <svg
@@ -173,6 +179,8 @@
 
   </svg>
 
+  <Controls {zoomLevel} />
+
   {#if handID}
     <div data-handid={handID} class="absolute bottom-0 w-full">
       <Hand {handID} hand={$stateStore.objects[handID]} />
@@ -189,6 +197,8 @@
 </span>
 
 <Ghost api={ghostAPI} />
+
+<Preview api={previewAPI} />
 
 <ContextMenu />
 

@@ -144,6 +144,7 @@
     out:send|local={{ key: id, toSVGPoint, hand: true, disable: isDragging }}
     in:receive|local={{ key: id, toSVGPoint, hand: true }}
     data-id={id}
+    data-preview="true"
     data-selectable="true"
     data-draggable="true"
     on:movestart={DragStart}

@@ -24,7 +24,7 @@ interface Opts {
 }
 
 interface Ghost {
-  show: (e: Element, onTable?: boolean) => void;
+  show: (e: Element, opts?: object) => void;
   revert: () => Promise<void>;
   hide: () => void;
   setPosition: (x: number, y: number) => void;
@@ -41,7 +41,7 @@ export function ghost(node: Element, opts: Opts) {
 
     const rect = detail.target.getBoundingClientRect();
     opts.api.setPosition(Math.round(rect.x), Math.round(rect.y));
-    opts.api.show(detail.target, opts.onTable);
+    opts.api.show(detail.target, { onTable: opts.onTable });
   }
 
   function Move({ detail }: Detail) {

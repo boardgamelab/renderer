@@ -160,6 +160,7 @@
 </style>
 
 <g
+  data-preview="true"
   use:ghost={{ api: $ghostAPI, disable: $viewOnly, onTable: true, parentID }}
   transform="translate({$position.x}, {$position.y})"
   class:hide={isDragging}
