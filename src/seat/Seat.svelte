@@ -1,4 +1,5 @@
 <script>
+  export let seatID;
   export let seat;
   export let player;
   export let color = '#aaa';
@@ -7,6 +8,7 @@
   import HandObject from '../hand/HandObject.svelte';
   import { GetGameObject } from '../objects/game-object.ts';
   import { getContext } from 'svelte';
+  import { scale } from 'svelte/transition';
 
   const schema = getContext('schema');
   const state = getContext('state');
@@ -14,6 +16,14 @@
 
   let children = [];
   let nickname = '';
+  let passed = false;
+
+  $: {
+    passed = false;
+    if ($state.ctx && $state.ctx.passed.indexOf(seatID) !== -1) {
+      passed = true;
+    }
+  }
 
   $: {
     children = [];
@@ -78,6 +88,14 @@
 
   <div style="background: {color}" class="md:hidden rounded-b h-2 w-full" />
   <div class="hidden md:block bg-gray-400 h-2 w-full rounded-b" />
+
+  {#if passed}
+    <div
+      in:scale|local={{ duration: 100 }}
+      class="absolute top-0 left-0 text-xs bg-white md:m-1">
+      <div class="border p-1 px-4 rounded bg-gray-100">passed</div>
+    </div>
+  {/if}
 
   <div
     class="invisible md:visible absolute pointer-events-none bottom-0 left-0
