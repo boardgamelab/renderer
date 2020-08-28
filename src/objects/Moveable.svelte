@@ -110,6 +110,20 @@
         targetID: detail.dropID,
       };
 
+      const target = $state.objects[detail.dropID];
+      if (target) {
+        if (target.t === 'tile') {
+          activeObjects.set({
+            ['deck-' + detail.dropID]: true,
+          });
+        }
+        if (target.t === 'container') {
+          activeObjects.set({
+            [detail.dropID]: true,
+          });
+        }
+      }
+
       // If we're dropping the object back on its existing parent,
       // undo any position changes.
       if (detail.dropID === parentID) {
