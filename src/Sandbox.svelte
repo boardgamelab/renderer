@@ -47,7 +47,12 @@
       handID = $state.seats[seatID].handID;
     }
 
-    if ($state.ctx && $state.ctx.currentPlayer !== undefined) {
+    viewOnly.set(false);
+    if (
+      $state.game.turnOrder !== 'none' &&
+      $state.ctx &&
+      $state.ctx.currentPlayer !== undefined
+    ) {
       viewOnly.set($state.ctx.currentPlayer !== seatID);
     }
   }
