@@ -3,6 +3,7 @@
   export let player;
   export let color = '#aaa';
 
+  import Icon from './Icon.svelte';
   import HandObject from '../hand/HandObject.svelte';
   import { GetGameObject } from '../objects/game-object.ts';
   import { getContext } from 'svelte';
@@ -27,7 +28,7 @@
     if (player && player.nickname) {
       nickname = player.nickname;
     } else {
-      color = '#aaa';
+      color = '#ccc';
     }
   }
 </script>
@@ -52,12 +53,16 @@
 
 <div
   class:active={seat.handID in $highlight}
-  class="select-none transition duration-200 mx-2 border rounded w-3/4 md:w-64
-  shadow-lg overflow-none"
+  class="select-none relative transition duration-200 mx-2 border border-b-0
+  rounded w-3/4 md:w-64 shadow-lg overflow-none"
   title={nickname}
   data-seat="true"
   data-droppable="true"
   data-id={seat.handID}>
+  <div class="absolute top-0 right-0 m-2 text-xs text-gray-600 rounded-b">
+    {nickname}
+  </div>
+
   <div class="hand">
     {#each children as child, index (child)}
       <HandObject
@@ -71,9 +76,16 @@
     {/each}
   </div>
 
+  <div style="background: {color}" class="md:hidden rounded-b h-2 w-full" />
+  <div class="hidden md:block bg-gray-400 h-2 w-full rounded-b" />
+
   <div
-    class="transform duration-200 h-6 center text-xs text-white rounded-b"
-    style="background-color: {color}">
-    {nickname}
+    class="invisible md:visible absolute pointer-events-none bottom-0 left-0
+    w-full center">
+    <div
+      class="w-12 rounded-full border p-2 bg-white shadow transform
+      translate-y-4">
+      <Icon {color} />
+    </div>
   </div>
 </div>

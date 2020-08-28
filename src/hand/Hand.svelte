@@ -73,7 +73,7 @@
 
 <style>
   .hand {
-    @apply relative select-none h-8 py-1 border-t font-bold flex flex-row items-end justify-center w-full bg-white;
+    @apply relative select-none rounded-t h-10 py-1 font-bold flex flex-row items-end justify-center w-full bg-white;
   }
 
   .show {
@@ -81,18 +81,16 @@
   }
 
   .active {
-    @apply bg-gray-600 h-6;
+    @apply shadow-xl;
   }
 </style>
 
 <div
-  class="w-3/4 max-w-2xl mx-auto border shadow-lg rounded-t"
+  class="shadow-lg w-3/4 max-w-2xl mx-auto border border-t-8 border-gray-400
+  shadow-lg rounded-t transition duration-200"
+  class:active={handID in $highlight}
   data-id={handID}
   data-droppable="true">
-  <div
-    class:active={handID in $highlight}
-    class="transform duration-200 h-4 center text-xs text-white rounded-t
-    bg-gray-300" />
 
   <div
     on:contextmenu|preventDefault={() => {}}
@@ -100,7 +98,7 @@
     data-hand="true"
     class="hand">
     {#if list.length === 0}
-      <div class="text-gray-500 text-xs">PLAYER HAND</div>
+      <div class="text-gray-500">PLAYER HAND</div>
     {/if}
 
     {#each list as obj, index (obj.id)}
@@ -118,6 +116,5 @@
           {obj} />
       </div>
     {/each}
-
   </div>
 </div>
