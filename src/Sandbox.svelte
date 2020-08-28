@@ -195,7 +195,7 @@
   {/if}
 
   {#if multiplayer && $stateStore.ctx}
-    <Turn {seatID} ctx={$stateStore.ctx} />
+    <Turn {seatID} game={$stateStore.game} ctx={$stateStore.ctx} />
   {/if}
 </span>
 
