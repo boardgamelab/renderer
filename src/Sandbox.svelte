@@ -179,8 +179,6 @@
 
   </svg>
 
-  <Controls {zoomLevel} />
-
   {#if handID}
     <div data-handid={handID} class="absolute bottom-0 w-full">
       <Hand {handID} hand={$stateStore.objects[handID]} />
@@ -199,6 +197,8 @@
 <Ghost api={ghostAPI} />
 
 <Preview api={previewAPI} />
+
+<Controls {zoomLevel} />
 
 <ContextMenu />
 

@@ -11,7 +11,7 @@
   }
 </style>
 
-<div class="absolute top-0 right-0 grid gap-4 m-8">
+<div class="hidden absolute top-0 right-0 grid gap-4 m-8">
   <div
     class="control"
     on:click={() => {
