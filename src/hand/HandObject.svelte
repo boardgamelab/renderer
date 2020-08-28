@@ -35,7 +35,7 @@
   // like borders can be seen.
   const margin = 20;
 
-  const mobileMultiplier = $isMobile ? 0.5 : 1;
+  $: mobileMultiplier = $isMobile ? 0.5 : 1;
 
   let ref;
   let isDragging = false;
