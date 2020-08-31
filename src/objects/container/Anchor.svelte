@@ -73,7 +73,7 @@
   {/if}
 
   {#if obj.children.length}
-    {#each obj.children.slice(-2) as child (child.id)}
+    {#each obj.children as child (child.id)}
       <Moveable
         id={child.id}
         obj={child}
