@@ -61,8 +61,11 @@ export function crossfade() {
       tick: (t: number, u: number) => {
         const ux = u * dx;
         const uy = u * dy;
-        const uw = t + u * dw;
-        const uh = t + u * dh;
+        let uw = t + u * dw;
+        let uh = t + u * dh;
+
+        if (isNaN(uw)) uw = 1;
+        if (isNaN(uh)) uh = 1;
 
         if (params.ghost || params.hand) {
           let value = `translate3d(${ux}px, ${uy}px, 0) scale(${uw}, ${uh})`;
