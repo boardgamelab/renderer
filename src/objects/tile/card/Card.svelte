@@ -64,7 +64,7 @@
   <rect data-id={id} {width} {height} {fill} {stroke} />
 
   {#if forceFaceDown || (faceDown && !forceFaceUp)}
-    {#if !template.back || !template.back.parts || !Object.values(template.back.parts).length}
+    {#if !template || !template.back || !template.back.parts || !Object.values(template.back.parts).length}
       <Back {id} {width} {height} />
     {:else if renderer && id in $schema.objects}
       <svelte:component
