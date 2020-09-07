@@ -145,6 +145,7 @@
   }} />
 
 <span
+  class="select-none"
   use:preview={{ api: $previewAPI }}
   use:drag={{ dispatchActions, svg, panX: $panX, panY: $panY }}
   use:select={{ panX: $panX, panY: $panY, svg, activeObjects, selectBox, schema: $schema, state: $stateStore }}>
@@ -152,7 +153,7 @@
     id="root"
     data-selectable="box"
     bind:this={svg.el}
-    class="w-full h-full"
+    class="select-none w-full h-full"
     viewBox="{zoomOffsetX}
     {zoomOffsetY}
     {$zoomLevel * zoomLength}
