@@ -91,11 +91,12 @@
       </Moveable>
     {/each}
 
-    <g
-      class="cursor-move"
-      transform="translate({width / 2 - 100}, {height + 20})"
-      in:fly={{ duration: 250, y: -100 }}>
-      <foreignObject width="200" height="200">
+    <g class="cursor-move" in:fly={{ duration: 250, y: -100 }}>
+      <foreignObject
+        x={width / 2 - 100}
+        y={height + 20}
+        width="200"
+        height="200">
         <div class="w-full h-full p-8">
           <div
             style="font-size: 3rem"
