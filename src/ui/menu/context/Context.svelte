@@ -114,8 +114,8 @@
   function GetBehaviors(id) {
     const template = GetTemplate($schema, $state, id);
     let items = [];
-    if (template && template.behaviors) {
-      template.behaviors.forEach((behavior) => {
+    if (template && template.trait && template.trait.behaviors) {
+      template.trait.behaviors.forEach((behavior) => {
         items.push({
           text: behavior.name,
           fn: () => Behavior(behavior, id),
