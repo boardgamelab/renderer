@@ -115,7 +115,7 @@
     const template = GetTemplate($schema, $state, id);
     let items = [];
     if (template && template.trait && template.trait.behaviors) {
-      template.trait.behaviors.forEach((behavior) => {
+      Object.values(template.trait.behaviors).forEach((behavior) => {
         items.push({
           text: behavior.name,
           fn: () => Behavior(behavior, id),
