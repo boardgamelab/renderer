@@ -1,7 +1,6 @@
 import { State, Schema, Action } from '@boardgamelab/components';
-import type { createEventDispatcher } from 'svelte';
 import type { Readable } from 'svelte/store';
-import { writable, derived, get } from 'svelte/store';
+import { writable, derived, get, Writable } from 'svelte/store';
 import { setContext, onDestroy } from 'svelte';
 import { GetGameObject, GameObject } from './objects/game-object';
 
@@ -9,7 +8,7 @@ export function Init(
   schema: Readable<Schema>,
   masterState: Readable<State>,
   svg: { el: SVGGraphicsElement },
-  dispatch: ReturnType<typeof createEventDispatcher>
+  dispatch: (a: string, b: object) => {}
 ) {
   const activeObjects = writable({});
 
@@ -18,7 +17,7 @@ export function Init(
   // update its co-ordinates as it is being dragged, but we
   // only update the master state at the end of the drag in
   // order to not make the network traffic too chatty.
-  const localState = writable({ ...get(masterState) });
+  const localState: Writable<State> = writable({ ...get(masterState) });
 
   const u1 = masterState.subscribe((s) => {
     // TODO: Should we update the state in a loop here
