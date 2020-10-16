@@ -16,8 +16,8 @@
   const highlight = getContext('highlight');
 
   const template = obj.template;
-  const width = template.geometry.width;
-  const height = template.geometry.height;
+  const width = template.trait.layout.geometry.width;
+  const height = template.trait.layout.geometry.height;
 
   const rotation = tweened(0, { duration: 200 });
 

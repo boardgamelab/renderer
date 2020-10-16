@@ -12,7 +12,7 @@
   import Card from '../tile/card/Card.svelte';
 
   const highlight = getContext('highlight');
-  let { width, height } = obj.template.geometry;
+  let { width, height } = obj.template.trait.layout.geometry;
 
   const rotation = tweened(0, { duration: 200 });
 
@@ -33,7 +33,10 @@
       const firstChild = obj.children[0];
 
       if (firstChild.template) {
-        const { width: w, height: h } = firstChild.template.geometry;
+        const {
+          width: w,
+          height: h,
+        } = firstChild.template.trait.layout.geometry;
 
         if (w) {
           width = w;
@@ -45,12 +48,12 @@
       }
     }
 
-    if (obj.template.geometry.width) {
-      width = obj.template.geometry.width;
+    if (obj.template.trait.layout.geometry.width) {
+      width = obj.template.trait.layout.geometry.width;
     }
 
-    if (obj.template.geometry.height) {
-      height = obj.template.geometry.height;
+    if (obj.template.trait.layout.geometry.height) {
+      height = obj.template.trait.layout.geometry.height;
     }
   }
 </script>

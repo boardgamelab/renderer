@@ -70,7 +70,7 @@ export function FindIntersectingObjects(
 
     const x = obj.x || 0;
     const y = obj.y || 0;
-    const { width, height } = template.geometry;
+    const { width, height } = template.trait.layout.geometry;
     if (IsOverlap(box, { x, y, width, height })) {
       result.push(id);
     }
