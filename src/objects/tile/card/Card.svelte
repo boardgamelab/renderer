@@ -25,7 +25,7 @@
   const template = obj.template;
 
   if (template) {
-    const { geometry } = template.trait.layout;
+    const { geometry } = template.layout;
     width = geometry.width;
     height = geometry.height;
   }
@@ -65,7 +65,7 @@
   <rect data-id={id} {width} {height} {fill} {stroke} />
 
   {#if forceFaceDown || (faceDown && !forceFaceUp)}
-    {#if !template || !template.trait.layout.back || !template.trait.layout.back.parts || !Object.values(template.trait.layout.back.parts).length}
+    {#if !template || !template.layout.back || !template.layout.back.parts || !Object.values(template.layout.back.parts).length}
       <Back {id} {width} {height} />
     {:else if renderer && id in $schema.objects}
       <svelte:component
