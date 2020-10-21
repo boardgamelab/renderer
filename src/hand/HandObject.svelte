@@ -45,7 +45,7 @@
 
   if (id in $schema.objects) {
     const { templateID } = $schema.objects[id];
-    geometry = $schema.templates[templateID].geometry;
+    geometry = $schema.templates[templateID].layout.geometry;
   }
 
   function DragStart({ detail }) {
