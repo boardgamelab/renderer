@@ -31,7 +31,7 @@
   }
 
   const fill = '#fff';
-  const stroke = '#111';
+  const stroke = '#555';
   let faceDown = false;
   let rotation = tweened(0, { duration: 100 });
 
@@ -62,7 +62,7 @@
   {width / 2}
   {height / 2})">
 
-  <rect data-id={id} {width} {height} {fill} {stroke} />
+  <rect data-id={id} {width} {height} {fill} {stroke} stroke-width="5" />
 
   {#if forceFaceDown || (faceDown && !forceFaceUp)}
     {#if !template || !template.layout.back || !template.layout.back.parts || !Object.values(template.layout.back.parts).length}
