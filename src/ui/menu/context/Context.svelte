@@ -24,9 +24,11 @@
         template: {
           type: Component.DECK,
           id: newID,
-          geometry: {
-            width: firstCardTemplate.geometry.width,
-            height: firstCardTemplate.geometry.height,
+          layout: {
+            geometry: {
+              width: firstCardTemplate.layout.geometry.width,
+              height: firstCardTemplate.layout.geometry.height,
+            },
           },
         },
       },
