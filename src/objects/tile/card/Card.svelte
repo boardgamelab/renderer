@@ -35,6 +35,24 @@
   let faceDown = false;
   let rotation = tweened(0, { duration: 100 });
 
+  function IsFaceEmpty(face) {
+    if (!face) {
+      return true;
+    }
+
+    if (!face.layers) {
+      return true;
+    }
+
+    for (const layer of face.layers) {
+      if (Object.keys(layer.parts).length) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   $: {
     const card = obj.stateVal;
 
@@ -65,7 +83,7 @@
   <rect data-id={id} {width} {height} {fill} {stroke} stroke-width="5" />
 
   {#if forceFaceDown || (faceDown && !forceFaceUp)}
-    {#if !template || !template.layout.back || !template.layout.back.parts || !Object.values(template.layout.back.parts).length}
+    {#if !template || IsFaceEmpty(template.layout.faces[1])}
       <Back {id} {width} {height} />
     {:else if renderer && id in $schema.objects}
       <svelte:component
