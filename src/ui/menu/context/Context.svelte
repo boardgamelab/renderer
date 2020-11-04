@@ -58,10 +58,9 @@
   function FlipCard(id) {
     dispatchActions([
       {
-        context: { seatID },
+        context: { seatID, subject: { id } },
         type: 'tile',
-        subtype: 'flip',
-        subject: { id },
+        flip: null,
       },
     ]);
   }
@@ -69,10 +68,9 @@
   function RotateCard(id) {
     dispatchActions([
       {
-        context: { seatID },
+        context: { seatID, subject: { id } },
         type: 'tile',
-        subtype: 'rotate',
-        subject: { id },
+        rotate: null,
       },
     ]);
   }
@@ -80,10 +78,9 @@
   function FlipDeck(id) {
     dispatchActions([
       {
-        context: { seatID },
+        context: { seatID, subject: { id } },
         type: 'container',
-        subtype: 'flip',
-        subject: { id },
+        flip: null,
       },
     ]);
   }
@@ -91,11 +88,11 @@
   function Shuffle(id) {
     dispatchActions([
       {
-        context: { seatID },
+        context: { seatID, subject: { id } },
         type: 'container',
-        subtype: 'shuffle',
-        subject: { id },
-        seed: Math.floor(Math.random() * 1000),
+        shuffle: {
+          seed: Math.floor(Math.random() * 1000),
+        },
       },
     ]);
   }

@@ -62,10 +62,13 @@
 
     dispatchActions([
       {
+        context: {
+          subject: { id: handID },
+        },
         type: 'container',
-        subtype: 'reorder',
-        subject: { id: handID },
-        children: indices,
+        reorder: {
+          children: indices,
+        },
       },
     ]);
   }
