@@ -68,8 +68,13 @@
     // TODO: Use a ghost and stop calling "raise" here.
     dispatchActions([
       {
-        type: 'raise',
-        id: toRaise,
+        type: 'object',
+        raise: null,
+        context: {
+          subject: {
+            id: toRaise,
+          },
+        },
       },
     ]);
   }

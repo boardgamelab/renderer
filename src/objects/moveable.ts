@@ -29,10 +29,12 @@ function DropOnTable(dispatchActions: any, id: string, absolutePosition: any) {
       dest: null,
     },
     {
-      type: 'position',
-      subject: { id },
-      x: absolutePosition.x,
-      y: absolutePosition.y,
+      type: 'object',
+      context: { subject: { id } },
+      position: {
+        x: absolutePosition.x,
+        y: absolutePosition.y,
+      },
     },
   ]);
 }

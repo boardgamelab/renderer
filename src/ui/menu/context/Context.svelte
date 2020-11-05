@@ -33,11 +33,12 @@
         },
       },
       {
-        context: { seatID },
-        type: 'position',
-        subject: { id: newID },
-        x: firstCard.x,
-        y: firstCard.y,
+        context: { seatID, subject: { id: newID } },
+        type: 'object',
+        position: {
+          x: firstCard.x,
+          y: firstCard.y,
+        },
       },
     ];
 

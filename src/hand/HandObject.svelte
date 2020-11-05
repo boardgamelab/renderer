@@ -103,10 +103,12 @@
       } else if (cursorOffset) {
         dispatchActions([
           {
-            type: 'position',
-            subject: { id: detail.id },
-            x: detail.svg.x + ToSVGLength(cursorOffset.dx, svg.el),
-            y: detail.svg.y + ToSVGLength(cursorOffset.dy, svg.el),
+            type: 'object',
+            context: { subject: { id: detail.id } },
+            position: {
+              x: detail.svg.x + ToSVGLength(cursorOffset.dx, svg.el),
+              y: detail.svg.y + ToSVGLength(cursorOffset.dy, svg.el),
+            },
           },
           {
             type: 'add-to',
