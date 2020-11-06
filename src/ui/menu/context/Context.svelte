@@ -44,10 +44,11 @@
 
     Object.keys($activeObjects).forEach((id) => {
       actions.push({
-        context: { seatID },
-        type: 'add-to',
-        subject: { id },
-        dest: { id: newID },
+        type: 'object',
+        context: { seatID, subject: { id } },
+        move: {
+          dest: { id: newID },
+        },
       });
     });
 

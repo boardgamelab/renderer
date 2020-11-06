@@ -95,9 +95,11 @@
 
         dispatchActions([
           {
-            type: 'add-to',
-            subject: { id: detail.id },
-            dest: { id: detail.dropID },
+            type: 'object',
+            context: { subject: { id: detail.id } },
+            move: {
+              dest: { id: detail.dropID },
+            },
           },
         ]);
       } else if (cursorOffset) {
@@ -111,9 +113,11 @@
             },
           },
           {
-            type: 'add-to',
-            subject: { id: detail.id },
-            dest: null,
+            type: 'object',
+            context: { subject: { id: detail.id } },
+            move: {
+              dest: null,
+            },
           },
         ]);
       }

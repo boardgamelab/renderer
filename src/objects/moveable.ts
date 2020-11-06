@@ -11,9 +11,11 @@ export function Drop(
   if (drop) {
     dispatchActions([
       {
-        type: 'add-to',
-        subject: { id },
-        dest: { id: drop.targetID },
+        type: 'object',
+        context: { subject: { id } },
+        move: {
+          dest: { id: drop.targetID },
+        },
       },
     ]);
   } else {
@@ -24,9 +26,11 @@ export function Drop(
 function DropOnTable(dispatchActions: any, id: string, absolutePosition: any) {
   dispatchActions([
     {
-      type: 'add-to',
-      subject: { id },
-      dest: null,
+      type: 'object',
+      context: { subject: { id } },
+      move: {
+        dest: null,
+      },
     },
     {
       type: 'object',
