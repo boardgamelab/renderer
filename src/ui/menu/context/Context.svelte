@@ -20,7 +20,7 @@
       {
         context: { seatID },
         type: 'create',
-        id: newID,
+        createID: newID,
         template: {
           type: Component.DECK,
           id: newID,
