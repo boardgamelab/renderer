@@ -133,11 +133,13 @@
       const children = $state.objects[id].children;
       const topItem = children[children.length - 1];
 
-      items = [
-        { text: 'rotate', fn: () => RotateCard(topItem) },
-        { text: 'flip', fn: () => FlipCard(topItem) },
-        ...GetBehaviors(topItem),
-      ];
+      if (topItem) {
+        items = [
+          { text: 'rotate', fn: () => RotateCard(topItem) },
+          { text: 'flip', fn: () => FlipCard(topItem) },
+          ...GetBehaviors(topItem),
+        ];
+      }
     }
     return items;
   }

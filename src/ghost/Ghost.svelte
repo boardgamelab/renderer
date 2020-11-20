@@ -31,9 +31,12 @@
 
         ghostID = target.dataset.id;
         show = true;
+
+        const html = opts.onTable ? target.innerHTML : target.outerHTML;
+
         await tick();
 
-        ref.innerHTML = opts.onTable ? target.innerHTML : target.outerHTML;
+        ref.innerHTML = html;
       },
 
       revert: async () => {

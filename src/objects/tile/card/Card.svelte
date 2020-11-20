@@ -15,7 +15,6 @@
   import { selectionColor } from '../../../defaults.ts';
   import Back from './Back.svelte';
 
-  const schema = getContext('schema');
   const renderer = getContext('renderer');
   const highlight = getContext('highlight');
 
@@ -85,22 +84,22 @@
   {#if forceFaceDown || (faceDown && !forceFaceUp)}
     {#if !template || IsFaceEmpty(template.layout.faces[1])}
       <Back {id} {width} {height} />
-    {:else if renderer && id in $schema.objects}
+    {:else if renderer && obj.schemaVal}
       <svelte:component
         this={renderer}
         {width}
         {height}
         faceDown={true}
-        templates={$schema.templates}
-        object={$schema.objects[id]} />
+        {template}
+        object={obj.schemaVal} />
     {/if}
-  {:else if renderer && id in $schema.objects}
+  {:else if renderer && obj.schemaVal}
     <svelte:component
       this={renderer}
       {width}
       {height}
-      templates={$schema.templates}
-      object={$schema.objects[id]} />
+      {template}
+      object={obj.schemaVal} />
   {/if}
 
   {#if id in $highlight || active}

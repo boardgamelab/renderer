@@ -23,7 +23,6 @@
   import { ToSVGLength } from '../utils/svg.ts';
 
   const { activeObjects, dispatchActions, svg } = getContext('context');
-  const schema = getContext('schema');
   const toSVGPoint = getContext('to-svg-point');
   const highlight = getContext('highlight');
   const ghostAPI = getContext('ghost');
@@ -41,12 +40,7 @@
   let isDragging = false;
   let cursorOffset = null;
 
-  let geometry = { width: 0 };
-
-  if (id in $schema.objects) {
-    const { templateID } = $schema.objects[id];
-    geometry = $schema.templates[templateID].layout.geometry;
-  }
+  let geometry = obj.template.layout.geometry;
 
   function DragStart({ detail }) {
     isDragging = true;

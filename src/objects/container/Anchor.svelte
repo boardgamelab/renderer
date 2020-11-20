@@ -12,7 +12,6 @@
   import Card from '../tile/card/Card.svelte';
 
   const renderer = getContext('renderer');
-  const schema = getContext('schema');
   const highlight = getContext('highlight');
 
   const template = obj.template;
@@ -51,13 +50,13 @@
     stroke-width="10"
     stroke-dasharray="50,25" />
 
-  {#if renderer && id in $schema.objects}
+  {#if renderer && obj.schemaVal}
     <svelte:component
       this={renderer}
       {width}
       {height}
-      templates={$schema.templates}
-      object={$schema.objects[id]} />
+      {template}
+      object={obj.schemaVal} />
   {/if}
 
   {#if id in $highlight || active}

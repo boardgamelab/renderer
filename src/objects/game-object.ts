@@ -18,6 +18,7 @@ export function GetGameObject(
   id: string
 ): GameObject {
   const stateVal = state.objects[id];
+  const schemaID = GetTrimmed(id);
   const template = GetTemplate(schema, state, id);
 
   const childrenID: string[] = (stateVal as any).children || [];
@@ -28,8 +29,17 @@ export function GetGameObject(
   return {
     id,
     stateVal: state.objects[id],
-    schemaVal: schema.objects[id],
+    schemaVal: schema.objects[schemaID],
     template,
     children,
   };
+}
+
+/**
+ * Return the ID with the -<copy number> suffix removed.
+ */
+function GetTrimmed(id: string): string {
+  const m = id.match(/(.*)-\d+/);
+  if (!m) return id;
+  return m[1];
 }
