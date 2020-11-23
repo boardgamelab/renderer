@@ -72,7 +72,7 @@
   });
 
   // A multiplier to translate the current zoom level into a length.
-  const zoomLength = 800;
+  const zoomLength = 1000;
 
   let zoomOffsetX = 0;
   let zoomOffsetY = 0;
