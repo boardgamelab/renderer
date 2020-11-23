@@ -82,12 +82,12 @@
   }
 
   const panX = tweened(0, {
-    duration: 0,
+    duration: 200,
     easing: linear,
   });
 
   const panY = tweened(0, {
-    duration: 0,
+    duration: 200,
     easing: linear,
   });
 
