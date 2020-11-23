@@ -29,8 +29,8 @@ export function preview(_: Element, opts: Opts) {
   let target: Element | null = null;
   let visible = true;
 
-  function Show(alt: boolean) {
-    if (enable && target && alt) {
+  function Show() {
+    if (enable && target) {
       opts.api.show(target, { onTable: true });
       visible = true;
     } else if (visible) {
@@ -41,7 +41,7 @@ export function preview(_: Element, opts: Opts) {
 
   function MouseMove(e: MouseEvent) {
     target = (e.target as HTMLElement)?.closest('[data-preview=true]');
-    Show(e.altKey);
+    Show();
   }
 
   function FindPreviewableElement() {
@@ -53,20 +53,24 @@ export function preview(_: Element, opts: Opts) {
     return target?.closest('[data-preview=true]') || null;
   }
 
+  function IsKey(e: KeyboardEvent) {
+    return e.keyCode === 32; // spacebar
+  }
+
   function KeyDown(e: KeyboardEvent) {
-    if (e.altKey) {
+    if (IsKey(e)) {
       enable = true;
       window.addEventListener('mousemove', MouseMove);
       target = FindPreviewableElement();
-      Show(e.altKey);
+      Show();
     }
   }
 
-  function KeyUp(e: KeyboardEvent) {
+  function KeyUp() {
     window.removeEventListener('mousemove', MouseMove);
     target = null;
     enable = false;
-    Show(e.altKey);
+    Show();
   }
 
   // @ts-ignore
