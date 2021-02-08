@@ -15,14 +15,14 @@
   <div
     class="control"
     on:click={() => {
-      zoomLevel.update((z) => z / 2);
+      zoomLevel.update(z => z / 2);
     }}>
     <ZoomIn />
   </div>
   <div
     class="control"
     on:click={() => {
-      zoomLevel.update((z) => z * 2);
+      zoomLevel.update(z => z * 2);
     }}>
     <ZoomOut />
   </div>
