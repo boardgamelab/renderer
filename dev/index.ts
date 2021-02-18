@@ -1,8 +1,8 @@
-import './dev.css';
+import './index.css';
 
-import type { Component, State, Schema } from '@boardgamelab/components';
+import { State, Schema } from '@boardgamelab/components';
 
-import Sandbox from './src/Sandbox.svelte';
+import Sandbox from '../src/Sandbox.svelte';
 import { writable } from 'svelte/store';
 
 const schema: Schema = {

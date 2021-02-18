@@ -1,15 +1,20 @@
-import html from 'rollup-plugin-html-entry';
+import serve from 'rollup-plugin-serve';
+import livereload from 'rollup-plugin-livereload';
+import copy from 'rollup-plugin-copy';
+import css from 'rollup-plugin-css-only';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import svelte from 'rollup-plugin-svelte';
 import json from '@rollup/plugin-json';
 import typescript from '@rollup/plugin-typescript';
+import sveltePreprocess from 'svelte-preprocess';
 
 const pkg = require('./package.json');
+const production = !process.env.ROLLUP_WATCH;
 
 export default [
   {
-    input: 'dev.html',
+    input: 'dev/index.ts',
 
     output: [{ file: pkg.main, format: 'es', sourcemap: true }],
 
@@ -20,7 +25,11 @@ export default [
     },
 
     plugins: [
-      html({ exports: false }),
+      copy({
+        targets: [{ src: 'dev/index.html', dest: 'dist' }],
+      }),
+
+      css(),
 
       json(),
 
@@ -43,6 +52,9 @@ export default [
       resolve(),
       commonjs(),
       typescript(),
+
+      serve('dist'),
+      livereload(),
     ],
   },
 ];
