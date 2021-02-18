@@ -1,7 +1,7 @@
 {
-  "name": "@boardgamelab/sandbox",
+  "name": "@boardgamelab/renderer",
   "version": "0.0.1",
-  "description": "SVG Implementation of Boardgame Lab components",
+  "description": "SVG renderer for Boardgame Lab",
   "scripts": {
     "start": "npm run dev",
     "dev": "parcel dev.html",
