@@ -1,4 +1,4 @@
-import { State, Schema } from '@boardgamelab/components';
+import type { State, Schema } from '@boardgamelab/components';
 import { GetTemplate } from '../utils/template';
 
 export interface GameObject {

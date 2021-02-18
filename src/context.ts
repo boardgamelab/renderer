@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { Action, State, Schema } from '@boardgamelab/components';
+import type { Action, State, Schema } from '@boardgamelab/components';
 
 export interface Context {
   svg: SVGElement;

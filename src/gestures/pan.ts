@@ -15,7 +15,7 @@
  */
 
 import { ToSVGPoint } from '../utils/svg';
-import { Writable } from 'svelte/store';
+import type { Writable } from 'svelte/store';
 import throttle from 'lodash.throttle';
 
 interface Point {

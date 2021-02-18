@@ -14,7 +14,8 @@
  *  limitations under the License.
  */
 
-import { Component, Schema, State } from '@boardgamelab/components';
+import type { Schema, State } from '@boardgamelab/components';
+import { Component } from '@boardgamelab/components';
 import { GetTemplate } from './utils/template';
 
 interface Box {

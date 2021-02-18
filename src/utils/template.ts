@@ -1,4 +1,4 @@
-import { Schema, State } from '@boardgamelab/components';
+import type { Schema, State } from '@boardgamelab/components';
 
 export function GetTemplate(schema: Schema, state: State, id: string) {
   // Check if template is in the state itself (true for decks).

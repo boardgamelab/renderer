@@ -17,7 +17,7 @@
 import type { Writable } from 'svelte/store';
 import { ToSVGPoint } from '../utils/svg';
 import { FindIntersectingObjects } from '../geometry';
-import { Schema, State } from '@boardgamelab/components';
+import type { Schema, State } from '@boardgamelab/components';
 
 interface Opts {
   activeObjects: Writable<object>;

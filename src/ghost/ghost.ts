@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { DragEvent } from '../gestures/drag';
+import type { DragEvent } from '../gestures/drag';
 
 interface Opts {
   api: Ghost;

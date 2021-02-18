@@ -1,6 +1,6 @@
-import { State, Schema, Action } from '@boardgamelab/components';
-import type { Readable } from 'svelte/store';
-import { writable, derived, get, Writable } from 'svelte/store';
+import type { State, Schema, Action } from '@boardgamelab/components';
+import type { Readable, Writable } from 'svelte/store';
+import { writable, derived, get } from 'svelte/store';
 import { setContext, onDestroy } from 'svelte';
 import { GetGameObject, GameObject } from './objects/game-object';
 
