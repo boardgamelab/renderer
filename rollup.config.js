@@ -16,7 +16,7 @@ export default [
   {
     input: 'dev/index.ts',
 
-    output: [{ file: pkg.main, format: 'es', sourcemap: true }],
+    output: [{ file: pkg.main, format: 'umd', sourcemap: true }],
 
     external: [],
 
@@ -53,7 +53,7 @@ export default [
       commonjs(),
       typescript(),
 
-      serve('dist'),
+      serve({ contentBase: 'dist', port: 5000 }),
       livereload(),
     ],
   },

@@ -5,7 +5,7 @@ import { State, Schema } from '@boardgamelab/components';
 import Sandbox from '../src/Sandbox.svelte';
 import { writable } from 'svelte/store';
 
-const schema: Schema = {
+const schema: any = {
   assets: {},
 
   templates: {
@@ -69,7 +69,7 @@ const schema: Schema = {
   },
 };
 
-const state: State = {
+const state: any = {
   objects: {
     'card-1': {},
     'card-2': {},
