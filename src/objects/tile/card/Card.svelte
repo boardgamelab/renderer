@@ -2,7 +2,6 @@
   export let id;
   export let obj;
   export let droppable = true;
-  export let isDragging = false;
   export let active = false;
   export let forceFaceUp = false;
   export let forceFaceDown = false;

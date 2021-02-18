@@ -79,10 +79,6 @@
     @apply relative select-none rounded-t h-10 py-1 font-bold flex flex-row items-end justify-center w-full bg-white;
   }
 
-  .show {
-    @apply opacity-100;
-  }
-
   .active {
     @apply shadow-xl;
   }
