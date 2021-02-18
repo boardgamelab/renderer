@@ -2,6 +2,15 @@
 <html>
   <body>
     <div id="root" class="fixed top-0 left-0 w-screen h-screen"/>
+  <script type="text/javascript">
+    window.crypto = {};
+    window.cluster = {};
+    window.process = {
+      env: {
+        NODE_UNIQUE_ID: 1,
+      }
+    };
+  </script>
     <script src="index.js"></script>
   </body>
 </html>

@@ -16,9 +16,17 @@ export default [
   {
     input: 'dev/index.ts',
 
-    output: [{ file: pkg.main, format: 'umd', sourcemap: true }],
-
-    external: [],
+    output: [
+      {
+        file: pkg.main,
+        format: 'iife',
+        sourcemap: true,
+        globals: {
+          crypto: 'crypto',
+          cluster: 'cluster',
+        },
+      },
+    ],
 
     watch: {
       include: 'src/**',
