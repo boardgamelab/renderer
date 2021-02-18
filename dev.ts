@@ -1,6 +1,6 @@
 import './dev.css';
 
-import { Component, State, Schema } from '@boardgamelab/components';
+import type { Component, State, Schema } from '@boardgamelab/components';
 
 import Sandbox from './src/Sandbox.svelte';
 import { writable } from 'svelte/store';
