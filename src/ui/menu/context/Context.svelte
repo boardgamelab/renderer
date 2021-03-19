@@ -92,37 +92,36 @@
       {
         context: { seatID, subject: { id } },
         type: 'container',
-        shuffle: {
-          seed: Math.floor(Math.random() * 1000),
-        },
+        shuffle: {},
       },
     ]);
   }
 
-  function Behavior(behavior, id) {
+  function Rule(rule, id) {
     dispatchActions([
       {
         context: { seatID, subject: { id } },
-        type: 'advanced',
-        subtype: 'multi',
-        ...behavior.action,
+        type: 'rule',
+        id: rule.id,
       },
     ]);
   }
 
   let items = [];
 
-  function GetBehaviors(id) {
+  function GetRules(id) {
     const template = GetTemplate($schema, $state, id);
     let items = [];
-    if (template && template.trait && template.trait.behaviors) {
-      Object.values(template.trait.behaviors).forEach((behavior) => {
-        items.push({
-          text: behavior.name,
-          fn: () => Behavior(behavior, id),
-          color: '#93c3ec',
+    if (template && template.rules) {
+      template.rules
+        .map(rule => $schema.automation.rules[rule])
+        .forEach((rule) => {
+          items.push({
+            text: rule.name,
+            fn: () => Rule(rule, id),
+            color: '#93c3ec',
+          });
         });
-      });
     }
     return items;
   }
@@ -137,7 +136,7 @@
         items = [
           { text: 'rotate', fn: () => RotateCard(topItem) },
           { text: 'flip', fn: () => FlipCard(topItem) },
-          ...GetBehaviors(topItem),
+          ...GetRules(topItem),
         ];
       }
     }
@@ -202,7 +201,7 @@
         }
       }
 
-      items = [...items, ...GetBehaviors(id)];
+      items = [...items, ...GetRules(id)];
     }
 
     if (Object.keys($activeObjects).length > 1) {
