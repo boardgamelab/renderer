@@ -102,7 +102,7 @@
       {
         context: { seatID, subject: { id } },
         type: 'rule',
-        id: rule.id,
+        ruleID: rule.id,
       },
     ]);
   }
