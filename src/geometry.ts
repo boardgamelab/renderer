@@ -15,8 +15,9 @@
  */
 
 import type { Schema, State } from '@boardgamelab/components';
-import { Component } from '@boardgamelab/components';
 import { GetTemplate } from './utils/template';
+
+const HAND = 1;
 
 interface Box {
   x: number;
@@ -60,7 +61,7 @@ export function FindIntersectingObjects(
       continue;
     }
 
-    if (obj.template?.type === Component.HAND) {
+    if (obj.template?.type === HAND) {
       continue;
     }
 
