@@ -1,6 +1,7 @@
 <script>
   import { getContext } from 'svelte';
 
+  import RuleIcon from "../list/RuleIcon.svelte";
   import List from '../list/List.svelte';
   import { Component } from '@boardgamelab/components';
   import { GetTemplate } from '../../../utils/template.ts';
@@ -120,6 +121,7 @@
             text: rule.name,
             fn: () => Rule(rule, id),
             color: '#93c3ec',
+            icon: RuleIcon,
           });
         });
     }
