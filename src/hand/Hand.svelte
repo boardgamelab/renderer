@@ -97,7 +97,7 @@
     data-hand="true"
     class="hand">
     {#if list.length === 0}
-      <div class="text-gray-500">PLAYER HAND</div>
+      <div class="text-gray-400">HAND</div>
     {/if}
 
     {#each list as obj, index (obj.id)}
