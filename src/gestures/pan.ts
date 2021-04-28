@@ -94,7 +94,7 @@ export function pan(node: Element, opts: Opts) {
   function MouseDown(e: Event) {
     const mouseEvent = e as MouseEvent;
 
-    if (mouseEvent.button !== 1) {
+    if (mouseEvent.button !== 1 && !mouseEvent.ctrlKey) {
       return;
     }
 

@@ -124,7 +124,7 @@ export function select(node: HTMLElement, opts: Opts) {
   }
 
   function MouseDown(e: MouseEvent) {
-    if (e.button !== 0) {
+    if (e.button !== 0 || e.ctrlKey) {
       return;
     }
 

@@ -30,10 +30,14 @@ const ZOOM_OUT_MULTIPLIER = 0.7;
  */
 export function zoom(node: HTMLElement, opts: Opts) {
   function MouseWheel(e: WheelEvent) {
-    if (e.deltaY > 0) {
-      opts.zoomLevel.update((v) => Math.min(v * ZOOM_IN_MULTIPLIER, MAX_ZOOM));
-    } else {
-      opts.zoomLevel.update((v) => Math.max(v * ZOOM_OUT_MULTIPLIER, MIN_ZOOM));
+    if (e.ctrlKey) {
+      e.preventDefault();
+
+      if (e.deltaY > 0) {
+        opts.zoomLevel.update((v) => Math.min(v * ZOOM_IN_MULTIPLIER, MAX_ZOOM));
+      } else {
+        opts.zoomLevel.update((v) => Math.max(v * ZOOM_OUT_MULTIPLIER, MIN_ZOOM));
+      }
     }
   }
 
