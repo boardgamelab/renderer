@@ -9,6 +9,7 @@
   export let selectable = true;
 
   import { getContext } from 'svelte';
+  import { backOut } from "svelte/easing";
   import { tweened } from 'svelte/motion';
   import { fade } from 'svelte/transition';
   import { selectionColor } from '../../../defaults.ts';
@@ -31,7 +32,7 @@
   const fill = '#fff';
   const stroke = '#555';
   let faceDown = false;
-  let rotation = tweened(0, { duration: 100 });
+  let rotation = tweened(0, { duration: 300, easing: backOut });
 
   function IsFaceEmpty(face) {
     if (!face) {
