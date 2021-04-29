@@ -32,7 +32,7 @@
   const fill = '#fff';
   const stroke = '#555';
   let faceDown = false;
-  let rotation = tweened(0, { duration: 300, easing: backOut });
+  let rotation = tweened(0, { duration: 400, easing: backOut });
 
   function IsFaceEmpty(face) {
     if (!face) {
