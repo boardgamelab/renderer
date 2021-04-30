@@ -12,10 +12,8 @@ export function Drop(
     dispatchActions([
       {
         type: 'object',
-        context: { subject: { id } },
-        move: {
-          dest: { id: drop.targetID },
-        },
+        context: { subject: { id }, args: [{ object: drop.targetID }] },
+        move: {},
       },
     ]);
   } else {
@@ -28,9 +26,7 @@ function DropOnTable(dispatchActions: any, id: string, absolutePosition: any) {
     {
       type: 'object',
       context: { subject: { id } },
-      move: {
-        dest: null,
-      },
+      move: {},
     },
     {
       type: 'object',
