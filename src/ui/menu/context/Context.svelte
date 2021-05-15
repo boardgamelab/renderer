@@ -113,18 +113,30 @@
   function GetRules(id) {
     const template = GetTemplate($schema, $state, id);
     let items = [];
-    if (template && template.rules) {
-      template.rules
-        .map(rule => $schema.automation.rules[rule])
-        .forEach((rule) => {
-          items.push({
-            text: rule.name,
-            fn: () => Rule(rule, id),
-            color: '#93c3ec',
-            icon: RuleIcon,
-          });
-        });
+
+    if (template) {
+      let rules = template.rules;
+
+      template.deps.forEach(dep => {
+        const trait = $schema.traits[dep];
+        if (trait.rules) {
+          rules = [...rules, ...trait.rules];
+        }
+      });
+
+      if (rules) {
+        rules.map(rule => $schema.automation.rules[rule])
+             .forEach((rule) => {
+               items.push({
+                 text: rule.name,
+                 fn: () => Rule(rule, id),
+                 color: '#93c3ec',
+                 icon: RuleIcon,
+               });
+             });
+      }
     }
+
     return items;
   }
 
@@ -145,11 +157,11 @@
     return items;
   }
 
-  $: {
+  function UpdateActiveObjectMenu(activeObjects) {
     items = [];
 
-    if (Object.keys($activeObjects).length === 1) {
-      const id = Object.keys($activeObjects)[0];
+    if (Object.keys(activeObjects).length === 1) {
+      const id = Object.keys(activeObjects)[0];
       const template = GetTemplate($schema, $state, id);
 
       if (template && template.type === Component.DECK) {
@@ -206,8 +218,8 @@
       items = [...items, ...GetRules(id)];
     }
 
-    if (Object.keys($activeObjects).length > 1) {
-      const allCards = Object.keys($activeObjects).every((id) => {
+    if (Object.keys(activeObjects).length > 1) {
+      const allCards = Object.keys(activeObjects).every((id) => {
         const template = GetTemplate($schema, $state, id);
         if (!template) {
           return false;
@@ -218,6 +230,10 @@
         items = [{ text: 'group', fn: MakeDeck }];
       }
     }
+  }
+
+  $: {
+    UpdateActiveObjectMenu($activeObjects);
   }
 </script>
 
