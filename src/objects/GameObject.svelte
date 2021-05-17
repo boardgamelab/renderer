@@ -2,7 +2,7 @@
   import Moveable from './Moveable.svelte';
   import { Component } from '@boardgamelab/components';
 
-  import Anchor from './container/Anchor.svelte';
+  import Board from './container/Board.svelte';
   import Card from './tile/card/Card.svelte';
   import Deck from './container/Deck.svelte';
 
@@ -11,7 +11,7 @@
 
   const components = {
     [Component.CARD]: Card,
-    [Component.ANCHOR]: Anchor,
+    [Component.BOARD]: Board,
     [Component.DECK]: Deck,
   };
 </script>
