@@ -98,10 +98,12 @@ export function drag(node: Element, opts: DragOpts) {
   function CheckDrop(e: MouseEvent | Touch) {
     dropTarget = null;
 
-    pointsToCheck.forEach((point) => {
+    const component = (target as SVGGraphicsElement).dataset.component;
+
+    pointsToCheck.forEach(point => {
       const t = document
         .elementFromPoint(point.x + e.clientX, point.y + e.clientY)
-        ?.closest('[data-droppable=true]');
+        ?.closest(`[data-droppable=true][data-component=${component}]`);
 
       if (t) {
         dropTarget = t;

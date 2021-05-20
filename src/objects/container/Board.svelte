@@ -38,6 +38,7 @@
 <g
   data-id={id}
   data-selectable="true"
+  data-component={template.id}
   data-droppable="true"
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
   <rect

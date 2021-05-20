@@ -74,6 +74,7 @@
 <g
   data-id={id}
   data-selectable={selectable}
+  data-component={template.id}
   data-droppable={droppable}
   transform="rotate({$rotation}
   {width / 2}
