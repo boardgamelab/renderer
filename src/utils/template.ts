@@ -9,16 +9,16 @@ export function GetComponent(schema: Schema, state: State, id: string) {
 
   // Check if object exists in schema.
   if (id in schema.instances) {
-    const { templateID } = schema.instances[id];
-    const t = schema.components[templateID];
+    const { componentID } = schema.instances[id];
+    const t = schema.components[componentID];
     if (t) return t;
   }
 
   // Check if object is a copy of an instance in the schema.
   const trimmed = GetTrimmed(id);
   if (trimmed && trimmed in schema.instances) {
-    const { templateID } = schema.instances[trimmed];
-    const t = schema.components[templateID];
+    const { componentID } = schema.instances[trimmed];
+    const t = schema.components[componentID];
     if (t) return t;
   }
 

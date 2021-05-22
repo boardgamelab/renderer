@@ -58,9 +58,9 @@ const schema: any = {
   },
 
   objects: {
-    'card-1': { id: 'card-1', templateID: 'card', copies: 1 },
-    'card-2': { id: 'card-2', templateID: 'card', copies: 1 },
-    'card-3': { id: 'card-3', templateID: 'card', copies: 1 },
+    'card-1': { id: 'card-1', componentID: 'card', copies: 1 },
+    'card-2': { id: 'card-2', componentID: 'card', copies: 1 },
+    'card-3': { id: 'card-3', componentID: 'card', copies: 1 },
   },
 
   traits: {},
