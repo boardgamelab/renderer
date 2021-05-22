@@ -39,17 +39,15 @@
   data-id={id}
   data-selectable="true"
   data-component={template.id}
-  data-droppable="true"
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
   <rect
     x={10}
     y={10}
     width={width - 20}
     height={height - 20}
-    fill="#fff"
     stroke="#aaa"
-    stroke-width="10"
-    stroke-dasharray="50,25" />
+    stroke-width={5}
+    fill="transparent" />
 
   {#if renderer && obj.schemaVal}
     <svelte:component

@@ -16,23 +16,27 @@ export function GetGameObject(
   schema: Schema,
   state: State,
   id: string
-): GameObject {
+): GameObject|null {
   const stateVal = state.objects[id];
   const schemaID = GetTrimmed(id);
   const template = GetTemplate(schema, state, id);
 
   const childrenID: string[] = (stateVal as any).children || [];
-  const children: GameObject[] = childrenID.map((childID) =>
+  const children = childrenID.map((childID) =>
     GetGameObject(schema, state, childID)
-  );
+  ) as GameObject[];
 
-  return {
-    id,
-    stateVal: state.objects[id],
-    schemaVal: schema.objects[schemaID],
-    template,
-    children,
-  };
+  if (template) {
+    return {
+      id,
+      stateVal: state.objects[id],
+      schemaVal: schema.objects[schemaID],
+      template,
+      children,
+    };
+  }
+
+  return null;
 }
 
 /**
