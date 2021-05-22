@@ -4,7 +4,7 @@
   import RuleIcon from "../list/RuleIcon.svelte";
   import List from '../list/List.svelte';
   import { Component } from '@boardgamelab/components';
-  import { GetTemplate } from '../../../utils/template.ts';
+  import { GetComponent } from '../../../utils/template.ts';
   import shortid from 'shortid';
   const schema = getContext('schema');
   const seatID = getContext('seatID');
@@ -14,7 +14,7 @@
   function MakeDeck() {
     const firstCardID = Object.keys($activeObjects)[0];
     const firstCard = $state.objects[firstCardID];
-    const firstCardTemplate = GetTemplate($schema, $state, firstCardID);
+    const firstCardTemplate = GetComponent($schema, $state, firstCardID);
     const newID = shortid();
 
     const actions = [
@@ -111,7 +111,7 @@
   let items = [];
 
   function GetRules(id) {
-    const template = GetTemplate($schema, $state, id);
+    const template = GetComponent($schema, $state, id);
     let items = [];
 
     if (template) {
@@ -162,7 +162,7 @@
 
     if (Object.keys(activeObjects).length === 1) {
       const id = Object.keys(activeObjects)[0];
-      const template = GetTemplate($schema, $state, id);
+      const template = GetComponent($schema, $state, id);
 
       if (template && template.type === Component.DECK) {
         items = [
@@ -220,7 +220,7 @@
 
     if (Object.keys(activeObjects).length > 1) {
       const allCards = Object.keys(activeObjects).every((id) => {
-        const template = GetTemplate($schema, $state, id);
+        const template = GetComponent($schema, $state, id);
         if (!template) {
           return false;
         }

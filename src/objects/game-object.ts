@@ -1,11 +1,11 @@
 import type { State, Schema } from '@boardgamelab/components';
-import { GetTemplate } from '../utils/template';
+import { GetComponent } from '../utils/template';
 
 export interface GameObject {
   id: string;
   stateVal: object;
-  schemaVal: object;
-  template: object | null;
+  instance: object;
+  component: object | null;
   children: GameObject[];
 }
 
@@ -19,19 +19,19 @@ export function GetGameObject(
 ): GameObject|null {
   const stateVal = state.objects[id];
   const schemaID = GetTrimmed(id);
-  const template = GetTemplate(schema, state, id);
+  const component = GetComponent(schema, state, id);
 
   const childrenID: string[] = (stateVal as any).children || [];
   const children = childrenID.map((childID) =>
     GetGameObject(schema, state, childID)
   ) as GameObject[];
 
-  if (template) {
+  if (component) {
     return {
       id,
       stateVal: state.objects[id],
-      schemaVal: schema.objects[schemaID],
-      template,
+      instance: schema.objects[schemaID],
+      component,
       children,
     };
   }

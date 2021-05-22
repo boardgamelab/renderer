@@ -21,10 +21,10 @@
   let width = 0;
   let height = 0;
 
-  const template = obj.template;
+  const component = obj.component;
 
-  if (template) {
-    const { geometry } = template.layout;
+  if (component) {
+    const { geometry } = component.layout;
     width = geometry.width;
     height = geometry.height;
   }
@@ -74,7 +74,7 @@
 <g
   data-id={id}
   data-selectable={selectable}
-  data-component={template.id}
+  data-component={component.id}
   data-droppable={droppable}
   transform="rotate({$rotation}
   {width / 2}
@@ -83,24 +83,24 @@
   <rect data-id={id} {width} {height} {fill} {stroke} stroke-width="5" />
 
   {#if forceFaceDown || (faceDown && !forceFaceUp)}
-    {#if !template || IsFaceEmpty(template.layout.faces[1])}
+    {#if !component || IsFaceEmpty(component.layout.faces[1])}
       <Back {id} {width} {height} />
-    {:else if renderer && obj.schemaVal}
+    {:else if renderer && obj.instance}
       <svelte:component
         this={renderer}
         {width}
         {height}
         faceDown={true}
-        {template}
-        object={obj.schemaVal} />
+        {component}
+        instance={obj.instance} />
     {/if}
-  {:else if renderer && obj.schemaVal}
+  {:else if renderer && obj.instance}
     <svelte:component
       this={renderer}
       {width}
       {height}
-      {template}
-      object={obj.schemaVal} />
+      {component}
+      instance={obj.instance} />
   {/if}
 
   {#if id in $highlight || active}

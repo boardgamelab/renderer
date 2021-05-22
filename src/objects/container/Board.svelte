@@ -14,9 +14,9 @@
   const renderer = getContext('renderer');
   const highlight = getContext('highlight');
 
-  const template = obj.template;
-  const width = template.layout.geometry.width;
-  const height = template.layout.geometry.height;
+  const component = obj.component;
+  const width = component.layout.geometry.width;
+  const height = component.layout.geometry.height;
 
   const rotation = tweened(0, { duration: 200 });
 
@@ -38,7 +38,7 @@
 <g
   data-id={id}
   data-selectable="true"
-  data-component={template.id}
+  data-component={component.id}
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
   <rect
     x={10}
@@ -49,13 +49,13 @@
     stroke-width={5}
     fill="transparent" />
 
-  {#if renderer && obj.schemaVal}
+  {#if renderer && obj.instance}
     <svelte:component
       this={renderer}
       {width}
       {height}
-      {template}
-      object={obj.schemaVal} />
+      {component}
+      instance={obj.instance} />
   {/if}
 
   {#if id in $highlight || active}

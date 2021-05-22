@@ -15,7 +15,7 @@
  */
 
 import type { Schema, State } from '@boardgamelab/components';
-import { GetTemplate } from './utils/template';
+import { GetComponent } from './utils/template';
 
 const HAND = 1;
 
@@ -65,7 +65,7 @@ export function FindIntersectingObjects(
       continue;
     }
 
-    const template = GetTemplate(schema, state, id);
+    const template = GetComponent(schema, state, id);
     if (!template) {
       continue;
     }

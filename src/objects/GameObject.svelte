@@ -16,10 +16,10 @@
   };
 </script>
 
-{#if obj.template}
+{#if obj.component}
   <Moveable {id} {obj} let:active let:isDragging let:position>
     <svelte:component
-      this={components[obj.template.type]}
+      this={components[obj.component.type]}
       {obj}
       {id}
       {active}
