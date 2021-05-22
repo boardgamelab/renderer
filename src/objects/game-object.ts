@@ -30,7 +30,7 @@ export function GetGameObject(
     return {
       id,
       stateVal: state.objects[id],
-      instance: schema.objects[schemaID],
+      instance: schema.instances[schemaID],
       component,
       children,
     };
