@@ -90,10 +90,8 @@
         dispatchActions([
           {
             type: 'object',
-            context: { subject: { id: detail.id } },
-            move: {
-              dest: { id: detail.dropID },
-            },
+            context: { subject: { id: detail.id }, args: [{ object: detail.dropID }] },
+            move: {},
           },
         ]);
       } else if (cursorOffset) {
@@ -109,9 +107,7 @@
           {
             type: 'object',
             context: { subject: { id: detail.id } },
-            move: {
-              dest: null,
-            },
+            move: {},
           },
         ]);
       }

@@ -148,7 +148,6 @@
     });
   };
 
-  let active = false;
   $: active = id in $activeObjects;
 </script>
 
