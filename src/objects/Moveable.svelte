@@ -20,6 +20,8 @@
 
   const position = tweened(null, { duration: 0 });
 
+  $: active = id in $activeObjects;
+
   let x;
   let y;
 
@@ -147,8 +149,6 @@
       y: snapshot.y + detail.svg.dy,
     });
   };
-
-  $: active = id in $activeObjects;
 </script>
 
 <style>

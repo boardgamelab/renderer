@@ -1,6 +1,7 @@
 <script>
   export let id;
   export let obj;
+  export let position;
   export let active = false;
 
   import { getContext } from 'svelte';
@@ -72,7 +73,7 @@
   {#if obj.snapZones.length}
     {#each obj.snapZones as zone (zone.id)}
       <g transform="translate({zone.stateVal.x} {zone.stateVal.y})">
-        <Snap id={zone.id} obj={zone} {active} />
+      <Snap id={zone.id} obj={zone} {active} {position} />
       </g>
     {/each}
   {/if}
