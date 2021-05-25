@@ -1,15 +1,13 @@
 <script>
   export let id;
   export let obj;
-  export let position;
   export let active = false;
 
   import { getContext } from 'svelte';
   import { tweened } from 'svelte/motion';
-  import { fade, fly } from 'svelte/transition';
+  import { fade } from 'svelte/transition';
   import { selectionColor } from '../../defaults.ts';
-  import Moveable from '../Moveable.svelte';
-  import Card from '../tile/card/Card.svelte';
+  import Snap from './Snap.svelte';
 
   const renderer = getContext('renderer');
   const highlight = getContext('highlight');
@@ -40,6 +38,7 @@
   data-selectable="true"
   data-component={component.id}
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
+
   <rect
     x={10}
     y={10}
@@ -70,40 +69,11 @@
       stroke={selectionColor} />
   {/if}
 
-  {#if obj.children.length}
-    {#each obj.children as child (child.id)}
-      <Moveable
-        id={child.id}
-        obj={child}
-        parentID={id}
-        parentPos={position}
-        let:active
-        let:isDragging>
-        <Card
-          id={child.id}
-          obj={child}
-          selectable={false}
-          droppable={false}
-          {isDragging}
-          {active} />
-      </Moveable>
+  {#if obj.snapZones.length}
+    {#each obj.snapZones as zone (zone.id)}
+      <g transform="translate({zone.stateVal.x} {zone.stateVal.y})">
+        <Snap id={zone.id} obj={zone} {active} />
+      </g>
     {/each}
-
-    <g class="cursor-move" in:fly={{ duration: 250, y: -100 }}>
-      <foreignObject
-        x={width / 2 - 100}
-        y={height + 20}
-        width="200"
-        height="200">
-        <div class="w-full h-full p-8">
-          <div
-            style="font-size: 3rem"
-            class="text-gray-600 bg-white rounded-full shadow-xl w-full h-full
-            flex items-center justify-center select-none font-bold text-white">
-            {obj.children.length}
-          </div>
-        </div>
-      </foreignObject>
-    </g>
   {/if}
 </g>

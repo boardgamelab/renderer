@@ -40,7 +40,7 @@
   let isDragging = false;
   let cursorOffset = null;
 
-  let geometry = obj.template.layout.geometry;
+  let geometry = obj.component.layout.geometry;
 
   function DragStart({ detail }) {
     isDragging = true;

@@ -22,31 +22,11 @@
 
   let x;
   let y;
-  let prevParent = null;
 
   $: {
-    const newX = obj.stateVal.x || 0;
-    const newY = obj.stateVal.y || 0;
-
-    let changed = false;
-    if (newX !== x || newY !== y) {
-      changed = true;
-    }
-
-    x = newX;
-    y = newY;
-
-    const currParent = obj.stateVal.parent || null;
-
-    if (changed) {
-      if ($state.remote && !currParent && !prevParent) {
-        position.set({ x, y }, { duration: 150 });
-      } else {
-        position.set({ x, y });
-      }
-    }
-
-    prevParent = currParent;
+    x = obj.stateVal.x || 0;
+    y = obj.stateVal.y || 0;
+    position.set({ x, y }, { duration: 150 });
   }
 
   let isDragging = false;
@@ -98,9 +78,9 @@
   async function DragEnd({ detail }) {
     highlight.set({});
 
-    if (detail.dropID === parentID) {
-      isDragging = false;
-    }
+    // if (detail.dropID === parentID) {
+    isDragging = false;
+    // }
 
     if (!dragged) {
       return;
