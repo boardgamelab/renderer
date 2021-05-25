@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import type { Schema, State } from '@boardgamelab/components';
+import type { Container, Schema, State } from '@boardgamelab/components';
 import { GetComponent } from './utils/template';
 
 const HAND = 1;
@@ -58,6 +58,11 @@ export function FindIntersectingObjects(
 
     // Ignore objects in containers.
     if (obj.parent) {
+      continue;
+    }
+
+    // Ignore snap zones.
+    if ((obj as Container).isSnap) {
       continue;
     }
 

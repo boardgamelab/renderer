@@ -46,10 +46,8 @@
     Object.keys($activeObjects).forEach((id) => {
       actions.push({
         type: 'object',
-        context: { seatID, subject: { id } },
-        move: {
-          dest: { id: newID },
-        },
+        context: { seatID, subject: { id }, args: [{ object: newID }] },
+        move: {},
       });
     });
 
@@ -227,7 +225,7 @@
         return template.type === Component.CARD;
       });
       if (allCards) {
-        items = [{ text: 'group', fn: MakeDeck }];
+        items = [{ text: 'stack', fn: MakeDeck }];
       }
     }
   }
