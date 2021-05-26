@@ -93,7 +93,7 @@
     easing: linear,
   });
 
-  onMount(() => {
+  function ResetViewport(duration = 0) {
     const bbox = svg.el.getBBox();
 
     const z1 = bbox.width / zoomLength;
@@ -102,14 +102,16 @@
 
     const actualZoom = Math.max(5, z * 1.5);
 
-    zoomLevel.set(actualZoom, { duration: 0 });
+    const px = (zoomLength * (1 - z)) / 2;
+    const py = (zoomLength * (1 - z)) / 2;
 
-    zoomOffsetX = (zoomLength * (1 - z)) / 2;
-    zoomOffsetY = (zoomLength * (1 - z)) / 2;
+    panX.set(px, { duration });
+    panY.set(py, { duration });
 
-    panX.set(zoomOffsetX, { duration: 0 });
-    panY.set(zoomOffsetY, { duration: 0 });
-  });
+    zoomLevel.set(actualZoom, { duration });
+  }
+
+  onMount(() => { ResetViewport(); });
 
   function ToSVGPoint(point) {
     return ToSVGPointWithPan(point, svg.el, $panX, $panY);
@@ -206,7 +208,7 @@
 
 <Preview api={previewAPI} />
 
-<Controls {zoomLevel} />
+<Controls {zoomLevel} reset={ResetViewport} />
 
 <ContextMenu />
 
