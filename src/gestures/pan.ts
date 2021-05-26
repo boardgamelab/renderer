@@ -35,6 +35,7 @@ interface Opts {
   panY: Tweened<number>;
   // The current selected objects.
   activeObjects: Writable<object>;
+  isPanning: Writable<boolean>;
 }
 
 const PAN_DELTA_X = 2000;
@@ -73,6 +74,7 @@ export function pan(node: Element, opts: Opts) {
     const dx = point.x - anchor!.x;
     const dy = point.y - anchor!.y;
     anchor = point;
+    opts.isPanning.set(true);
     opts.panX.update((v) => v + dx, { duration: 0 });
     opts.panY.update((v) => v + dy, { duration: 0 });
   }
@@ -123,6 +125,7 @@ export function pan(node: Element, opts: Opts) {
     window.removeEventListener('mousemove', MouseMove);
     window.removeEventListener('mouseup', Cancel);
     anchor = null;
+    opts.isPanning.set(false);
   }
 
   window.addEventListener('keydown', KeyDown);

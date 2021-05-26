@@ -17,6 +17,7 @@
   import { onMount, createEventDispatcher, setContext } from 'svelte';
   import { writable } from 'svelte/store';
   import { Init } from './sandbox.ts';
+  import { fly } from 'svelte/transition';
   import { tweened } from 'svelte/motion';
   import { cubicOut, linear } from 'svelte/easing';
   import Seats from './seat/Seats.svelte';
@@ -31,6 +32,7 @@
 
   const dispatch = createEventDispatcher();
   const isDragging = writable(false);
+  const isPanning = writable(false);
 
   setContext('schema', schema);
   setContext('renderer', renderer);
@@ -162,7 +164,7 @@
     {zoomOffsetY}
     {$zoomLevel * zoomLength}
     {$zoomLevel * zoomLength}"
-    use:pan={{ panX, panY, activeObjects }}
+    use:pan={{ panX, panY, activeObjects, isPanning }}
     use:zoom={{ zoomLevel }}
     on:touchmove|preventDefault={() => {}}
     on:contextmenu|preventDefault={() => {}}
@@ -190,8 +192,8 @@
 
   </svg>
 
-  {#if handID}
-    <div data-handid={handID} class="absolute bottom-0 w-full">
+  {#if handID && !$isPanning}
+    <div transition:fly|local={{ y: 50, duration: 200 }} data-handid={handID} class="absolute bottom-0 w-full">
       <Hand {handID} hand={$stateStore.objects[handID]} />
     </div>
   {/if}

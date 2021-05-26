@@ -4,9 +4,10 @@
 
   import { getContext } from 'svelte';
   import { tweened } from 'svelte/motion';
-  import { fade, fly } from 'svelte/transition';
+  import { fade } from 'svelte/transition';
   import { selectionColor } from '../../defaults.ts';
   import GameObject from '../GameObject.svelte';
+  import Size from './Size.svelte';
 
   const highlight = getContext('highlight');
   const isDragging = getContext('isDragging');
@@ -55,23 +56,6 @@
       <GameObject id={child.id} obj={child} selectable={false} droppable={false} />
     {/each}
 
-    {#if obj.children.length > 1}
-    <g class="cursor-move" in:fly={{ duration: 250, y: -100 }}>
-      <foreignObject
-        x={width / 2 - 100}
-        y={height + 20}
-        width="200"
-        height="200">
-        <div class="w-full h-full p-8">
-          <div
-            style="font-size: 3rem"
-            class="text-gray-600 bg-white rounded-full shadow-xl w-full h-full
-            flex items-center justify-center select-none font-bold text-white">
-            {obj.children.length}
-          </div>
-        </div>
-      </foreignObject>
-    </g>
-    {/if}
+    <Size {obj} {width} {height} />
   {/if}
 </g>
