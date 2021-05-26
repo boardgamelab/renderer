@@ -107,8 +107,8 @@
     zoomOffsetX = (zoomLength * (1 - z)) / 2;
     zoomOffsetY = (zoomLength * (1 - z)) / 2;
 
-    panX.set(zoomOffsetX);
-    panY.set(zoomOffsetY);
+    panX.set(zoomOffsetX, { duration: 0 });
+    panY.set(zoomOffsetY, { duration: 0 });
   });
 
   function ToSVGPoint(point) {
