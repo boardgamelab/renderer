@@ -76,6 +76,7 @@
       </Moveable>
     {/each}
 
+    {#if obj.children.length > 1}
     <g class="cursor-move" in:fly={{ duration: 250, y: -100 }}>
       <foreignObject
         x={width / 2 - 100}
@@ -92,5 +93,6 @@
         </div>
       </foreignObject>
     </g>
+    {/if}
   {/if}
 </g>
