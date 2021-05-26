@@ -8,6 +8,8 @@
 
   export let id;
   export let obj;
+  export let droppable;
+  export let selectable;
 
   const components = {
     [Component.CARD]: Card,
@@ -23,6 +25,8 @@
       {obj}
       {id}
       {active}
+      {droppable}
+      {selectable}
       {isDragging} />
   </Moveable>
 {/if}

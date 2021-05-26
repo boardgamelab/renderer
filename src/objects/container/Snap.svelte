@@ -1,7 +1,6 @@
 <script>
   export let id;
   export let obj;
-  export let active = false;
 
   import { getContext } from 'svelte';
   import { tweened } from 'svelte/motion';
@@ -38,7 +37,7 @@
   data-droppable="true"
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
 
-  {#if $isDragging}
+  {#if $isDragging || id in $highlight}
     <rect
       in:fade|local={{ duration: 150 }}
       x={0}
@@ -52,20 +51,8 @@
   {/if}
 
   {#if obj.children.length}
-    {#if id in $highlight || active}
-      <rect
-        in:fade|local={{ duration: 150 }}
-        x={-10}
-        y={-10}
-        width={width + 20}
-        height={height + 20}
-        fill="none"
-        stroke-width="10"
-        stroke={selectionColor} />
-    {/if}
-
     {#each obj.children as child (child.id)}
-      <GameObject id={child.id} obj={child} />
+      <GameObject id={child.id} obj={child} selectable={false} droppable={false} />
     {/each}
 
     {#if obj.children.length > 1}
