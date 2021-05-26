@@ -30,10 +30,12 @@
   export let multiplayer = false;
 
   const dispatch = createEventDispatcher();
+  const isDragging = writable(false);
 
   setContext('schema', schema);
   setContext('renderer', renderer);
   setContext('seatID', seatID);
+  setContext('isDragging', isDragging);
 
   let debug = false;
   let svg = { el: null };
@@ -147,7 +149,7 @@
 <span
   class="select-none"
   use:preview={{ api: $previewAPI }}
-  use:drag={{ dispatchActions, svg, panX: $panX, panY: $panY }}
+  use:drag={{ dispatchActions, svg, panX: $panX, panY: $panY, isDragging }}
   use:select={{ panX: $panX, panY: $panY, svg, activeObjects, selectBox, schema: $schema, state: $stateStore }}>
   <svg
     id="root"

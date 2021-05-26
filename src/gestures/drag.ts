@@ -14,7 +14,8 @@
  *  limitations under the License.
  */
 
-import { ToSVGPoint } from '../utils/svg';
+import { ToSVGPoint } from "../utils/svg";
+import type { Writable } from "svelte/store";
 
 export interface DragEvent {
   // ID of the object being dragged.
@@ -46,6 +47,7 @@ interface DragOpts {
   panX: number;
   panY: number;
   dispatchActions: Function;
+  isDragging: Writable<boolean>;
 }
 
 interface Point {
@@ -119,6 +121,7 @@ export function drag(node: Element, opts: DragOpts) {
   }
 
   function Drag(e: MouseEvent | Touch) {
+    opts.isDragging.set(true);
     // Update the current drag point.
     pointSVG = ToSVGPoint(e, opts.svg.el, opts.panX, opts.panY);
     pointScreen = { x: e.clientX, y: e.clientY };
@@ -138,6 +141,8 @@ export function drag(node: Element, opts: DragOpts) {
 
   function Cancel() {
     target?.dispatchEvent(CreateCustomEvent('moveend', target));
+
+    opts.isDragging.set(false);
 
     anchorSVG = null;
     anchorScreen = null;

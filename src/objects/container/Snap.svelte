@@ -11,6 +11,7 @@
   import Card from '../tile/card/Card.svelte';
 
   const highlight = getContext('highlight');
+  const isDragging = getContext('isDragging');
 
   $: width = obj.stateVal.template.layout.geometry.width;
   $: height = obj.stateVal.template.layout.geometry.height;
@@ -34,17 +35,22 @@
 
 <g
   data-id={id}
+  data-selectable="true"
   data-droppable="true"
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
-      <rect
-        in:fade|local={{ duration: 150 }}
-        x={-10}
-        y={-10}
-        width={width + 20}
-        height={height + 20}
-        fill="transparent"
-        stroke-width="10"
-        stroke={selectionColor} />
+
+  {#if $isDragging}
+    <rect
+      in:fade|local={{ duration: 150 }}
+      x={0}
+      y={0}
+      {width}
+      {height}
+      fill={selectionColor}
+      fill-opacity="0.4"
+      stroke-width="10"
+      stroke={selectionColor} />
+  {/if}
 
   {#if obj.children.length}
     {#if id in $highlight || active}
