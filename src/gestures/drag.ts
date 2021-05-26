@@ -63,6 +63,7 @@ export function drag(node: Element, opts: DragOpts) {
   let anchorSVG: Point | null = null;
   let pointScreen: Point | null = null;
   let pointSVG: Point | null = null;
+  let targetSVG: Point | null = null;
 
   function CreateCustomEvent(name: string, target: HTMLElement) {
     const id = target.dataset.id;
@@ -82,6 +83,8 @@ export function drag(node: Element, opts: DragOpts) {
           y: pointSVG!.y,
           dx: pointSVG!.x - anchorSVG!.x,
           dy: pointSVG!.y - anchorSVG!.y,
+          targetX: targetSVG!.x + pointSVG!.x - anchorSVG!.x,
+          targetY: targetSVG!.y + pointSVG!.y - anchorSVG!.y,
         },
         client: {
           x: pointScreen!.x,
@@ -140,6 +143,7 @@ export function drag(node: Element, opts: DragOpts) {
     anchorScreen = null;
     target = null;
     dropTarget = null;
+    targetSVG = null;
 
     window.removeEventListener('mousemove', MouseMove);
     window.removeEventListener('touchmove', TouchMove);
@@ -158,6 +162,12 @@ export function drag(node: Element, opts: DragOpts) {
     };
 
     const targetRect = target!.getBoundingClientRect();
+    targetSVG = ToSVGPoint(
+      { clientX: targetRect.x, clientY: targetRect.y } as MouseEvent,
+      opts.svg.el,
+      opts.panX,
+      opts.panY
+    );
 
     pointsToCheck = [
       {

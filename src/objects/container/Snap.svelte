@@ -1,11 +1,9 @@
 <script>
   export let id;
   export let obj;
-  export let position;
   export let active = false;
 
   import { getContext } from 'svelte';
-  import { derived } from "svelte/store";
   import { tweened } from 'svelte/motion';
   import { fade, fly } from 'svelte/transition';
   import { selectionColor } from '../../defaults.ts';
@@ -13,10 +11,6 @@
   import Card from '../tile/card/Card.svelte';
 
   const highlight = getContext('highlight');
-
-  const parentPos = derived(position, ($p) => {
-    return { x: $p.x + obj.stateVal.x, y: $p.y + obj.stateVal.y };
-  });
 
   $: width = obj.stateVal.template.layout.geometry.width;
   $: height = obj.stateVal.template.layout.geometry.height;
@@ -70,7 +64,6 @@
         id={child.id}
         obj={child}
         parentID={id}
-        {parentPos}
         let:active
         let:isDragging>
         <Card

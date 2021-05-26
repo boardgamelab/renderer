@@ -17,13 +17,12 @@
 </script>
 
 {#if obj.component}
-  <Moveable {id} {obj} let:active let:isDragging let:position>
+  <Moveable {id} {obj} let:active let:isDragging>
     <svelte:component
       this={components[obj.component.type]}
       {obj}
       {id}
       {active}
-      {isDragging}
-      {position} />
+      {isDragging} />
   </Moveable>
 {/if}

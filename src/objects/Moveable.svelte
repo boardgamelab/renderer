@@ -8,7 +8,6 @@
   export let id;
   export let obj;
   export let parentID = null;
-  export let parentPos = null;
   export let draggable = true;
 
   const { dispatchActions, state, activeObjects } = getContext('context');
@@ -61,34 +60,14 @@
     ]);
   }
 
-  function RelativeToSVG(pos) {
-    if (!pos) {
-      return null;
-    }
-
-    let dx = 0;
-    let dy = 0;
-
-    if ($parentPos) {
-      dx = $parentPos.x;
-      dy = $parentPos.y;
-    }
-
-    return { x: pos.x + dx, y: pos.y + dy };
-  }
-
   async function DragEnd({ detail }) {
     highlight.set({});
 
-    // if (detail.dropID === parentID) {
     isDragging = false;
-    // }
 
     if (!dragged) {
       return;
     }
-
-    const absolutePosition = RelativeToSVG($position);
 
     let drop = null;
 
@@ -126,6 +105,7 @@
       }
     }
 
+    const absolutePosition = { x: detail.svg.targetX, y: detail.svg.targetY };
     Drop(id, drop, absolutePosition, dispatchActions);
   }
 
@@ -170,5 +150,5 @@
   on:movestart={!$viewOnly && DragStart}
   on:moveend={!$viewOnly && DragEnd}
   on:move={!$viewOnly && Drag}>
-  <slot {active} {isDragging} {position} />
+  <slot {active} {isDragging} />
 </g>

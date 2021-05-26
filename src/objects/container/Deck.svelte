@@ -1,7 +1,6 @@
 <script>
   export let id;
   export let obj;
-  export let position;
   export let active = false;
 
   import { getContext } from 'svelte';
@@ -78,7 +77,6 @@
         id={child.id}
         obj={child}
         parentID={id}
-        parentPos={position}
         let:active
         let:isDragging>
         <Card
