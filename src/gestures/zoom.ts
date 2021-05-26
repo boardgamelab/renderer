@@ -20,8 +20,6 @@ interface Opts {
   zoomLevel: Writable<number>;
 }
 
-const MAX_ZOOM = 20;
-const MIN_ZOOM = 2;
 const ZOOM_IN_MULTIPLIER = 1.3;
 const ZOOM_OUT_MULTIPLIER = 0.7;
 
@@ -34,9 +32,9 @@ export function zoom(node: HTMLElement, opts: Opts) {
       e.preventDefault();
 
       if (e.deltaY > 0) {
-        opts.zoomLevel.update((v) => Math.min(v * ZOOM_IN_MULTIPLIER, MAX_ZOOM));
+        opts.zoomLevel.update((v) => v * ZOOM_IN_MULTIPLIER);
       } else {
-        opts.zoomLevel.update((v) => Math.max(v * ZOOM_OUT_MULTIPLIER, MIN_ZOOM));
+        opts.zoomLevel.update((v) => v * ZOOM_OUT_MULTIPLIER);
       }
     }
   }
