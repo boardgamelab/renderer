@@ -178,7 +178,8 @@
 
     {#if $selectBox}
       <rect
-        fill="none"
+        fill="#aaa"
+        fill-opacity="0.2"
         stroke-width="10"
         stroke="#aaa"
         x={$selectBox.x}
