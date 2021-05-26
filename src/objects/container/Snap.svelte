@@ -45,7 +45,7 @@
       {width}
       {height}
       fill={selectionColor}
-      fill-opacity="0.4"
+      fill-opacity={id in $highlight ? 0.5 : 0}
       stroke-width="10"
       stroke={selectionColor} />
   {/if}
