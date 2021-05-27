@@ -12,7 +12,9 @@
   import Size from './Size.svelte';
 
   const highlight = getContext('highlight');
-  let { width, height } = obj.component.layout.geometry;
+
+  let width = 0;
+  let height = 0;
 
   const rotation = tweened(0, { duration: 200 });
 
@@ -43,14 +45,6 @@
           height = h;
         }
       }
-    }
-
-    if (obj.component.layout.geometry.width) {
-      width = obj.component.layout.geometry.width;
-    }
-
-    if (obj.component.layout.geometry.height) {
-      height = obj.component.layout.geometry.height;
     }
   }
 </script>

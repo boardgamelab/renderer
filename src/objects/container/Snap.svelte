@@ -12,8 +12,8 @@
   const highlight = getContext('highlight');
   const isDragging = getContext('isDragging');
 
-  $: width = obj.stateVal.template.layout.geometry.width;
-  $: height = obj.stateVal.template.layout.geometry.height;
+  $: width = obj.stateVal.kind.snap.geometry.width;
+  $: height = obj.stateVal.kind.snap.geometry.height;
 
   const rotation = tweened(0, { duration: 200 });
 

@@ -145,7 +145,7 @@
   out:send={{ key: id, toSVGPoint, disable: isDragging }}
   in:receive={{ key: id, toSVGPoint }}
   data-id={id}
-  data-component={obj.component.id}
+  data-component={obj.stateVal.componentID}
   data-draggable={draggable}
   on:movestart={!$viewOnly && DragStart}
   on:moveend={!$viewOnly && DragEnd}

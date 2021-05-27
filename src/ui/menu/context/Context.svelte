@@ -14,7 +14,6 @@
   function MakeDeck() {
     const firstCardID = Object.keys($activeObjects)[0];
     const firstCard = $state.objects[firstCardID];
-    const firstCardTemplate = GetComponent($schema, $state, firstCardID);
     const newID = shortid();
 
     const actions = [
@@ -22,16 +21,7 @@
         context: { seatID },
         type: 'create',
         createID: newID,
-        template: {
-          type: Component.DECK,
-          id: newID,
-          layout: {
-            geometry: {
-              width: firstCardTemplate.layout.geometry.width,
-              height: firstCardTemplate.layout.geometry.height,
-            },
-          },
-        },
+        kind: "deck",
       },
       {
         context: { seatID, subject: { id: newID } },

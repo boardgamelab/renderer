@@ -1,12 +1,6 @@
 import type { Schema, State } from '@boardgamelab/components';
 
 export function GetComponent(schema: Schema, state: State, id: string) {
-  // Check if template is in the state itself (true for decks).
-  if (id in state.objects) {
-    const t = state.objects[id].template;
-    if (t) return t;
-  }
-
   // Check if object exists in schema.
   if (id in schema.instances) {
     const { componentID } = schema.instances[id];

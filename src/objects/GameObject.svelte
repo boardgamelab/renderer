@@ -14,14 +14,23 @@
   const components = {
     [Component.CARD]: Card,
     [Component.BOARD]: Board,
-    [Component.DECK]: Deck,
   };
+
+  let component = null;
+  $: {
+    component = null;
+    if (obj.component) {
+      component = components[obj.component.type];
+    } else if (obj.stateVal.kind === "deck") {
+      component = Deck;
+    }
+  }
 </script>
 
-{#if obj.component}
+{#if component}
   <Moveable {id} {obj} let:active let:isDragging>
     <svelte:component
-      this={components[obj.component.type]}
+      this={component}
       {obj}
       {id}
       {active}
