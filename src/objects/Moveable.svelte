@@ -1,5 +1,5 @@
 <script>
-  import { getContext } from 'svelte';
+  import { createEventDispatcher, getContext } from 'svelte';
   import { Drop } from './moveable.ts';
   import { tweened } from 'svelte/motion';
   import { send, receive } from '../utils/crossfade.ts';
@@ -10,6 +10,7 @@
   export let parentID = null;
   export let draggable = true;
 
+  const dispatch = createEventDispatcher();
   const { dispatchActions, state, activeObjects } = getContext('context');
 
   const highlight = getContext('highlight');
@@ -34,6 +35,8 @@
   let dragged = false;
   let snapshot = null;
   function DragStart() {
+    dispatch("movestart");
+
     dragged = false;
     isDragging = true;
 
@@ -61,6 +64,8 @@
   }
 
   async function DragEnd({ detail }) {
+    dispatch("moveend");
+
     highlight.set({});
 
     isDragging = false;

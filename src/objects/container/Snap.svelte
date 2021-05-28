@@ -11,6 +11,7 @@
 
   const highlight = getContext('highlight');
   const isDragging = getContext('isDragging');
+  const { dispatchActions } = getContext('context');
 
   $: width = obj.stateVal.kind.snap.geometry.width;
   $: height = obj.stateVal.kind.snap.geometry.height;
@@ -22,6 +23,22 @@
     await rotation.set(0, { duration: 1 });
   }
 
+  let movedIndex = null;
+  let swapTarget = null;
+
+  function MoveStart(index) {
+    movedIndex = index;
+  }
+
+  function MoveEnd() {
+    movedIndex = null;
+    swapTarget = null;
+  }
+
+  function MouseEnter(index) {
+    ElementEnter(index);
+  }
+
   let shuffleID = null;
   $: {
     const newID = obj.stateVal.shuffleID;
@@ -29,6 +46,33 @@
       ShuffleAnimation();
       shuffleID = newID;
     }
+  }
+
+  function ElementEnter(index) {
+    if (movedIndex === null || movedIndex === index || index === swapTarget) {
+      return;
+    }
+
+    swapTarget = index;
+
+    let indices = [...Array(obj.children.length).keys()];
+
+    indices[movedIndex] = index;
+    indices[index] = movedIndex;
+
+    movedIndex = index;
+
+    dispatchActions([
+      {
+        context: {
+          subject: { id },
+        },
+        type: 'container',
+        reorder: {
+          children: indices,
+        },
+      },
+    ]);
   }
 </script>
 
@@ -53,16 +97,21 @@
 
   {#if obj.children.length}
     {#each obj.children as child, index (child.id)}
-      <GameObject
-        id={child.id}
-        obj={child}
-        anchor={{
-          x: width / 2,
-          y: height/ 2,
-          index
-        }}
-        selectable={false}
-        droppable={false} />
+      <g on:mouseenter={() => MouseEnter(index)}>
+        <GameObject
+          on:movestart={() => MoveStart(index)}
+          on:moveend={MoveEnd}
+          id={child.id}
+          obj={child}
+          parentID={id}
+          anchor={{
+            x: width / 2,
+            y: height/ 2,
+            index
+          }}
+          selectable={false}
+          droppable={false} />
+      </g>
     {/each}
 
     <Size {obj} {width} {height} />

@@ -11,6 +11,7 @@
   export let anchor;
   export let droppable;
   export let selectable;
+  export let parentID;
 
   const components = {
     [Component.CARD]: Card,
@@ -29,7 +30,7 @@
 </script>
 
 {#if component}
-  <Moveable {id} {obj} let:active let:isDragging>
+  <Moveable on:movestart on:moveend {id} {obj} {parentID} let:active let:isDragging>
     <svelte:component
       this={component}
       {anchor}
