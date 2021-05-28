@@ -53,10 +53,9 @@
     return true;
   }
 
-  let translate = "";
-  if (anchor) {
-    translate = `translate(${anchor.x - width / 2}, ${anchor.y - height / 2})`;
-  }
+  $: translate = anchor ?
+  `translate(${anchor.x - width / 2}, ${anchor.y - height / 2})`
+    : "";
 
   $: {
     const card = obj.stateVal;
