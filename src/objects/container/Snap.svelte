@@ -14,6 +14,7 @@
 
   $: width = obj.stateVal.kind.snap.geometry.width;
   $: height = obj.stateVal.kind.snap.geometry.height;
+  $: anchor = { x: width / 2, y: height / 2 };
 
   const rotation = tweened(0, { duration: 200 });
 
@@ -53,7 +54,7 @@
 
   {#if obj.children.length}
     {#each obj.children as child (child.id)}
-      <GameObject id={child.id} obj={child} selectable={false} droppable={false} />
+      <GameObject id={child.id} obj={child} {anchor} selectable={false} droppable={false} />
     {/each}
 
     <Size {obj} {width} {height} />

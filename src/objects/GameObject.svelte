@@ -8,6 +8,7 @@
 
   export let id;
   export let obj;
+  export let anchor;
   export let droppable;
   export let selectable;
 
@@ -31,6 +32,7 @@
   <Moveable {id} {obj} let:active let:isDragging>
     <svelte:component
       this={component}
+      {anchor}
       {obj}
       {id}
       {active}

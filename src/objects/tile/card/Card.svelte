@@ -1,6 +1,7 @@
 <script>
   export let id;
   export let obj;
+  export let anchor;
   export let droppable = true;
   export let active = false;
   export let forceFaceUp = false;
@@ -52,6 +53,11 @@
     return true;
   }
 
+  let translate = "";
+  if (anchor) {
+    translate = `translate(${anchor.x - width / 2}, ${anchor.y - height / 2})`;
+  }
+
   $: {
     const card = obj.stateVal;
 
@@ -78,7 +84,7 @@
   data-droppable={droppable}
   transform="rotate({$rotation}
   {width / 2}
-  {height / 2})">
+  {height / 2}) {translate}">
 
   <rect data-id={id} {width} {height} {fill} {stroke} stroke-width="5" />
 
