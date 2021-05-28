@@ -15,6 +15,7 @@
 
   $: width = obj.stateVal.kind.snap.geometry.width;
   $: height = obj.stateVal.kind.snap.geometry.height;
+  $: shape = obj.stateVal.kind.snap.geometry.shape;
 
   const rotation = tweened(0, { duration: 200 });
 
@@ -83,16 +84,31 @@
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
 
   {#if $isDragging || id in $highlight}
-    <rect
-      in:fade|local={{ duration: 150 }}
-      x={0}
-      y={0}
-      {width}
-      {height}
-      fill={selectionColor}
-      fill-opacity={id in $highlight ? 0.5 : 0}
-      stroke-width="10"
-      stroke={selectionColor} />
+    {#if shape === "rect"}
+      <rect
+        in:fade|local={{ duration: 150 }}
+        x={0}
+        y={0}
+        {width}
+        {height}
+        fill={selectionColor}
+        fill-opacity={id in $highlight ? 0.5 : 0}
+        stroke-width="30"
+        stroke={"red"} />
+    {/if}
+
+    {#if shape === "circle"}
+      <ellipse
+        in:fade|local={{ duration: 150 }}
+        cx={width / 2}
+        cy={height / 2}
+        rx={width / 2}
+        ry={height / 2}
+        fill={selectionColor}
+        fill-opacity={id in $highlight ? 0.5 : 0}
+        stroke-width="30"
+        stroke={"red"} />
+    {/if}
   {/if}
 
   {#if obj.children.length}
