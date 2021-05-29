@@ -7,8 +7,7 @@
   import { tweened } from 'svelte/motion';
   import { fade } from 'svelte/transition';
   import { selectionColor } from '../../defaults.ts';
-  import Moveable from '../Moveable.svelte';
-  import Card from '../tile/card/Card.svelte';
+  import GameObject from '../GameObject.svelte';
   import Size from './Size.svelte';
 
   const highlight = getContext('highlight');
@@ -68,20 +67,12 @@
     {/if}
 
     {#each obj.children as child (child.id)}
-      <Moveable
+      <GameObject
         id={child.id}
         obj={child}
         parentID={id}
-        let:active
-        let:isDragging>
-        <Card
-          id={child.id}
-          obj={child}
           selectable={false}
-          droppable={false}
-          {isDragging}
-          {active} />
-      </Moveable>
+        droppable={false} />
     {/each}
 
     <Size {obj} {width} {height} />
