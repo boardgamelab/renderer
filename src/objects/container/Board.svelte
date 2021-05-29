@@ -73,7 +73,7 @@
   {#if obj.snapZones.length}
     {#each obj.snapZones as zone (zone.id)}
       <g transform="translate({zone.stateVal.x} {zone.stateVal.y})">
-      <Snap id={zone.id} obj={zone} {active} {position} />
+        <Snap id={zone.id} obj={zone} {active} {position} />
       </g>
     {/each}
   {/if}

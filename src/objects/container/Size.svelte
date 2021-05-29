@@ -4,19 +4,21 @@
   export let obj;
 
   import { fly } from 'svelte/transition';
+
+  const size = 400;
 </script>
 
 {#if obj.children.length > 1}
   <g in:fly={{ duration: 250, y: -100 }}>
     <foreignObject
-      x={width / 2 - 100}
-      y={height - 60}
-      width="200"
-      height="200">
+      x={width / 2 - size / 2}
+      y={height - 200}
+      width={size}
+      height={size}>
       <div class="w-full h-full p-8">
         <div
-          style="font-size: 3rem"
-          class="text-white bg-gray-600 rounded-full shadow-xl w-full h-full
+          style="font-size: 10rem"
+          class="text-white cursor-move hover:bg-gray-500 bg-gray-600 rounded-full shadow-xl w-full h-full
           flex items-center justify-center select-none font-bold text-white">
           {obj.children.length}
         </div>

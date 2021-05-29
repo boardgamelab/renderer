@@ -1,4 +1,4 @@
-import type { State, Schema } from '@boardgamelab/components';
+import type { Container, State, Schema } from '@boardgamelab/components';
 import { GetComponent } from '../utils/template';
 
 export interface GameObject {
@@ -30,21 +30,27 @@ export function GetGameObject(
   const childrenID: string[] = (stateVal as any).children || [];
   const children = childrenID.map((childID) =>
     GetGameObject(schema, state, childID)
-  ) as GameObject[];
+  ).filter(obj => obj) as GameObject[];
 
   const snapZoneIDs = GetSnapZoneIDs(component, id);
   const snapZones = snapZoneIDs.map((id) =>
     GetGameObject(schema, state, id)
   ).filter(obj => obj) as GameObject[];
 
-  return {
-    id,
-    stateVal: state.objects[id],
-    instance: schema.instances[instanceID],
-    component,
-    children,
-    snapZones,
-  };
+  if ((stateVal as Container).kind == "deck" || (stateVal as Container).kind?.snap || component) {
+    return {
+      id,
+      stateVal: state.objects[id],
+      instance: schema.instances[instanceID],
+      component,
+      children,
+      snapZones,
+    };
+  }
+
+  // Return null if the component is missing. This can happen temporarily
+  // if we delete a component and are waiting for the state to be regenerated.
+  return null;
 }
 
 function GetSnapZoneIDs(component: any, instanceID: string): string[] {

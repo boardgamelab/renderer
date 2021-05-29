@@ -75,6 +75,8 @@
     easing: cubicOut,
   });
 
+  setContext('zoom', zoomLevel);
+
   // A multiplier to translate the current zoom level into a length.
   const zoomLength = 1000;
 
