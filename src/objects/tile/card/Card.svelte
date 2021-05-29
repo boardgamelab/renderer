@@ -54,7 +54,7 @@
   }
 
   $: translate = anchor ?
-  `translate(${anchor.x - width / 2}, ${anchor.y - height / 2})`
+  `translate(${anchor.x - width / 2 + anchor.index * 200}, ${anchor.y - height / 2})`
     : "";
 
   $: {

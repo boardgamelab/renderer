@@ -5,7 +5,6 @@
   import { getContext } from 'svelte';
   import { tweened } from 'svelte/motion';
   import { fade } from 'svelte/transition';
-  import { selectionColor } from '../../defaults.ts';
   import GameObject from '../GameObject.svelte';
   import Size from './Size.svelte';
 
@@ -91,10 +90,8 @@
         y={0}
         {width}
         {height}
-        fill={selectionColor}
-        fill-opacity={id in $highlight ? 0.5 : 0}
-        stroke-width="30"
-        stroke={"red"} />
+        fill={"#aaa"}
+        fill-opacity={id in $highlight ? 0.5 : 0.1} />
     {/if}
 
     {#if shape === "circle"}
@@ -104,10 +101,8 @@
         cy={height / 2}
         rx={width / 2}
         ry={height / 2}
-        fill={selectionColor}
-        fill-opacity={id in $highlight ? 0.5 : 0}
-        stroke-width="30"
-        stroke={"red"} />
+        fill={"#aaa"}
+        fill-opacity={id in $highlight ? 0.5 : 0.1} />
     {/if}
   {/if}
 
