@@ -5,6 +5,7 @@
   import { getContext } from 'svelte';
   import { tweened } from 'svelte/motion';
   import { fade } from 'svelte/transition';
+  import { flip } from 'svelte/animate';
   import GameObject from '../GameObject.svelte';
   import Size from './Size.svelte';
 
@@ -107,23 +108,24 @@
   {/if}
 
   {#if obj.children.length}
-    {#each obj.children as child, index (child.id)}
-      <g on:mouseenter={() => MouseEnter(index)}>
-        <GameObject
-          on:movestart={() => MoveStart(index)}
-          on:moveend={MoveEnd}
-          id={child.id}
-          obj={child}
-          parentID={id}
-          anchor={{
-            x: width / 2,
-            y: height/ 2,
-            index
-          }}
-          selectable={false}
-          droppable={false} />
-      </g>
-    {/each}
+    <foreignObject {width} {height}>
+      <div class="w-full h-full flex flex-row items-center justify-center">
+        {#each obj.children as child, index (child.id)}
+          <div animate:flip={{ duration: 100 }} on:mouseenter={() => MouseEnter(index)}>
+            <svg width={child.component.layout.geometry.width} height={child.component.layout.geometry.height}>
+              <GameObject
+                on:movestart={() => MoveStart(index)}
+                on:moveend={MoveEnd}
+                id={child.id}
+                obj={child}
+                parentID={id}
+                selectable={false}
+                droppable={false} />
+            </svg>
+          </div>
+        {/each}
+      </div>
+    </foreignObject>
 
     <Size {obj} {width} {height} />
   {/if}
