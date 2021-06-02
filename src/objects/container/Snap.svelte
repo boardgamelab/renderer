@@ -116,7 +116,7 @@
       <div class="w-full h-full flex flex-row items-center justify-center">
         {#each obj.children as child, index (child.id)}
           <div class="mx-2" animate:flip={{ duration: 100 }} on:mouseenter={() => MouseEnter(index)}>
-            <svg width={child.component.layout.geometry.width} height={child.component.layout.geometry.height}>
+            <svg class="overflow-visible" width={child.component.layout.geometry.width} height={child.component.layout.geometry.height}>
               <GameObject
                 on:movestart={() => MoveStart(index)}
                 on:moveend={MoveEnd}
