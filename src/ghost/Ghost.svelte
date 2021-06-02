@@ -68,5 +68,5 @@
     out:send={{ key: ghostID, toSVGPoint, ghost: true }}
     style="transform: translate3d({ghostPos.x + $ghostOffset.dx}px, {ghostPos.y + $ghostOffset.dy}px,
     0)"
-    class="pointer-events-none fixed top-0 left-0" />
+    class="overflow-visible pointer-events-none fixed top-0 left-0" />
 {/if}
