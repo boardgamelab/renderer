@@ -91,8 +91,11 @@
         y={0}
         {width}
         {height}
+        stroke={id in $highlight ? "#ff8700" : "#000"}
+        stroke-width={30}
+        stroke-opacity="0.5"
         fill={"#aaa"}
-        fill-opacity={id in $highlight ? 0.5 : 0.1} />
+        fill-opacity={id in $highlight ? .3 : 0} />
     {/if}
 
     {#if shape === "circle"}
@@ -102,8 +105,11 @@
         cy={height / 2}
         rx={width / 2}
         ry={height / 2}
+        stroke={id in $highlight ? "#ff8700" : "#000"}
+        stroke-width={30}
+        stroke-opacity="0.5"
         fill={"#aaa"}
-        fill-opacity={id in $highlight ? 0.5 : 0.1} />
+        fill-opacity={id in $highlight ? .3 : 0} />
     {/if}
   {/if}
 
