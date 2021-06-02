@@ -36,6 +36,7 @@
       bind:this={ref}
       width="100%"
       height="100%"
+      class="overflow-visible"
       viewBox={viewBox ? viewBox : undefined} />
   </div>
 {/if}
