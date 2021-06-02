@@ -150,9 +150,10 @@
 
     if (Object.keys(activeObjects).length === 1) {
       const id = Object.keys(activeObjects)[0];
+      const obj = $state.objects[id];
       const template = GetComponent($schema, $state, id);
 
-      if (template && template.type === Component.DECK) {
+      if (obj && obj.kind === "deck") {
         items = [
           { text: 'shuffle', fn: () => Shuffle(id) },
           { text: 'flip', fn: () => FlipDeck(id) },
@@ -168,7 +169,8 @@
           ];
         }
       }
-      if (template && template.type === Component.ANCHOR) {
+
+      if (obj && obj.kind && obj.kind.snap) {
         items = [
           { text: 'shuffle', fn: () => Shuffle(id) },
           { text: 'flip', fn: () => FlipDeck(id) },
