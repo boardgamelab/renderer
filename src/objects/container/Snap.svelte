@@ -112,7 +112,7 @@
   {/if}
 
   {#if obj.children.length}
-    <foreignObject {width} {height}>
+    <foreignObject class="overflow-visible" {width} {height}>
       <div class="w-full h-full flex flex-row items-center justify-center">
         {#each obj.children as child, index (child.id)}
           <div animate:flip={{ duration: 100 }} on:mouseenter={() => MouseEnter(index)}>
