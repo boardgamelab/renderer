@@ -34,33 +34,12 @@
   let isDragging = false;
   let dragged = false;
   let snapshot = null;
+
   function DragStart() {
     dispatch("movestart");
-
     dragged = false;
     isDragging = true;
-
     snapshot = $position;
-
-    let toRaise = id;
-    if (obj.stateVal.parent) {
-      toRaise = obj.stateVal.parent;
-    }
-
-    // Raise object so that it appears rendered above
-    // other objects while being dragged.
-    // TODO: Use a ghost and stop calling "raise" here.
-    dispatchActions([
-      {
-        type: 'object',
-        raise: null,
-        context: {
-          subject: {
-            id: toRaise,
-          },
-        },
-      },
-    ]);
   }
 
   async function DragEnd({ detail }) {
