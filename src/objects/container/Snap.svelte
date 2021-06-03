@@ -16,6 +16,7 @@
   $: width = obj.stateVal.kind.snap.geometry.width;
   $: height = obj.stateVal.kind.snap.geometry.height;
   $: shape = obj.stateVal.kind.snap.geometry.shape;
+  $: kind = obj.stateVal.kind.snap.kind;
 
   const rotation = tweened(0, { duration: 200 });
 
@@ -112,24 +113,39 @@
   {/if}
 
   {#if obj.children.length}
-    <foreignObject class="overflow-visible" {width} {height}>
-      <div class="w-full h-full flex flex-row items-center justify-center">
-        {#each obj.children as child, index (child.id)}
-          <div class="mx-2" animate:flip={{ duration: 100 }} on:mouseenter={() => MouseEnter(index)}>
-            <svg class="overflow-visible" width={child.component.layout.geometry.width} height={child.component.layout.geometry.height}>
-              <GameObject
-                on:movestart={() => MoveStart(index)}
-                on:moveend={MoveEnd}
-                id={child.id}
-                obj={child}
-                parentID={id}
-                selectable={false}
-                droppable={false} />
-            </svg>
-          </div>
+    {#if kind === "row"}
+      <foreignObject class="overflow-visible" {width} {height}>
+        <div class="w-full h-full flex flex-row items-center justify-center">
+          {#each obj.children as child, index (child.id)}
+            <div animate:flip={{ duration: 100 }} on:mouseenter={() => MouseEnter(index)}>
+              <svg class="overflow-visible" width={child.component.layout.geometry.width} height={child.component.layout.geometry.height}>
+                <GameObject
+                  on:movestart={() => MoveStart(index)}
+                  on:moveend={MoveEnd}
+                  id={child.id}
+                  obj={child}
+                  parentID={id}
+                  selectable={false}
+                  droppable={false} />
+              </svg>
+            </div>
+          {/each}
+        </div>
+      </foreignObject>
+    {/if}
+
+    {#if kind === "stack"}
+      <g>
+        {#each obj.children.slice(-10) as child (child.id)}
+          <GameObject
+            id={child.id}
+            obj={child}
+            parentID={id}
+              selectable={false}
+            droppable={false} />
         {/each}
-      </div>
-    </foreignObject>
+      </g>
+    {/if}
 
     <Size {obj} {width} {height} />
   {/if}
