@@ -78,6 +78,7 @@
 
 <g
   data-id={id}
+  data-preview="true"
   data-selectable={selectable}
   data-component={component.id}
   data-droppable={droppable}
