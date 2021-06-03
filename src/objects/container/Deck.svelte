@@ -66,7 +66,7 @@
         stroke={selectionColor} />
     {/if}
 
-    {#each obj.children as child (child.id)}
+    {#each obj.children.slice(-10) as child (child.id)}
       <GameObject
         id={child.id}
         obj={child}
