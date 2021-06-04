@@ -134,6 +134,11 @@
       </foreignObject>
     {/if}
 
+    <!-- A bug with absolute / relative positioning
+         (which is what would be required to position things on top of
+         each other) causes flickering when used inside a foreignObject.
+         So, we just continue using SVG here instead.
+         https://bugs.webkit.org/show_bug.cgi?id=23113 -->
     {#if kind === "stack"}
       <g>
         {#each obj.children.slice(-10) as child (child.id)}
