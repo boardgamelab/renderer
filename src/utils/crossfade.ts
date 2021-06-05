@@ -100,23 +100,41 @@ export function send(node: Element, params: Params) {
 
 export function receive(node: Element, params: Params) {
   return () => {
-    let animation = {
+    const animation = {
       duration: 0,
     };
 
     if (senders.has(params.key)) {
       let other = senders.get(params.key);
 
-      if (senders.has(other.parentID)) {
-        other = senders.get(other.parentID);
-      }
-
       // If the object has the same parent before and after,
       // then it's likely that the container was moved (and
       // we needn't transition the children).
-      if (params.parentID !== other.parentID) {
-        animation = crossfade(other, node, params);
+      if (
+        params.parentID &&
+        other.parentID &&
+        params.parentID === other.parentID
+      ) {
+        return animation;
       }
+
+      if (senders.has(other.parentID)) {
+        const parent = senders.get(other.parentID);
+        other = {
+          ...other,
+          rect: {
+            x: parent.rect.x,
+            left: parent.rect.x,
+            y: parent.rect.y,
+            top: parent.rect.y,
+            // Only use position of parent, not dimensions.
+            width: other.width,
+            height: other.height,
+          },
+        };
+      }
+
+      return crossfade(other, node, params);
     }
 
     return animation;
