@@ -11,7 +11,6 @@
   import Hand from './hand/Hand.svelte';
   import Turn from './Turn.svelte';
   import ContextMenu from './ui/menu/context/Context.svelte';
-  import Ghost from './ghost/Ghost.svelte';
   import Preview from './preview/Preview.svelte';
   import { ToSVGPointWithPan, ToClientPointWithPan } from './utils/svg.ts';
   import { onMount, createEventDispatcher, setContext } from 'svelte';
@@ -126,10 +125,7 @@
   setContext('to-svg-point', ToSVGPoint);
   setContext('to-client-point', ToClientPoint);
 
-  let ghostAPI = writable({});
   let previewAPI = writable({});
-
-  setContext('ghost', ghostAPI);
 
   let clientWidth;
   let isMobile = writable(false);
@@ -208,8 +204,6 @@
     <Turn {seatID} game={$stateStore.game} ctx={$stateStore.ctx} />
   {/if}
 </span>
-
-<Ghost api={ghostAPI} />
 
 <Preview api={previewAPI} />
 

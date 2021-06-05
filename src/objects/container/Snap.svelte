@@ -152,6 +152,8 @@
       </g>
     {/if}
 
+    {#if kind === "stack"}
     <Size {obj} {width} {height} />
+    {/if}
   {/if}
 </g>

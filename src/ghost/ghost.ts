@@ -15,37 +15,65 @@
  */
 
 import type { DragEvent } from '../gestures/drag';
+import { senders } from "../utils/crossfade";
+import Ghost from "./Ghost.svelte";
+import type { SvelteComponent } from "svelte";
 
 interface Opts {
-  api: Ghost;
+  id: string;
   onTable?: boolean;
   disable?: boolean;
   parentID: string | null;
 }
 
-interface Ghost {
-  show: (e: Element, opts?: object) => void;
-  revert: () => Promise<void>;
-  hide: () => void;
-  setPosition: (x: number, y: number) => void;
-  move: (dx: number, dy: number) => void;
-}
-
 type Detail = { detail: DragEvent };
+type Point = { x: number, y: number };
 
 export function ghost(node: Element, opts: Opts) {
+  let ghost: SvelteComponent|null = null;
+  let originalPosition: Point|null = null;
+
   function MoveStart({ detail }: Detail) {
     if (opts.disable) {
       return;
     }
 
     const rect = detail.target.getBoundingClientRect();
-    opts.api.setPosition(Math.round(rect.x), Math.round(rect.y));
-    opts.api.show(detail.target, { onTable: opts.onTable });
+    const width = rect.width;
+    const height = rect.height;
+
+    let viewBox;
+    if (opts.onTable) {
+      const bbox = (detail.target as SVGGraphicsElement).getBBox();
+      viewBox = opts.onTable
+        ? `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`
+        : '';
+    }
+
+    const content = opts.onTable ? detail.target.innerHTML : detail.target.outerHTML;
+    const position = { x: rect.x, y: rect.y };
+
+    originalPosition = position;
+
+    ghost = new Ghost({
+      target: document.body,
+      props: {
+        width,
+        height,
+        viewBox,
+        position,
+        content
+      }
+    });
   }
 
   function Move({ detail }: Detail) {
-    opts.api.move(detail.client.dx, detail.client.dy);
+    const position = {
+      x: originalPosition!.x + detail.client.dx,
+      y: originalPosition!.y + detail.client.dy,
+    };
+
+    ghost!.$set({ position });
   }
 
   function MoveEnd({ detail }: Detail) {
@@ -57,8 +85,23 @@ export function ghost(node: Element, opts: Opts) {
     //   await opts.api.revert();
     //   t.style.opacity = '1';
     // }
+    //
 
-    opts.api.hide();
+    const el = document.getElementById("ghost");
+    senders.set(opts.id, {
+      rect: el!.getBoundingClientRect(),
+      ghost: true,
+    });
+
+    // Clean up map entry after any transition has played.
+    setTimeout(() => {
+      senders.delete(opts.id);
+    }, 50);
+
+    ghost!.$destroy();
+
+    ghost = null;
+    originalPosition = null;
   }
 
   // @ts-ignore
@@ -70,6 +113,10 @@ export function ghost(node: Element, opts: Opts) {
 
   return {
     destroy() {
+      if (ghost) {
+        ghost!.$destroy();
+      }
+
       // @ts-ignore
       node.removeEventListener('movestart', MoveStart);
       // @ts-ignore

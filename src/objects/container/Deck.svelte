@@ -71,7 +71,7 @@
         id={child.id}
         obj={child}
         parentID={id}
-          selectable={false}
+        selectable={false}
         droppable={false} />
     {/each}
 

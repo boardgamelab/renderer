@@ -9,7 +9,7 @@
 </script>
 
 {#if obj.children.length > 1}
-  <g in:fly={{ duration: 250, y: -100 }}>
+  <g data-size="true" in:fly={{ duration: 250, y: -100 }}>
     <foreignObject
       x={width / 2 - size / 2}
       y={height - 200}

@@ -136,9 +136,9 @@
 <div class:splay class:small class:hide={isDragging}>
   <svg
     class="hand-object"
-    use:ghost={{ api: $ghostAPI, parentID: handID }}
-    out:send|local={{ key: id, toSVGPoint, hand: true, disable: isDragging }}
-    in:receive|local={{ key: id, toSVGPoint, hand: true }}
+    use:ghost={{ id, parentID: handID }}
+    out:send={{ key: id, toSVGPoint, hand: true }}
+    in:receive={{ key: id, toSVGPoint, hand: true }}
     data-id={id}
     data-preview="true"
     data-selectable="true"
