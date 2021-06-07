@@ -105,36 +105,51 @@ export function receive(node: Element, params: Params) {
     };
 
     if (senders.has(params.key)) {
-      let other = senders.get(params.key);
+      let from = senders.get(params.key);
 
       // If the object has the same parent before and after,
       // then it's likely that the container was moved (and
       // we needn't transition the children).
       if (
         params.parentID &&
-        other.parentID &&
-        params.parentID === other.parentID
+        from.parentID &&
+        params.parentID === from.parentID
       ) {
         return animation;
       }
 
-      if (senders.has(other.parentID)) {
-        const parent = senders.get(other.parentID);
-        other = {
-          ...other,
-          rect: {
-            x: parent.rect.x,
-            left: parent.rect.x,
-            y: parent.rect.y,
-            top: parent.rect.y,
-            // Only use position of parent, not dimensions.
-            width: other.width,
-            height: other.height,
-          },
-        };
+      // Use the position of the parent if possible so that
+      // when a container is dragged, it's children don't try
+      // to animate themselves from the container's original
+      // position.
+      if (senders.has(from.parentID)) {
+        const parent = senders.get(from.parentID);
+
+        // Only use the position of the parent if the parent
+        // was just dragged (i.e. replaced by the ghost).
+        // If we don't do this, then when the top card of a deck
+        // of size 2 is moved to the table, the bottom card
+        // displaces because the deck emits a "send" transition
+        // that incorrectly calculates its position based on
+        // the position of the top card (which stretches the
+        // dimensions and position of the container).
+        if (parent.ghost) {
+          from = {
+            ...from,
+            rect: {
+              x: parent.rect.x,
+              left: parent.rect.x,
+              y: parent.rect.y,
+              top: parent.rect.y,
+              // Only use position of parent, not dimensions.
+              width: from.width,
+              height: from.height,
+            },
+          };
+        }
       }
 
-      return crossfade(other, node, params);
+      return crossfade(from, node, params);
     }
 
     return animation;
