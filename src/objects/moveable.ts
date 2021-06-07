@@ -6,7 +6,8 @@ export function Drop(
   id: string,
   drop: DropInfo | null,
   absolutePosition: any,
-  dispatchActions: any
+  dispatchActions: any,
+  position: any
 ) {
   if (drop) {
     dispatchActions([
@@ -18,6 +19,10 @@ export function Drop(
     ]);
   } else {
     DropOnTable(dispatchActions, id, absolutePosition);
+    position.set({
+      x: absolutePosition.x,
+      y: absolutePosition.y,
+    });
   }
 }
 

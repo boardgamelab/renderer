@@ -1,9 +1,9 @@
 <script>
   import { createEventDispatcher, getContext } from 'svelte';
-  import { tweened } from 'svelte/motion';
   import { Drop } from './moveable.ts';
   import { send, receive } from '../utils/crossfade.ts';
   import { ghost } from '../ghost/ghost.ts';
+  import { tweened } from 'svelte/motion';
 
   export let id;
   export let obj;
@@ -19,6 +19,19 @@
 
   $: active = id in $activeObjects;
 
+  let x = obj.stateVal.x || 0;
+  let y = obj.stateVal.y || 0;
+
+  const position = tweened({ x, y }, { duration: 0 });
+
+  $: {
+    if (x !== obj.stateVal.x || y !== obj.stateVal.y) {
+      x = obj.stateVal.x || 0;
+      y = obj.stateVal.y || 0;
+      position.set({ x, y }, { duration: 150 });
+    }
+  }
+
   let hide = false;
   let dragged = false;
 
@@ -28,19 +41,6 @@
     hide = true;
   }
 
-  let x = obj.stateVal.x || 0;
-  let y = obj.stateVal.y || 0;
-
-  const position = tweened({ x, y }, { duration: 0 });
-
-  $: {
-    if (obj.stateVal.x !== x || obj.stateVal.y !== y) {
-      x = obj.stateVal.x;
-      y = obj.stateVal.y;
-      position.set({ x, y }, { duration: 150 });
-    }
-  }
-
   async function DragEnd({ detail }) {
     dispatch("moveend");
 
@@ -48,7 +48,7 @@
 
     // If the object switches containers, we don't
     // have to restore visibility because the object will be created
-    // anew at then new destination. If we did restore visibility in
+    // anew at the new destination. If we did restore visibility in
     // those cases, there will be a slight flickering artifact as the
     // object becomes visible right before it disappears again as it
     // is destroyed.
@@ -83,7 +83,7 @@
     }
 
     const absolutePosition = { x: detail.svg.targetX, y: detail.svg.targetY };
-    Drop(id, drop, absolutePosition, dispatchActions);
+    Drop(id, drop, absolutePosition, dispatchActions, position);
   }
 
   const Drag = ({ detail }) => {
