@@ -41,8 +41,6 @@
     hide = true;
   }
 
-  let renderID = 0;
-
   // TODO: Make ghost emit synthetic events so that it can
   // delay DragEnd in case it needs to reanimate itself back
   // to another position.
@@ -59,7 +57,6 @@
     // is destroyed.
     if (detail.dropID === parentID) {
       hide = false;
-      renderID++;
     }
 
     if (!dragged) {
@@ -118,19 +115,17 @@
 <!-- The object has to continue existing while the ghost is
      active so that the ghost is not destroyed. Instead, we hide
      it using CSS -->
-{#key renderID}
-  <g
-    use:ghost={{ id, disable: $viewOnly, onTable: true, parentID }}
-    transform="translate({$position.x || 0}, {$position.y || 0})"
-    class:hide
-    out:send={{ key: id, toSVGPoint, parentID }}
-    in:receive={{ key: id, toSVGPoint, parentID }}
-    data-id={id}
-    data-component={obj.stateVal.componentID}
-    data-draggable={draggable}
-    on:movestart={!$viewOnly && DragStart}
-    on:moveend={!$viewOnly && DragEnd}
-    on:move={!$viewOnly && Drag}>
-    <slot {active} {hide} />
-  </g>
-{/key}
+<g
+  use:ghost={{ id, disable: $viewOnly, onTable: true, parentID }}
+  transform="translate({$position.x || 0}, {$position.y || 0})"
+  class:hide
+  out:send={{ key: id, toSVGPoint, parentID }}
+  in:receive={{ key: id, toSVGPoint, parentID }}
+  data-id={id}
+  data-component={obj.stateVal.componentID}
+  data-draggable={draggable}
+  on:movestart={!$viewOnly && DragStart}
+  on:moveend={!$viewOnly && DragEnd}
+  on:move={!$viewOnly && Drag}>
+  <slot {active} {hide} />
+</g>
