@@ -25,7 +25,6 @@
   const { activeObjects, dispatchActions, svg } = getContext('context');
   const toSVGPoint = getContext('to-svg-point');
   const highlight = getContext('highlight');
-  const ghostAPI = getContext('ghost');
   const viewOnly = getContext('viewOnly');
   const isMobile = getContext('isMobile');
   const dispatch = createEventDispatcher();
