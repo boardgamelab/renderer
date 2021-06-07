@@ -31,6 +31,8 @@ export interface DragEvent {
     y: number;
     dx: number;
     dy: number;
+    targetX: number;
+    targetY: number;
   };
 
   // Coordinates relative to the client viewport.

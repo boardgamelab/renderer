@@ -18,12 +18,17 @@ import type { DragEvent } from '../gestures/drag';
 import { senders } from "../utils/crossfade";
 import Ghost from "./Ghost.svelte";
 import type { SvelteComponent } from "svelte";
+import type { Writable } from "svelte/store";
 
 interface Opts {
   id: string;
   onTable?: boolean;
   disable?: boolean;
   parentID: string | null;
+  highlight: Writable<any>;
+  activeObjects: Writable<any>;
+  dispatchActions: Function;
+  position: Writable<any>;
 }
 
 type Detail = { detail: DragEvent };
@@ -32,11 +37,14 @@ type Point = { x: number, y: number };
 export function ghost(node: Element, opts: Opts) {
   let ghost: SvelteComponent|null = null;
   let originalPosition: Point|null = null;
+  let dragged = false;
 
   function MoveStart({ detail }: Detail) {
     if (opts.disable) {
       return;
     }
+
+    dragged = false;
 
     const rect = detail.target.getBoundingClientRect();
     const width = rect.width;
@@ -65,28 +73,34 @@ export function ghost(node: Element, opts: Opts) {
         content
       }
     });
+
+    node.dispatchEvent(new CustomEvent("hide"));
   }
 
   function Move({ detail }: Detail) {
+    dragged = true;
+
     const position = {
       x: originalPosition!.x + detail.client.dx,
       y: originalPosition!.y + detail.client.dy,
     };
 
     ghost!.$set({ position });
+
+    let h = {};
+    if (detail.dropID && detail.dropID !== opts.parentID) {
+      h = {
+        [detail.dropID]: true,
+      };
+    }
+    opts.highlight.set(h);
+
+    opts.activeObjects.set({
+      [opts.id]: true,
+    });
   }
 
   function MoveEnd({ detail }: Detail) {
-    // If the element is being dropped back into it's
-    // original location, then animate it back first.
-    // const t = node as HTMLElement;
-    // if (detail.dropID === opts.parentID) {
-    //   t.style.opacity = '0';
-    //   await opts.api.revert();
-    //   t.style.opacity = '1';
-    // }
-    //
-
     const el = document.getElementById("ghost");
     senders.set(opts.id, {
       rect: el!.getBoundingClientRect(),
@@ -102,6 +116,47 @@ export function ghost(node: Element, opts: Opts) {
 
     ghost = null;
     originalPosition = null;
+
+    opts.highlight.set({});
+
+    // If the object switches containers, we don't
+    // have to restore visibility because the object will be created
+    // anew at the new destination. If we did restore visibility in
+    // those cases, there will be a slight flickering artifact as the
+    // object becomes visible right before it disappears again as it
+    // is destroyed.
+    if (detail.dropID === opts.parentID) {
+      node.dispatchEvent(new CustomEvent("show"));
+    }
+
+    if (!dragged) {
+      return;
+    }
+
+    let drop = null;
+
+    if (detail.dropID) {
+      drop = {
+        targetID: detail.dropID,
+      };
+
+    //   const target = $state.objects[detail.dropID];
+    //   if (target) {
+    //     if (target.t === 'tile') {
+    //       activeObjects.set({
+    //         ['deck-' + detail.dropID]: true,
+    //       });
+    //     }
+    //     if (target.t === 'container') {
+    //       activeObjects.set({
+    //         [detail.dropID]: true,
+    //       });
+    //     }
+    //   }
+    }
+
+    const absolutePosition = { x: detail.svg.targetX, y: detail.svg.targetY };
+    Drop(opts.id, drop, absolutePosition, opts.dispatchActions, opts.position);
   }
 
   // @ts-ignore
@@ -129,4 +184,50 @@ export function ghost(node: Element, opts: Opts) {
       opts = newOpts;
     },
   };
+}
+
+interface DropInfo {
+  targetID: string;
+}
+
+export function Drop(
+  id: string,
+  drop: DropInfo | null,
+  absolutePosition: any,
+  dispatchActions: any,
+  position: any
+) {
+  if (drop) {
+    dispatchActions([
+      {
+        type: 'object',
+        context: { subject: { id }, args: [{ object: drop.targetID }] },
+        move: {},
+      },
+    ]);
+  } else {
+    DropOnTable(dispatchActions, id, absolutePosition);
+    position.set({
+      x: absolutePosition.x,
+      y: absolutePosition.y,
+    });
+  }
+}
+
+function DropOnTable(dispatchActions: any, id: string, absolutePosition: any) {
+  dispatchActions([
+    {
+      type: 'object',
+      context: { subject: { id } },
+      move: {},
+    },
+    {
+      type: 'object',
+      context: { subject: { id } },
+      position: {
+        x: absolutePosition.x,
+        y: absolutePosition.y,
+      },
+    },
+  ]);
 }
