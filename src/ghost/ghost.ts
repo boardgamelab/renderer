@@ -28,7 +28,6 @@ interface Opts {
   highlight: Writable<any>;
   activeObjects: Writable<any>;
   dispatchActions: Function;
-  position: Writable<any>;
 }
 
 type Detail = { detail: DragEvent };
@@ -156,7 +155,7 @@ export function ghost(node: Element, opts: Opts) {
     }
 
     const absolutePosition = { x: detail.svg.targetX, y: detail.svg.targetY };
-    Drop(opts.id, drop, absolutePosition, opts.dispatchActions, opts.position);
+    Drop(opts.id, drop, absolutePosition, opts.dispatchActions, node);
   }
 
   // @ts-ignore
@@ -193,9 +192,9 @@ interface DropInfo {
 export function Drop(
   id: string,
   drop: DropInfo | null,
-  absolutePosition: any,
+  position: any,
   dispatchActions: any,
-  position: any
+  node: Element
 ) {
   if (drop) {
     dispatchActions([
@@ -206,15 +205,12 @@ export function Drop(
       },
     ]);
   } else {
-    DropOnTable(dispatchActions, id, absolutePosition);
-    position.set({
-      x: absolutePosition.x,
-      y: absolutePosition.y,
-    });
+    DropOnTable(dispatchActions, id, position);
+    node.dispatchEvent(new CustomEvent("table", { detail: { position }}));
   }
 }
 
-function DropOnTable(dispatchActions: any, id: string, absolutePosition: any) {
+function DropOnTable(dispatchActions: any, id: string, position: any) {
   dispatchActions([
     {
       type: 'object',
@@ -224,10 +220,7 @@ function DropOnTable(dispatchActions: any, id: string, absolutePosition: any) {
     {
       type: 'object',
       context: { subject: { id } },
-      position: {
-        x: absolutePosition.x,
-        y: absolutePosition.y,
-      },
+      position
     },
   ]);
 }

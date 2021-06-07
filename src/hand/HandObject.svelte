@@ -20,9 +20,8 @@
   import { ghost } from '../ghost/ghost.ts';
   import { send, receive } from '../utils/crossfade.ts';
   import { createEventDispatcher, getContext } from 'svelte';
-  import { ToSVGLength } from '../utils/svg.ts';
 
-  const { activeObjects, dispatchActions, svg } = getContext('context');
+  const { activeObjects, dispatchActions } = getContext('context');
   const toSVGPoint = getContext('to-svg-point');
   const highlight = getContext('highlight');
   const viewOnly = getContext('viewOnly');
@@ -35,22 +34,21 @@
 
   $: mobileMultiplier = $isMobile ? 0.5 : 1;
 
+  let hide = false;
+
+  function Hide() {
+    hide = true;
+  }
+
+  function Show() {
+    hide = false;
+  }
+
   let ref;
-  let isDragging = false;
-  let cursorOffset = null;
 
   let geometry = obj.component.layout.geometry;
 
   function DragStart({ detail }) {
-    isDragging = true;
-
-    const rect = ref.getBoundingClientRect();
-
-    cursorOffset = {
-      dx: rect.x - detail.client.x,
-      dy: rect.y - detail.client.y,
-    };
-
     dispatch('movestart', {
       ...detail,
       index,
@@ -61,58 +59,10 @@
 
   const Drag = ({ detail }) => {
     dispatch('move', detail);
-
-    let h = {};
-    if (detail.dropID && detail.dropID !== handID) {
-      h = {
-        [detail.dropID]: true,
-      };
-    }
-    highlight.set(h);
-
-    activeObjects.set({
-      [detail.id]: true,
-    });
   };
 
-  const DragEnd = ({ detail }) => {
+  const DragEnd = () => {
     dispatch('moveend', { index });
-
-    highlight.set({});
-
-    if (!$viewOnly && detail.dropID !== handID) {
-      if (detail.dropID) {
-        activeObjects.set({
-          [detail.dropID]: true,
-        });
-
-        dispatchActions([
-          {
-            type: 'object',
-            context: { subject: { id: detail.id }, args: [{ object: detail.dropID }] },
-            move: {},
-          },
-        ]);
-      } else if (cursorOffset) {
-        dispatchActions([
-          {
-            type: 'object',
-            context: { subject: { id: detail.id } },
-            position: {
-              x: detail.svg.x + ToSVGLength(cursorOffset.dx, svg.el),
-              y: detail.svg.y + ToSVGLength(cursorOffset.dy, svg.el),
-            },
-          },
-          {
-            type: 'object',
-            context: { subject: { id: detail.id } },
-            move: {},
-          },
-        ]);
-      }
-    } else {
-      isDragging = false;
-    }
   };
 </script>
 
@@ -132,10 +82,12 @@
   }
 </style>
 
-<div class:splay class:small class:hide={isDragging}>
+<div class:splay class:small class:hide>
   <svg
     class="hand-object"
-    use:ghost={{ id, parentID: handID }}
+    use:ghost={{ id, disable: $viewOnly, parentID: handID, highlight, activeObjects, dispatchActions }}
+    on:hide={Hide}
+    on:show={Show}
     out:send={{ key: id, toSVGPoint, hand: true }}
     in:receive={{ key: id, toSVGPoint, hand: true }}
     data-id={id}

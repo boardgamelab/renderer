@@ -39,6 +39,13 @@
   function Show() {
     hide = false;
   }
+
+  function DropOnTable({ detail }) {
+    position.set({
+      x: detail.position.x,
+      y: detail.position.y,
+    });
+  }
 </script>
 
 <style>
@@ -51,7 +58,7 @@
      active so that the ghost is not destroyed. Instead, we hide
      it using CSS -->
 <g
-  use:ghost={{ id, disable: $viewOnly, onTable: true, parentID, highlight, activeObjects, dispatchActions, position }}
+  use:ghost={{ id, disable: $viewOnly, onTable: true, parentID, highlight, activeObjects, dispatchActions }}
   transform="translate({$position.x || 0}, {$position.y || 0})"
   class:hide
   out:send={{ key: id, toSVGPoint, parentID }}
@@ -59,6 +66,7 @@
   data-id={id}
   data-component={obj.stateVal.componentID}
   data-draggable={draggable}
+  on:table={DropOnTable}
   on:hide={Hide}
   on:show={Show}
   on:movestart
