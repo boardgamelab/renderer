@@ -41,15 +41,6 @@
   data-component={component.id}
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
 
-  <rect
-    x={10}
-    y={10}
-    width={width - 20}
-    height={height - 20}
-    stroke="#aaa"
-    stroke-width={5}
-    fill="transparent" />
-
   {#if renderer && obj.instance}
     <svelte:component
       this={renderer}
@@ -57,6 +48,15 @@
       {height}
       {component}
       instance={obj.instance} />
+  {:else}
+    <rect
+      x={10}
+      y={10}
+      width={width - 20}
+      height={height - 20}
+      stroke="#aaa"
+      stroke-width={5}
+      fill="transparent" />
   {/if}
 
   {#if id in $highlight || active}

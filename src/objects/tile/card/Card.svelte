@@ -30,8 +30,6 @@
     height = geometry.height;
   }
 
-  const fill = '#fff';
-  const stroke = '#555';
   let faceDown = false;
   let rotation = tweened(0, { duration: 400, easing: backOut });
 
@@ -86,12 +84,8 @@
   {width / 2}
   {height / 2}) {translate}">
 
-  <rect data-id={id} {width} {height} {fill} {stroke} stroke-width="5" />
-
   {#if forceFaceDown || (faceDown && !forceFaceUp)}
-    {#if !component || IsFaceEmpty(component.layout.faces[1])}
-      <Back {id} {width} {height} />
-    {:else if renderer && obj.instance}
+    {#if renderer && obj.instance}
       <svelte:component
         this={renderer}
         {width}
@@ -99,6 +93,10 @@
         faceDown={true}
         {component}
         instance={obj.instance} />
+    {/if}
+
+    {#if !component || IsFaceEmpty(component.layout.faces[1])}
+      <Back {id} {width} {height} />
     {/if}
   {:else if renderer && obj.instance}
     <svelte:component
