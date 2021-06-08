@@ -84,25 +84,12 @@
   {width / 2}
   {height / 2}) {translate}">
 
-  {#if forceFaceDown || (faceDown && !forceFaceUp)}
-    {#if renderer && obj.instance}
-      <svelte:component
-        this={renderer}
-        {width}
-        {height}
-        faceDown={true}
-        {component}
-        instance={obj.instance} />
-    {/if}
-
-    {#if !component || IsFaceEmpty(component.layout.faces[1])}
-      <Back {id} {width} {height} />
-    {/if}
-  {:else if renderer && obj.instance}
+  {#if renderer && obj.instance}
     <svelte:component
       this={renderer}
       {width}
       {height}
+      faceDown={forceFaceDown || (faceDown && !forceFaceUp)}
       {component}
       instance={obj.instance} />
   {/if}
