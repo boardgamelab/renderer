@@ -7,11 +7,12 @@
   import { fade } from 'svelte/transition';
   import { flip } from 'svelte/animate';
   import GameObject from '../GameObject.svelte';
+  import {ghost } from "../../ghost/ghost.ts";
   import Size from './Size.svelte';
 
   const highlight = getContext('highlight');
   const isDragging = getContext('isDragging');
-  const { dispatchActions } = getContext('context');
+  const { activeObjects, dispatchActions } = getContext('context');
 
   $: width = obj.stateVal.kind.snap.geometry.width;
   $: height = obj.stateVal.kind.snap.geometry.height;
@@ -50,6 +51,16 @@
     }
   }
 
+  let hide = false;
+
+  function Hide() {
+    hide = true;
+  }
+
+  function Show() {
+    hide = false;
+  }
+
   function ElementEnter(index) {
     if (movedIndex === null || movedIndex === index || index === swapTarget) {
       return;
@@ -82,6 +93,11 @@
   data-id={id}
   data-selectable="true"
   data-droppable="true"
+  data-draggable="true"
+  class:hide
+  use:ghost={{ id, isSnap: true, onTable: true, highlight, activeObjects, dispatchActions }}
+  on:hide={Hide}
+  on:show={Show}
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
 
   {#if $isDragging || id in $highlight}
@@ -157,3 +173,9 @@
     {/if}
   {/if}
 </g>
+
+<style>
+  .hide {
+    @apply opacity-0 pointer-events-none;
+  }
+</style>

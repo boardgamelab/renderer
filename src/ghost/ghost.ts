@@ -28,6 +28,7 @@ interface Opts {
   highlight: Writable<any>;
   activeObjects: Writable<any>;
   dispatchActions: Function;
+  isSnap?: boolean;
 }
 
 type Detail = { detail: DragEvent };
@@ -128,6 +129,12 @@ export function ghost(node: Element, opts: Opts) {
       node.dispatchEvent(new CustomEvent("show"));
     }
 
+    if (opts.isSnap) {
+      setTimeout(() => {
+        node.dispatchEvent(new CustomEvent("show"));
+      }, 10);
+    }
+
     if (!dragged) {
       return;
     }
@@ -215,12 +222,9 @@ function DropOnTable(dispatchActions: any, id: string, position: any) {
     {
       type: 'object',
       context: { subject: { id } },
-      move: {},
-    },
-    {
-      type: 'object',
-      context: { subject: { id } },
-      position
+      move: {
+        position,
+      },
     },
   ]);
 }
