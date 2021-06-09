@@ -70,7 +70,7 @@ export function ghost(node: Element, opts: Opts) {
         height,
         viewBox,
         position,
-        content
+        content: content.replace("url(#glow)", "")
       }
     });
 
