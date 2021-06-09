@@ -130,9 +130,13 @@ export function ghost(node: Element, opts: Opts) {
     }
 
     if (opts.isSnap) {
-      setTimeout(() => {
+      if (detail.dropID) {
+        setTimeout(() => {
+          node.dispatchEvent(new CustomEvent("show"));
+        }, 50);
+      } else {
         node.dispatchEvent(new CustomEvent("show"));
-      }, 10);
+      }
     }
 
     if (!dragged) {

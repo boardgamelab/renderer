@@ -16,7 +16,7 @@
 
   export let forceFaceDown = false;
 
-  import Card from '../objects/tile/card/Card.svelte';
+  import Tile from '../objects/tile/Tile.svelte';
   import { ghost } from '../ghost/ghost.ts';
   import { send, receive } from '../utils/crossfade.ts';
   import { createEventDispatcher, getContext } from 'svelte';
@@ -103,7 +103,7 @@
     {geometry.height + 2 * margin}"
     xmlns="http://www.w3.org/2000/svg">
     <g bind:this={ref}>
-      <Card
+      <Tile
         {id}
         {obj}
         droppable={false}
