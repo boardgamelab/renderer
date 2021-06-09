@@ -12,9 +12,6 @@
   import { getContext } from 'svelte';
   import { backOut } from "svelte/easing";
   import { tweened } from 'svelte/motion';
-  import { fade } from 'svelte/transition';
-  import { selectionColor } from '../../../defaults.ts';
-  import Back from './Back.svelte';
 
   const renderer = getContext('renderer');
   const highlight = getContext('highlight');
@@ -32,24 +29,6 @@
 
   let faceDown = false;
   let rotation = tweened(0, { duration: 400, easing: backOut });
-
-  function IsFaceEmpty(face) {
-    if (!face) {
-      return true;
-    }
-
-    if (!face.layers) {
-      return true;
-    }
-
-    for (const layer of face.layers) {
-      if (Object.keys(layer.parts).length) {
-        return false;
-      }
-    }
-
-    return true;
-  }
 
   $: translate = anchor ?
   `translate(${anchor.x - width / 2 + anchor.index * 200}, ${anchor.y - height / 2})`
@@ -91,18 +70,7 @@
       {height}
       faceDown={forceFaceDown || (faceDown && !forceFaceUp)}
       {component}
+      highlight={id in $highlight || active}
       instance={obj.instance} />
-  {/if}
-
-  {#if id in $highlight || active}
-    <rect
-      in:fade|local={{ duration: 150 }}
-      x={-10}
-      y={-10}
-      width={width + 20}
-      height={height + 20}
-      fill="none"
-      stroke-width="10"
-      stroke={selectionColor} />
   {/if}
 </g>
