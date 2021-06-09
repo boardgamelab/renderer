@@ -31,7 +31,7 @@
   let rotation = tweened(0, { duration: 400, easing: backOut });
 
   $: translate = anchor ?
-  `translate(${anchor.x - width / 2 + anchor.index * 200}, ${anchor.y - height / 2})`
+  `translate(${Math.round(anchor.x - width / 2)}, ${Math.round(anchor.y - height / 2)})`
     : "";
 
   $: {
