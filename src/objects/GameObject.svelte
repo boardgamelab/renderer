@@ -20,6 +20,7 @@
   };
 
   let component = null;
+  let draggable = true;
   $: {
     component = null;
     if (obj.component) {
@@ -27,11 +28,15 @@
     } else if (obj.stateVal.kind === "deck") {
       component = Deck;
     }
+
+    if (component === Board) {
+      draggable = false;
+    }
   }
 </script>
 
 {#if component}
-  <Moveable on:movestart on:moveend {id} {obj} {parentID} let:active let:isDragging>
+  <Moveable on:movestart on:moveend {id} {draggable} {obj} {parentID} let:active let:isDragging>
     <svelte:component
       this={component}
       {anchor}

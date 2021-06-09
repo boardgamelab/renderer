@@ -9,7 +9,6 @@
   import Snap from './Snap.svelte';
 
   const renderer = getContext('renderer');
-  const highlight = getContext('highlight');
 
   const component = obj.component;
   const width = component.layout.geometry.width;
@@ -44,7 +43,6 @@
       {width}
       {height}
       {component}
-      highlight={id in $highlight || active}
       instance={obj.instance} />
   {:else}
     <rect
