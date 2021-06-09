@@ -187,22 +187,10 @@
         }
       }
       if (template && template.type === Component.CARD) {
-        const obj = $state.objects[id];
-
-        let inHand = false;
-        if (obj && obj.parent) {
-          const p = $state.objects[obj.parent];
-          if (p && p.template && p.template.type === Component.HAND) {
-            inHand = true;
-          }
-        }
-
-        if (!inHand) {
-          items = [
-            { text: 'rotate', fn: () => RotateCard(id) },
-            { text: 'flip', fn: () => FlipCard(id) },
-          ];
-        }
+        items = [
+          { text: 'rotate', fn: () => RotateCard(id) },
+          { text: 'flip', fn: () => FlipCard(id) },
+        ];
       }
 
       items = [...items, ...GetRules(id)];

@@ -3,7 +3,7 @@
   import { Component } from '@boardgamelab/components';
 
   import Board from './container/Board.svelte';
-  import Card from './tile/card/Card.svelte';
+  import Tile from './tile/Tile.svelte';
   import Deck from './container/Deck.svelte';
 
   export let id;
@@ -14,7 +14,8 @@
   export let parentID;
 
   const components = {
-    [Component.CARD]: Card,
+    [Component.TILE]: Tile,
+    [Component.CARD]: Tile,
     [Component.BOARD]: Board,
   };
 
