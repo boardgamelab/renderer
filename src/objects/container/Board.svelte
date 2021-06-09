@@ -6,8 +6,6 @@
 
   import { getContext } from 'svelte';
   import { tweened } from 'svelte/motion';
-  import { fade } from 'svelte/transition';
-  import { selectionColor } from '../../defaults.ts';
   import Snap from './Snap.svelte';
 
   const renderer = getContext('renderer');
@@ -47,6 +45,7 @@
       {width}
       {height}
       {component}
+      highlight={id in $highlight || active}
       instance={obj.instance} />
   {:else}
     <rect
@@ -57,18 +56,6 @@
       stroke="#aaa"
       stroke-width={5}
       fill="transparent" />
-  {/if}
-
-  {#if id in $highlight || active}
-    <rect
-      in:fade|local={{ duration: 150 }}
-      x={-10}
-      y={-10}
-      width={width + 20}
-      height={height + 20}
-      fill="none"
-      stroke-width="10"
-      stroke={selectionColor} />
   {/if}
 
   {#if obj.snapZones.length}
