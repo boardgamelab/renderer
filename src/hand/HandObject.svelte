@@ -84,7 +84,7 @@
 
 <div class:splay class:small class:hide>
   <svg
-    class="hand-object"
+    class="overflow-visible hand-object"
     use:ghost={{ id, disable: $viewOnly, parentID: handID, highlight, activeObjects, dispatchActions }}
     on:hide={Hide}
     on:show={Show}
@@ -107,7 +107,6 @@
         {id}
         {obj}
         droppable={false}
-        forceRotation={0}
         {forceFaceUp}
         {forceFaceDown}
         active={id in $activeObjects} />
