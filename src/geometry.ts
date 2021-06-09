@@ -66,12 +66,12 @@ export function FindIntersectingObjects(
       continue;
     }
 
-    if (obj.template?.type === HAND) {
+    const template = GetComponent(schema, state, id);
+    if (!template) {
       continue;
     }
 
-    const template = GetComponent(schema, state, id);
-    if (!template) {
+    if (template.type === 3) {
       continue;
     }
 

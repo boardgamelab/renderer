@@ -34,6 +34,7 @@
 <g
   data-id={id}
   data-preview="true"
+  data-selectable="box"
   data-component={component.id}
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
 
