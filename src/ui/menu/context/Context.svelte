@@ -158,16 +158,6 @@
           { text: 'shuffle', fn: () => Shuffle(id) },
           { text: 'flip', fn: () => FlipDeck(id) },
         ];
-
-        const topItem = GetTopItemActions(id);
-        if (topItem.length) {
-          items = [
-            { section: 'top item' },
-            ...topItem,
-            { section: 'container' },
-            ...items,
-          ];
-        }
       }
 
       if (obj && obj.kind && obj.kind.snap) {
@@ -175,18 +165,9 @@
           { text: 'shuffle', fn: () => Shuffle(id) },
           { text: 'flip', fn: () => FlipDeck(id) },
         ];
-
-        const topItem = GetTopItemActions(id);
-        if (topItem.length) {
-          items = [
-            { section: 'top item' },
-            ...topItem,
-            { section: 'container' },
-            ...items,
-          ];
-        }
       }
-      if (template && template.type === Component.CARD) {
+
+      if (template && (template.type === Component.CARD || template.type === Component.TILE)) {
         items = [
           { text: 'rotate', fn: () => RotateCard(id) },
           { text: 'flip', fn: () => FlipCard(id) },
@@ -202,7 +183,7 @@
         if (!template) {
           return false;
         }
-        return template.type === Component.CARD;
+        return (template.type === Component.CARD || template.type === Component.TILE);
       });
       if (allCards) {
         items = [{ text: 'stack', fn: MakeDeck }];

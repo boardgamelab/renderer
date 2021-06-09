@@ -163,7 +163,7 @@
             id={child.id}
             obj={child}
             parentID={id}
-            selectable={false}
+            selectable={true}
             anchor={{ x: width / 2, y: height / 2 }}
             droppable={false} />
         {/each}

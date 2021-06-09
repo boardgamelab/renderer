@@ -18,7 +18,7 @@ $: size = Math.round(width / 2);
       height={size}>
       <div class="w-full h-full">
         <div
-          style="font-size: {size / 50}rem"
+          style="font-size: {size / 30}rem"
           class:highlight
           class="size">
           {obj.children.length}
