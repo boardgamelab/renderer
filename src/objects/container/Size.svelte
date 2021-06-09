@@ -2,27 +2,43 @@
   export let width;
   export let height;
   export let obj;
+  export let highlight = false;
 
   import { fly } from 'svelte/transition';
 
-  const size = 400;
+$: size = Math.round(width / 2);
 </script>
 
 {#if obj.children.length > 1}
   <g data-size="true" in:fly={{ duration: 250, y: -100 }}>
     <foreignObject
       x={width / 2 - size / 2}
-      y={height - 200}
+      y={height / 2 - size / 2}
       width={size}
       height={size}>
-      <div class="w-full h-full p-8">
+      <div class="w-full h-full">
         <div
-          style="font-size: 10rem"
-          class="text-white cursor-move hover:bg-gray-500 bg-gray-600 rounded-full shadow-xl w-full h-full
-          flex items-center justify-center select-none font-bold text-white">
+          style="font-size: {size / 50}rem"
+          class:highlight
+          class="size">
           {obj.children.length}
         </div>
       </div>
     </foreignObject>
   </g>
 {/if}
+
+<style>
+  .size {
+    @apply text-white opacity-75 cursor-move bg-gray-600 text-white rounded-full w-full h-full flex items-center justify-center select-none font-bold;
+  }
+
+  .size:hover {
+    @apply opacity-100;
+  }
+
+  .highlight, .highlight:hover {
+    @apply bg-primary text-white opacity-100;
+  }
+
+</style>

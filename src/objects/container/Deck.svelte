@@ -5,8 +5,6 @@
 
   import { getContext } from 'svelte';
   import { tweened } from 'svelte/motion';
-  import { fade } from 'svelte/transition';
-  import { selectionColor } from '../../defaults.ts';
   import GameObject from '../GameObject.svelte';
   import Size from './Size.svelte';
 
@@ -54,18 +52,6 @@
   data-droppable="true"
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
   {#if obj.children.length}
-    {#if id in $highlight || active}
-      <rect
-        in:fade|local={{ duration: 150 }}
-        x={-10}
-        y={-10}
-        width={width + 20}
-        height={height + 20}
-        fill="none"
-        stroke-width="10"
-        stroke={selectionColor} />
-    {/if}
-
     {#each obj.children.slice(-10) as child (child.id)}
       <GameObject
         id={child.id}
@@ -75,6 +61,6 @@
         droppable={false} />
     {/each}
 
-    <Size {obj} {width} {height} />
+    <Size {obj} {width} {height} highlight={id in $highlight || active} />
   {/if}
 </g>

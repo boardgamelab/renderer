@@ -18,6 +18,7 @@
   $: height = obj.stateVal.kind.snap.geometry.height;
   $: shape = obj.stateVal.kind.snap.geometry.shape;
   $: kind = obj.stateVal.kind.snap.kind;
+  $: active = id in $activeObjects;
 
   const rotation = tweened(0, { duration: 200 });
 
@@ -108,9 +109,9 @@
         y={0}
         {width}
         {height}
-        stroke="#18a0fb"
-        stroke-width={30}
-        stroke-opacity={id in $highlight ? .5 : 0}
+        stroke="#ff8700"
+        stroke-width={50}
+        stroke-opacity={id in $highlight ? .8 : 0}
         fill={"transparent"} />
     {/if}
 
@@ -121,9 +122,9 @@
         cy={height / 2}
         rx={width / 2}
         ry={height / 2}
-        stroke="#18a0fb"
-        stroke-width={30}
-        stroke-opacity={id in $highlight ? .5 : 0}
+        stroke="#ff8700"
+        stroke-width={50}
+        stroke-opacity={id in $highlight ? .8 : 0}
         fill={"transparent"} />
     {/if}
   {/if}
@@ -170,7 +171,7 @@
     {/if}
 
     {#if kind === "stack"}
-    <Size {obj} {width} {height} />
+    <Size {obj} {width} {height} highlight={id in $highlight || active} />
     {/if}
   {/if}
 </g>
