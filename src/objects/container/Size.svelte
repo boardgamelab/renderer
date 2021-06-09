@@ -6,7 +6,7 @@
 
   import { fly } from 'svelte/transition';
 
-$: size = Math.round(width / 2);
+$: size = Math.min(300, Math.round(width / 2));
 </script>
 
 {#if obj.children.length > 1}
