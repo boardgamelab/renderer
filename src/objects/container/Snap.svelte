@@ -141,7 +141,7 @@
                   id={child.id}
                   obj={child}
                   parentID={id}
-                  selectable={false}
+                  selectable={true}
                   droppable={false} />
               </svg>
             </div>

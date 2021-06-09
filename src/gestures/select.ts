@@ -128,7 +128,9 @@ export function select(node: HTMLElement, opts: Opts) {
       return;
     }
 
-    CheckSelect(e);
+    if (CheckSelect(e)) {
+      e.stopPropagation();
+    }
 
     if (CheckLongSelect(e)) {
       window.addEventListener('mousemove', CancelLongSelect);
@@ -150,7 +152,9 @@ export function select(node: HTMLElement, opts: Opts) {
 
     const touch = e.touches[0];
 
-    CheckSelect(touch);
+    if (CheckSelect(touch)) {
+      e.stopPropagation();
+    }
 
     if (CheckLongSelect(touch)) {
       node.addEventListener('touchmove', CancelLongSelect);
