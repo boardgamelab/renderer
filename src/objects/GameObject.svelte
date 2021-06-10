@@ -8,10 +8,10 @@
 
   export let id;
   export let obj;
-  export let anchor;
-  export let droppable;
-  export let selectable;
-  export let parentID;
+  export let anchor = null;
+  export let droppable = true;
+  export let selectable = true;
+  export let parentID = null;
 
   const components = {
     [Component.TILE]: Tile,

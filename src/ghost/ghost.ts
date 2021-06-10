@@ -145,6 +145,7 @@ export function ghost(node: Element, opts: Opts) {
     }
 
     if (!dragged) {
+      node.dispatchEvent(new CustomEvent("show"));
       return;
     }
 

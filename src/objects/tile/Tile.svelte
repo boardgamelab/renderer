@@ -6,8 +6,9 @@
   export let active = false;
   export let forceFaceUp = false;
   export let forceFaceDown = false;
-  export let forceRotation;
+  export let forceRotation = null;
   export let selectable = true;
+  export let isDragging = false;
 
   import { getContext } from 'svelte';
   import { backOut } from "svelte/easing";
@@ -47,7 +48,7 @@
       rotation.set(0);
     }
 
-    if (forceRotation !== undefined) {
+    if (forceRotation !== null) {
       rotation.set(forceRotation);
     }
   }
