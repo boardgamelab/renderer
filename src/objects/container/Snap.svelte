@@ -115,7 +115,7 @@
         fill={"transparent"} />
     {/if}
 
-    {#if shape === "circle"}
+    {#if shape === "circle" || shape === "hex"}
       <ellipse
         in:fade|local={{ duration: 150 }}
         cx={width / 2}
