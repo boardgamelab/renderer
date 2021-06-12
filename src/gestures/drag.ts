@@ -105,7 +105,7 @@ export function drag(node: Element, opts: DragOpts) {
   function CheckDrop(e: MouseEvent | Touch) {
     dropTarget = null;
 
-    // const component = (target as SVGGraphicsElement).dataset.component;
+    const candidates: any[] = [];
 
     pointsToCheck.forEach(point => {
       // const t = document
@@ -117,9 +117,34 @@ export function drag(node: Element, opts: DragOpts) {
         ?.closest(`[data-droppable=true]`);
 
       if (t) {
-        dropTarget = t;
+        candidates.push(t);
       }
     });
+
+    if (candidates.length === 1) {
+      dropTarget = candidates[0];
+    }
+
+    // Sort candidates by distance and pick the closest one.
+    if (candidates.length > 1) {
+      const rects = candidates.map((t) => ({ target: t, rect: t.getBoundingClientRect() }));
+
+      rects.sort(({ rect: a }, { rect: b }) => {
+        const ax = a.x + a.width / 2;
+        const ay = a.y + a.height / 2;
+        const bx = b.x + b.width / 2;
+        const by = b.y + b.height / 2;
+        const tx = e.clientX;
+        const ty = e.clientY;
+
+        const da = (tx - ax) * (tx - ax) + (ty - ay) * (ty - ay);
+        const db = (tx - bx) * (tx - bx) + (ty - by) * (ty - by);
+
+        return da <= db ? -1 : 1;
+      });
+
+      dropTarget = rects[0].target;
+    }
   }
 
   function Drag(e: MouseEvent | Touch) {
@@ -196,6 +221,10 @@ export function drag(node: Element, opts: DragOpts) {
       {
         x: targetRect!.left - e.clientX,
         y: targetRect!.top + targetRect!.height - e.clientY,
+      },
+      {
+        x: targetRect!.left + targetRect!.width / 2 - e.clientX,
+        y: targetRect!.top + targetRect!.height / 2 - e.clientY,
       },
     ];
 
