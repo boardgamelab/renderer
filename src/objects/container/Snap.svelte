@@ -102,6 +102,7 @@
   on:show={Show}
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
 
+  <!-- TODO: Move Frame.svelte into renderer (or pass it through setContext) -->
   {#if $isDragging || id in $highlight}
     {#if shape === "rect"}
       <rect
