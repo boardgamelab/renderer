@@ -2,6 +2,7 @@
   export let id;
   export let obj;
 
+  import { FlatTopHexPointsStr } from '../../utils/hex.ts';
   import { getContext } from 'svelte';
   import { tweened } from 'svelte/motion';
   import { fade } from 'svelte/transition';
@@ -115,13 +116,22 @@
         fill={"transparent"} />
     {/if}
 
-    {#if shape === "circle" || shape === "hex"}
+    {#if shape === "circle"}
       <ellipse
         in:fade|local={{ duration: 150 }}
         cx={width / 2}
         cy={height / 2}
         rx={width / 2}
         ry={height / 2}
+        stroke="#ff8700"
+        stroke-width={50}
+        stroke-opacity={id in $highlight ? .8 : 0}
+        fill={"transparent"} />
+    {/if}
+
+    {#if shape === "hex"}
+      <polygon
+        points={FlatTopHexPointsStr(width, height)}
         stroke="#ff8700"
         stroke-width={50}
         stroke-opacity={id in $highlight ? .8 : 0}

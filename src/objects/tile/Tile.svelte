@@ -8,7 +8,7 @@
   export let forceFaceDown = false;
   export let forceRotation = null;
   export let selectable = true;
-  export let isDragging = false;
+  export const isDragging = false;
 
   import { getContext } from 'svelte';
   import { backOut } from "svelte/easing";
