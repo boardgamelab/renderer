@@ -121,6 +121,11 @@ export function drag(node: Element, opts: DragOpts) {
       }
     });
 
+    const center = {
+      x: pointsToCheck[0].x + e.clientX,
+      y: pointsToCheck[0].y + e.clientY,
+    };
+
     if (candidates.length === 1) {
       dropTarget = candidates[0];
     }
@@ -134,8 +139,8 @@ export function drag(node: Element, opts: DragOpts) {
         const ay = a.y + a.height / 2;
         const bx = b.x + b.width / 2;
         const by = b.y + b.height / 2;
-        const tx = e.clientX;
-        const ty = e.clientY;
+        const tx = center.x;
+        const ty = center.y;
 
         const da = (tx - ax) * (tx - ax) + (ty - ay) * (ty - ay);
         const db = (tx - bx) * (tx - bx) + (ty - by) * (ty - by);
@@ -203,6 +208,10 @@ export function drag(node: Element, opts: DragOpts) {
 
     pointsToCheck = [
       {
+        x: targetRect!.left + targetRect!.width / 2 - e.clientX,
+        y: targetRect!.top + targetRect!.height / 2 - e.clientY,
+      },
+      {
         x: 0,
         y: 0,
       },
@@ -221,10 +230,6 @@ export function drag(node: Element, opts: DragOpts) {
       {
         x: targetRect!.left - e.clientX,
         y: targetRect!.top + targetRect!.height - e.clientY,
-      },
-      {
-        x: targetRect!.left + targetRect!.width / 2 - e.clientX,
-        y: targetRect!.top + targetRect!.height / 2 - e.clientY,
       },
     ];
 
