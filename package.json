@@ -43,7 +43,7 @@
     "lodash.throttle": "^4.1.1",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-svelte": "^4.0.6",
-    "postcss": "^8.2.6",
+    "postcss": "^8.2.10",
     "prettier": "1.19.1",
     "prettier-plugin-svelte": "^0.7.0",
     "rollup": "^2.39.0",
