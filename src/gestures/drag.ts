@@ -117,7 +117,9 @@ export function drag(node: Element, opts: DragOpts) {
         ?.closest(`[data-droppable=true]`);
 
       if (t) {
-        candidates.push(t);
+        if (CheckTypeCompatibility(target, t)) {
+          candidates.push(t);
+        }
       }
     });
 
@@ -295,4 +297,10 @@ export function drag(node: Element, opts: DragOpts) {
       opts = newOpts;
     },
   };
+}
+
+function CheckTypeCompatibility(source: Element, dest: Element) {
+  const sourceTypes = (source as HTMLElement).dataset.types?.split(' ') || [];
+  const destTypes = new Set((dest as HTMLElement).dataset.types?.split(' ') || []);
+  return destTypes.size === 0 || sourceTypes.every(t => destTypes.has(t));
 }

@@ -44,12 +44,19 @@
       }
     }
   }
+
+  $: types = obj.stateVal.types.map(t => {
+    if (t.component) return t.component;
+    if (t.trait) return t.trait;
+    return t;
+  }).join(' ');
 </script>
 
 <g
   data-id={id}
   data-selectable="true"
   data-droppable="true"
+  data-types={types}
   transform="rotate({$rotation}, {width / 2}, {height / 2})">
   {#if obj.children.length}
     {#each obj.children.slice(-10) as child (child.id)}

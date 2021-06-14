@@ -46,6 +46,12 @@
       y: detail.position.y,
     });
   }
+
+  $: types = obj.stateVal.types.map(t => {
+    if (t.component) return t.component;
+    if (t.trait) return t.trait;
+    return t;
+  }).join(' ');
 </script>
 
 <style>
@@ -66,6 +72,7 @@
   data-id={id}
   data-component={obj.stateVal.componentID}
   data-draggable={draggable}
+  data-types={types}
   on:table={DropOnTable}
   on:hide={Hide}
   on:show={Show}

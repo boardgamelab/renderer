@@ -52,6 +52,12 @@
       rotation.set(forceRotation);
     }
   }
+
+  $: types = obj.stateVal.types.map(t => {
+    if (t.component) return t.component;
+    if (t.trait) return t.trait;
+    return t;
+  }).join(' ');
 </script>
 
 <g
@@ -60,6 +66,7 @@
   data-selectable={selectable}
   data-component={component.id}
   data-droppable={droppable}
+  data-types={types}
   transform="rotate({$rotation}
   {width / 2}
   {height / 2}) {translate}">
