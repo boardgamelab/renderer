@@ -171,8 +171,10 @@ export function ghost(node: Element, opts: Opts) {
     //   }
     }
 
-    const absolutePosition = { x: detail.svg.targetX, y: detail.svg.targetY };
-    Drop(opts.id, drop, absolutePosition, opts.dispatchActions, node);
+    if (detail.dropID !== opts.parentID) {
+      const absolutePosition = { x: detail.svg.targetX, y: detail.svg.targetY };
+      Drop(opts.id, drop, absolutePosition, opts.dispatchActions, node);
+    }
   }
 
   // @ts-ignore
