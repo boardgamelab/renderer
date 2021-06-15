@@ -19,7 +19,10 @@
   $: height = obj.stateVal.kind.snap.geometry.height;
   $: shape = obj.stateVal.kind.snap.geometry.shape;
   $: kind = obj.stateVal.kind.snap.kind;
+  $: limit = obj.stateVal.kind.snap.limit;
   $: active = id in $activeObjects;
+
+  $: isFull = limit !== null && obj.children.length >= limit;
 
   const rotation = tweened(0, { duration: 200 });
 
@@ -94,7 +97,7 @@
 <g
   data-id={id}
   data-selectable="true"
-  data-droppable="true"
+  data-droppable={!isFull && "true"}
   data-draggable="true"
   class:hide
   use:ghost={{ id, isSnap: true, onTable: true, highlight, activeObjects, dispatchActions }}
