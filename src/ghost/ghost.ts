@@ -166,7 +166,7 @@ export function ghost(node: Element, opts: Opts) {
     //   }
     }
 
-    if (!detail.dropID || detail.dropID !== opts.parentID) {
+    if (detail.dropAt || !detail.dropID || detail.dropID !== opts.parentID) {
       const absolutePosition = { x: detail.svg.targetX, y: detail.svg.targetY };
       Drop(opts.id, drop, absolutePosition, opts.dispatchActions, node);
     }
