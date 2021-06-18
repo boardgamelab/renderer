@@ -218,14 +218,12 @@ export function Drop(
   node: Element
 ) {
   if (drop) {
-    const index = drop.at ? Number(drop.at) : undefined;
+    const at = drop.at ? Number(drop.at) : undefined;
     dispatchActions([
       {
         type: 'object',
         context: { subject: { id }, args: [{ object: drop.targetID }] },
-        move: {
-          index
-        },
+        move: { at },
       },
     ]);
   } else {
