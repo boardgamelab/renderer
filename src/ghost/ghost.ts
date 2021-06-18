@@ -151,21 +151,6 @@ export function ghost(node: Element, opts: Opts) {
         at: detail.dropAt,
       };
 
-    //   const target = $state.objects[detail.dropID];
-    //   if (target) {
-    //     if (target.t === 'tile') {
-    //       activeObjects.set({
-    //         ['deck-' + detail.dropID]: true,
-    //       });
-    //     }
-    //     if (target.t === 'container') {
-    //       activeObjects.set({
-    //         [detail.dropID]: true,
-    //       });
-    //     }
-    //   }
-    }
-
     if (detail.dropAt || !detail.dropID || detail.dropID !== opts.parentID) {
       const absolutePosition = { x: detail.svg.targetX, y: detail.svg.targetY };
       Drop(opts.id, drop, absolutePosition, opts.dispatchActions, node);
