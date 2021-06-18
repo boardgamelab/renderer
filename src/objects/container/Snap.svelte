@@ -106,7 +106,7 @@
         <div class="w-full h-full flex flex-row items-center justify-center">
           {#each obj.children as child, index (child.id)}
             <div data-droppable="true" data-id={id} data-at={index} class="flex flex-row" animate:flip={{ duration: 100 }}>
-              <div class:at-end={index === 0} class="at-slot" />
+              <div data-droppable="true" data-id={id} data-at={index} class:at-end={index === 0} class="at-slot" />
               <svg class="overflow-visible" width={child.component.layout.geometry.width} height={child.component.layout.geometry.height}>
                 <GameObject
                   id={child.id}
