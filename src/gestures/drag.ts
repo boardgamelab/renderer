@@ -23,6 +23,8 @@ export interface DragEvent {
 
   dropID: string | null;
 
+  dropAt: string | null;
+
   target: Element;
 
   // Coordinates relative to the SVG viewport.
@@ -77,10 +79,13 @@ export function drag(node: Element, opts: DragOpts) {
       dropID = null;
     }
 
+    let dropAt = dropTarget?.dataset.at || null;
+
     return new CustomEvent(name, {
       detail: {
         id,
         dropID,
+        dropAt,
         target,
         svg: {
           x: pointSVG!.x,
@@ -131,6 +136,8 @@ export function drag(node: Element, opts: DragOpts) {
     if (candidates.length === 1) {
       dropTarget = candidates[0];
     }
+
+    // TODO: If there is a data-at candidate, discard the parent.
 
     // Sort candidates by distance and pick the closest one.
     if (candidates.length > 1) {

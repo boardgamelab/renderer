@@ -154,6 +154,7 @@ export function ghost(node: Element, opts: Opts) {
     if (detail.dropID) {
       drop = {
         targetID: detail.dropID,
+        at: detail.dropAt,
       };
 
     //   const target = $state.objects[detail.dropID];
@@ -171,7 +172,7 @@ export function ghost(node: Element, opts: Opts) {
     //   }
     }
 
-    if (detail.dropID !== opts.parentID) {
+    if (!detail.dropID || detail.dropID !== opts.parentID) {
       const absolutePosition = { x: detail.svg.targetX, y: detail.svg.targetY };
       Drop(opts.id, drop, absolutePosition, opts.dispatchActions, node);
     }
@@ -206,6 +207,7 @@ export function ghost(node: Element, opts: Opts) {
 
 interface DropInfo {
   targetID: string;
+  at: string|null;
 }
 
 export function Drop(
@@ -216,11 +218,14 @@ export function Drop(
   node: Element
 ) {
   if (drop) {
+    const index = drop.at ? Number(drop.at) : undefined;
     dispatchActions([
       {
         type: 'object',
         context: { subject: { id }, args: [{ object: drop.targetID }] },
-        move: {},
+        move: {
+          index
+        },
       },
     ]);
   } else {

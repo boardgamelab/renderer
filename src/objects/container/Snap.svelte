@@ -31,22 +31,6 @@
     await rotation.set(0, { duration: 1 });
   }
 
-  let movedIndex = null;
-  let swapTarget = null;
-
-  function MoveStart(index) {
-    movedIndex = index;
-  }
-
-  function MoveEnd() {
-    movedIndex = null;
-    swapTarget = null;
-  }
-
-  function MouseEnter(index) {
-    ElementEnter(index);
-  }
-
   let shuffleID = null;
   $: {
     const newID = obj.stateVal.shuffleID;
@@ -64,33 +48,6 @@
 
   function Show() {
     hide = false;
-  }
-
-  function ElementEnter(index) {
-    if (movedIndex === null || movedIndex === index || index === swapTarget) {
-      return;
-    }
-
-    swapTarget = index;
-
-    let indices = [...Array(obj.children.length).keys()];
-
-    indices[movedIndex] = index;
-    indices[index] = movedIndex;
-
-    movedIndex = index;
-
-    dispatchActions([
-      {
-        context: {
-          subject: { id },
-        },
-        type: 'container',
-        reorder: {
-          children: indices,
-        },
-      },
-    ]);
   }
 </script>
 
@@ -148,11 +105,10 @@
       <foreignObject class="overflow-visible" {width} {height}>
         <div class="w-full h-full flex flex-row items-center justify-center">
           {#each obj.children as child, index (child.id)}
-            <div class="mx-10" animate:flip={{ duration: 100 }} on:mouseenter={() => MouseEnter(index)}>
+            <div data-droppable="true" data-id={id} data-at={index} class="flex flex-row" animate:flip={{ duration: 100 }}>
+              <div class:at-end={index === 0} class="at-slot" />
               <svg class="overflow-visible" width={child.component.layout.geometry.width} height={child.component.layout.geometry.height}>
                 <GameObject
-                  on:movestart={() => MoveStart(index)}
-                  on:moveend={MoveEnd}
                   id={child.id}
                   obj={child}
                   parentID={id}
@@ -193,5 +149,13 @@
 <style>
   .hide {
     @apply opacity-0 pointer-events-none;
+  }
+
+  .at-slot {
+    @apply w-32 items-stretch;
+  }
+
+  .at-end {
+    @apply flex-grow;
   }
 </style>
