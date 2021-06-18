@@ -150,6 +150,7 @@ export function ghost(node: Element, opts: Opts) {
         targetID: detail.dropID,
         at: detail.dropAt,
       };
+    }
 
     if (detail.dropAt || !detail.dropID || detail.dropID !== opts.parentID) {
       const absolutePosition = { x: detail.svg.targetX, y: detail.svg.targetY };
