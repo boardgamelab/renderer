@@ -133,15 +133,9 @@ export function ghost(node: Element, opts: Opts) {
       // If we're dropping the snap zone somewhere else, then restore
       // visibility after a bit of delay so that the items don't show
       // up at the original location momentarily before disappearing.
-      if (detail.dropID) {
-        setTimeout(() => {
-          node.dispatchEvent(new CustomEvent("show"));
-        }, 50);
-      } else {
-        // Otherwise, restore visibility right away. We need to restore
-        // visibility so that the snap area doesn't disappear completely.
+      setTimeout(() => {
         node.dispatchEvent(new CustomEvent("show"));
-      }
+      }, 50);
     }
 
     if (!dragged) {
