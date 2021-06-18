@@ -101,11 +101,18 @@
   {/if}
 
   {#if obj.children.length}
-    {#if kind === "row"}
+    {#if kind === "row" || kind === "column"}
       <foreignObject class="overflow-visible" {width} {height}>
-        <div class="w-full h-full flex flex-row items-center justify-center">
+      <div
+        class:snap-row={kind === "row"}
+        class:snap-col={kind === "column"}
+        class="w-full h-full flex items-center justify-center"
+      >
           {#each obj.children as child, index (child.id)}
-            <div data-droppable="true" data-id={id} data-at={index} class="flex flex-row" animate:flip={{ duration: 100 }}>
+            <div
+              class:snap-row={kind === "row"}
+              class:snap-col={kind === "column"}
+              data-droppable="true" data-id={id} data-at={index} class="flex" animate:flip={{ duration: 100 }}>
               <div data-droppable="true" data-id={id} data-at={index} class:at-end={index === 0} class="at-slot" />
               <svg class="overflow-visible" width={child.component.layout.geometry.width} height={child.component.layout.geometry.height}>
                 <GameObject
@@ -152,10 +159,18 @@
   }
 
   .at-slot {
-    @apply w-32 items-stretch;
+    @apply w-32 h-32 items-stretch;
   }
 
   .at-end {
     @apply flex-grow;
+  }
+
+  .snap-row {
+    @apply flex-row;
+  }
+
+  .snap-col {
+    @apply flex-col;
   }
 </style>
