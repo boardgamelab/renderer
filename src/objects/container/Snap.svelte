@@ -21,6 +21,11 @@
   $: kind = obj.stateVal.kind.snap.kind;
   $: limit = obj.stateVal.kind.snap.limit;
   $: active = id in $activeObjects;
+  $: types = obj.stateVal.types.map(t => {
+    if (t.component) return t.component;
+    if (t.trait) return t.trait;
+    return t;
+  }).join(' ');
 
   $: isFull = limit !== null && obj.children.length >= limit;
 
@@ -56,6 +61,7 @@
   data-selectable="true"
   data-droppable={!isFull && "true"}
   data-draggable="true"
+  data-types={types}
   class:hide
   use:ghost={{ id, isSnap: true, onTable: true, highlight, activeObjects, dispatchActions }}
   on:hide={Hide}
