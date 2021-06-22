@@ -307,7 +307,7 @@ export function drag(node: Element, opts: DragOpts) {
 }
 
 function CheckTypeCompatibility(source: Element, dest: Element) {
-  const sourceTypes = (source as HTMLElement).dataset.types?.split(' ') || [];
-  const destTypes = new Set((dest as HTMLElement).dataset.types?.split(' ') || []);
-  return destTypes.size === 0 || sourceTypes.every(t => destTypes.has(t));
+  const sourceTypes = new Set((source as HTMLElement).dataset.types?.split(' ') || []);
+  const destTypes = (dest as HTMLElement).dataset.types?.split(' ') || [];
+  return destTypes.length === 0 || destTypes.every(t => sourceTypes.has(t));
 }
