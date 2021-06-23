@@ -56,12 +56,18 @@
     ]);
   }
 
-  function RotateCard(id) {
+  function RotateCard(id, component) {
+    let delta = 45;
+
+    if (component.layout.geometry.shape === "hex") {
+      delta = 30;
+    }
+
     dispatchActions([
       {
         context: { seatID, subject: { id } },
         type: 'tile',
-        rotate: null,
+        rotate: { delta },
       },
     ]);
   }
@@ -128,23 +134,6 @@
     return items;
   }
 
-  function GetTopItemActions(id) {
-    let items = [];
-    if (id in $state.objects) {
-      const children = $state.objects[id].children;
-      const topItem = children[children.length - 1];
-
-      if (topItem) {
-        items = [
-          { text: 'rotate', fn: () => RotateCard(topItem) },
-          { text: 'flip', fn: () => FlipCard(topItem) },
-          ...GetRules(topItem),
-        ];
-      }
-    }
-    return items;
-  }
-
   function UpdateActiveObjectMenu(activeObjects) {
     items = [];
 
@@ -169,7 +158,7 @@
 
       if (template && (template.type === Component.CARD || template.type === Component.TILE)) {
         items = [
-          { text: 'rotate', fn: () => RotateCard(id) },
+          { text: 'rotate', fn: () => RotateCard(id, template) },
           { text: 'flip', fn: () => FlipCard(id) },
         ];
       }
