@@ -2,7 +2,7 @@
   export let items = [];
   export let hotkeys = true;
 
-  import Icon from './ActionIcon.svelte';
+  import ActionIcon from './ActionIcon.svelte';
 
   let expanded = false;
   function Expand() {
@@ -53,8 +53,8 @@
 <div
   on:click={Expand}
   class:hide={expanded}
-  class="md:hidden w-10 bg-white border p-1 rounded-full text-gray-800 shadow-lg">
-  <Icon hollow={false} />
+  class="md:hidden w-10 bg-white border p-2 rounded-full text-gray-800 shadow-lg">
+  <ActionIcon />
 </div>
 
 <div
@@ -77,7 +77,7 @@
             {#if item.icon}
               <svelte:component this={item.icon} />
             {:else}
-              <Icon />
+              <ActionIcon />
             {/if}
           </div>
           <div>{item.text}</div>
