@@ -4,7 +4,6 @@
 
   import Board from './container/Board.svelte';
   import Tile from './tile/Tile.svelte';
-  import Deck from './container/Deck.svelte';
 
   export let id;
   export let obj;
@@ -25,8 +24,6 @@
     component = null;
     if (obj.component) {
       component = components[obj.component.type];
-    } else if (obj.stateVal.kind === "deck") {
-      component = Deck;
     }
 
     if (component === Board) {

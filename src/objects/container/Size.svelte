@@ -1,4 +1,5 @@
 <script>
+  export let stack = false;
   export let width;
   export let height;
   export let obj;
@@ -6,10 +7,11 @@
 
   import { fly } from 'svelte/transition';
 
-$: size = Math.min(300, Math.round(width / 2));
+  $: size = Math.min(300, Math.round(width / 2));
+  const min = stack ? 0 : 1;
 </script>
 
-{#if obj.children.length > 1}
+{#if obj.children.length > min}
   <g data-size="true" in:fly={{ duration: 250, y: -100 }}>
     <foreignObject
       x={width / 2 - size / 2}
@@ -21,7 +23,7 @@ $: size = Math.min(300, Math.round(width / 2));
           style="font-size: {size / 30}rem"
           class:highlight
           class="size">
-          {obj.children.length}
+          {stack ? obj.children.length + 1 : obj.children.length}
         </div>
       </div>
     </foreignObject>

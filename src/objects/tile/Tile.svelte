@@ -14,6 +14,8 @@
   import { backOut } from "svelte/easing";
   import { tweened } from 'svelte/motion';
   import Snap from "../container/Snap.svelte";
+  import Size from "../container/Size.svelte";
+  import GameObject from "../GameObject.svelte";
 
   const renderer = getContext('renderer');
   const highlight = getContext('highlight');
@@ -27,6 +29,20 @@
     const { geometry } = component.layout;
     width = geometry.width;
     height = geometry.height;
+  }
+
+  async function ShuffleAnimation() {
+    await rotation.update((r) => r + 359);
+    await rotation.set(0, { duration: 1 });
+  }
+
+  let shuffleID = null;
+  $: {
+    const newID = obj.stateVal.shuffleID;
+    if (newID && newID !== shuffleID) {
+      ShuffleAnimation();
+      shuffleID = newID;
+    }
   }
 
   let faceDown = false;
@@ -89,5 +105,18 @@
         <Snap id={zone.id} obj={zone} />
       </g>
     {/each}
+  {/if}
+
+  {#if obj.children.length}
+    {#each obj.children.slice(-10) as child (child.id)}
+      <GameObject
+        id={child.id}
+        obj={child}
+        parentID={id}
+        selectable={true}
+        droppable={false} />
+    {/each}
+
+    <Size stack={true} {obj} {width} {height} highlight={id in $highlight || active} />
   {/if}
 </g>
