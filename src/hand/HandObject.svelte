@@ -64,6 +64,12 @@
   const DragEnd = () => {
     dispatch('moveend', { index });
   };
+
+  $: types = obj.stateVal.types.map(t => {
+    if (t.component) return t.component;
+    if (t.trait) return t.trait;
+    return t;
+  }).join(' ');
 </script>
 
 <style>
@@ -94,6 +100,7 @@
     data-preview="true"
     data-selectable="true"
     data-draggable="true"
+    data-types={types}
     on:movestart={DragStart}
     on:moveend={DragEnd}
     on:move={Drag}
