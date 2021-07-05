@@ -13,6 +13,7 @@
   import { getContext } from 'svelte';
   import { backOut } from "svelte/easing";
   import { tweened } from 'svelte/motion';
+  import Snap from "../container/Snap.svelte";
 
   const renderer = getContext('renderer');
   const highlight = getContext('highlight');
@@ -80,5 +81,13 @@
       {component}
       highlight={id in $highlight || active}
       instance={obj.instance} />
+  {/if}
+
+  {#if obj.snapZones.length}
+    {#each obj.snapZones as zone (zone.id)}
+      <g transform="translate({zone.stateVal.x} {zone.stateVal.y})">
+        <Snap id={zone.id} obj={zone} />
+      </g>
+    {/each}
   {/if}
 </g>
