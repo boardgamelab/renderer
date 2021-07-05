@@ -1,4 +1,5 @@
 <script>
+  import Board from "./objects/container/Board.svelte";
   import GameObject from './objects/GameObject.svelte';
   import Effects from './Effects.svelte';
   import { drag } from './gestures/drag.ts';
@@ -52,6 +53,7 @@
 
     viewOnly.set(false);
     if (
+      $state.game &&
       $state.game.turnOrder !== 'none' &&
       $state.ctx &&
       $state.ctx.currentPlayer !== undefined
@@ -171,6 +173,8 @@
     <Effects />
 
     <g transform="translate({$panX}, {$panY})">
+      <Board {state} board={$schema.game.board} snapKeySuffix="gb" />
+
       {#each $objects as obj (obj.id)}
         <GameObject id={obj.id} {obj} />
       {/each}

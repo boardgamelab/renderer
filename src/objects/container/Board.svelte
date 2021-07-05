@@ -1,66 +1,36 @@
 <script>
-  export let id;
-  export let obj;
-  export let position;
-  export let active = false;
+  export let board;
+  export let state;
+  export let snapKeySuffix = "";
 
   import { getContext } from 'svelte';
-  import { tweened } from 'svelte/motion';
   import Snap from './Snap.svelte';
 
-  const renderer = getContext('renderer');
+  const schema = getContext("schema");
 
-  const component = obj.component;
-  const width = component.layout.geometry.width;
-  const height = component.layout.geometry.height;
+  import { GetGameObject } from "../game-object.ts";
+  import Render from "../../../../src/components/template/Render.svelte";
 
-  const rotation = tweened(0, { duration: 200 });
+  const width = board.geometry.width;
+  const height = board.geometry.height;
 
-  async function ShuffleAnimation() {
-    await rotation.update((r) => r + 359);
-    await rotation.set(0, { duration: 1 });
-  }
-
-  let shuffleID = null;
-  $: {
-    const newID = obj.stateVal.shuffleID;
-    if (newID && newID !== shuffleID) {
-      ShuffleAnimation();
-      shuffleID = newID;
-    }
-  }
+  $: snaps = board
+    .faces
+    .flatMap((face) => face.layers)
+    .flatMap((layer) => Object.values(layer.parts))
+    .filter((part) => part.snap)
+    .map(snap => GetGameObject($schema, $state, `${snap.id}:${snapKeySuffix}`))
+    .filter(obj => obj);
 </script>
 
-<g
-  data-id={id}
-  data-selectable="box"
-  data-component={component.id}
-  transform="rotate({$rotation}, {width / 2}, {height / 2})">
+<g>
+  <Render {width} {height} {board} highlightOnHover={false} />
 
-  {#if renderer && obj.instance}
-    <svelte:component
-      this={renderer}
-      {width}
-      {height}
-      {component}
-      instance={obj.instance} />
-  {:else}
-    <rect
-      x={10}
-      y={10}
-      width={width - 20}
-      height={height - 20}
-      stroke="#aaa"
-      stroke-width={5}
-      fill="transparent" />
-  {/if}
-
-  {#if obj.snapZones.length}
-    {#each obj.snapZones as zone (zone.id)}
+  {#if snaps.length}
+    {#each snaps as zone (zone.id)}
       <g transform="translate({zone.stateVal.x} {zone.stateVal.y})">
         <Snap id={zone.id} obj={zone} />
       </g>
     {/each}
   {/if}
-
 </g>
