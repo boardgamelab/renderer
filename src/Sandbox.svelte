@@ -173,7 +173,7 @@
     <Effects />
 
     <g transform="translate({$panX}, {$panY})">
-      <Board {state} board={$schema.game.board} snapKeySuffix="gb" />
+      <Board {state} board={$schema.game.board} snapKeySuffix="game" />
 
       {#each $objects as obj (obj.id)}
         <GameObject id={obj.id} {obj} />
