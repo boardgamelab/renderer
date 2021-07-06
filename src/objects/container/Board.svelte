@@ -17,7 +17,7 @@
   $: snaps = board
     .faces
     .flatMap((face) => face.layers)
-    .flatMap((layer) => Object.values(layer.parts))
+    .flatMap((layer) => Object.values(layer.parts || {}))
     .filter((part) => part.snap)
     .map(snap => GetGameObject($schema, $state, `${snap.id}:${snapKeySuffix}`))
     .filter(obj => obj);
