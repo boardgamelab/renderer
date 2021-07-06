@@ -13,37 +13,21 @@
 
   function MakeDeck() {
     const firstCardID = Object.keys($activeObjects)[0];
-    const firstCard = $state.objects[firstCardID];
-    const newID = shortid();
 
-    const actions = [
-      {
-        context: { seatID },
-        type: 'create',
-        createID: newID,
-        kind: "deck",
-      },
-      {
-        context: { seatID, subject: { id: newID } },
-        type: 'object',
-        position: {
-          x: firstCard.x,
-          y: firstCard.y,
-        },
-      },
-    ];
-
+    let actions = [];
     Object.keys($activeObjects).forEach((id) => {
-      actions.push({
-        type: 'object',
-        context: { seatID, subject: { id }, args: [{ object: newID }] },
-        move: {},
-      });
+      if (id !== firstCardID) {
+        actions.push({
+          type: 'object',
+          context: { seatID, subject: { id }, args: [{ object: firstCardID }] },
+          move: {},
+        });
+      }
     });
 
     dispatchActions(actions);
 
-    activeObjects.set({ [newID]: true });
+    activeObjects.set({ [firstCardID]: true });
   }
 
   function FlipCard(id) {
@@ -142,13 +126,6 @@
       const obj = $state.objects[id];
       const template = GetComponent($schema, $state, id);
 
-      if (obj && obj.kind === "deck") {
-        items = [
-          { text: 'shuffle', fn: () => Shuffle(id) },
-          { text: 'flip', fn: () => FlipDeck(id) },
-        ];
-      }
-
       if (obj && obj.kind && obj.kind.snap) {
         items = [
           { text: 'shuffle', fn: () => Shuffle(id) },
@@ -159,8 +136,19 @@
       if (template && (template.type === Component.CARD || template.type === Component.TILE)) {
         items = [
           { text: 'rotate', fn: () => RotateCard(id, template) },
-          { text: 'flip', fn: () => FlipCard(id) },
         ];
+
+        if (obj.children && obj.children.length) {
+          items = [
+            ...items,
+            { text: 'shuffle', fn: () => Shuffle(id) },
+          ];
+        } else {
+          items = [
+            ...items,
+            { text: 'flip', fn: () => FlipCard(id) },
+          ];
+        }
       }
 
       items = [...items, ...GetRules(id)];
