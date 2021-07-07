@@ -37,7 +37,7 @@ export function GetGameObject(
     GetGameObject(schema, state, id)
   ).filter(obj => obj) as GameObject[];
 
-  if ((stateVal as Container).kind == "deck" || (stateVal as Container).kind?.snap || component) {
+  if ((stateVal as Container).kind == "stack" || (stateVal as Container).kind?.snap || component) {
     return {
       id,
       stateVal: state.objects[id],

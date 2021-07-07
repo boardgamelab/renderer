@@ -3,6 +3,7 @@
   import { Component } from '@boardgamelab/components';
 
   import Board from './container/Board.svelte';
+  import Stack from './container/Stack.svelte';
   import Tile from './tile/Tile.svelte';
 
   export let id;
@@ -24,6 +25,8 @@
     component = null;
     if (obj.component) {
       component = components[obj.component.type];
+    } else if (obj.stateVal.kind === "stack") {
+      component = Stack;
     }
 
     if (component === Board) {

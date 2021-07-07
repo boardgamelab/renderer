@@ -126,7 +126,7 @@
       const obj = $state.objects[id];
       const template = GetComponent($schema, $state, id);
 
-      if (obj && obj.kind && obj.kind.snap) {
+      if (obj && obj.kind && (obj.kind.snap || obj.kind === "stack")) {
         items = [
           { text: 'shuffle', fn: () => Shuffle(id) },
           { text: 'flip', fn: () => FlipDeck(id) },
@@ -136,19 +136,8 @@
       if (template && (template.type === Component.CARD || template.type === Component.TILE)) {
         items = [
           { text: 'rotate', fn: () => RotateCard(id, template) },
+          { text: 'flip', fn: () => FlipCard(id) },
         ];
-
-        if (obj.children && obj.children.length) {
-          items = [
-            ...items,
-            { text: 'shuffle', fn: () => Shuffle(id) },
-          ];
-        } else {
-          items = [
-            ...items,
-            { text: 'flip', fn: () => FlipCard(id) },
-          ];
-        }
       }
 
       items = [...items, ...GetRules(id)];
