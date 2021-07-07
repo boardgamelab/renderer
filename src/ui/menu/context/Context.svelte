@@ -14,6 +14,8 @@
   function MakeDeck() {
     const firstCardID = Object.keys($activeObjects)[0];
 
+    // TODO: Make a Rust action that groups an arbitrary set of objects.
+
     let actions = [];
     Object.keys($activeObjects).forEach((id) => {
       if (id !== firstCardID) {

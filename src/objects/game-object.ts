@@ -25,7 +25,7 @@ export function GetGameObject(
   }
 
   const instanceID = stateVal.instance || "";
-  const component = GetComponent(schema, state, id);
+  let component = GetComponent(schema, state, id);
 
   const childrenID: string[] = (stateVal as any).children || [];
   const children = childrenID.map((childID) =>
@@ -37,7 +37,11 @@ export function GetGameObject(
     GetGameObject(schema, state, id)
   ).filter(obj => obj) as GameObject[];
 
-  if ((stateVal as Container).kind == "stack" || (stateVal as Container).kind?.snap || component) {
+  if ((stateVal as Container).kind === "stack" && children.length) {
+    component = children[0].component as any;
+  }
+
+  if ((stateVal as Container).kind === "stack" || (stateVal as Container).kind?.snap || component) {
     return {
       id,
       stateVal: state.objects[id],
