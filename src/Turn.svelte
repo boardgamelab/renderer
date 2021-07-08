@@ -51,17 +51,7 @@
   }
 </script>
 
-<style>
-  .event {
-    @apply cursor-pointer flex items-center justify-center rounded transition duration-200 p-2 bg-gray-700 font-bold text-white shadow-lg;
-  }
-
-  .event:hover {
-    @apply opacity-75;
-  }
-</style>
-
-{#if ctx && game.turnOrder !== 'none'}
+{#if ctx && game && game.turnOrder !== 'none'}
   {#if seatID === ctx.currentPlayer}
     <div class="absolute bottom-0 right-0 m-4 grid gap-2">
       <div on:click={EndTurn} class="event">End Turn</div>
@@ -75,9 +65,20 @@
         in:scale={{ duration: 400 }}
         out:fade={{ duration: 200 }}
         class="absolute inset-0 center text-6xl font-bold text-gray-600
-        pointer-events-none">
+        pointer-events-none"
+      >
         Your Turn
       </div>
     {/if}
   {/if}
 {/if}
+
+<style>
+  .event {
+    @apply cursor-pointer flex items-center justify-center rounded transition duration-200 p-2 bg-gray-700 font-bold text-white shadow-lg;
+  }
+
+  .event:hover {
+    @apply opacity-75;
+  }
+</style>

@@ -17,31 +17,36 @@ export function GetGameObject(
   schema: Schema,
   state: State,
   id: string
-): GameObject|null {
-  const stateVal = state.objects[id];
+): GameObject | null {
+  const stateVal: any = state.objects[id];
 
   if (!stateVal) {
     return null;
   }
 
-  const instanceID = stateVal.instance || "";
+  const instanceID = stateVal.instance || '';
   let component = GetComponent(schema, state, id);
 
   const childrenID: string[] = (stateVal as any).children || [];
-  const children = childrenID.map((childID) =>
-    GetGameObject(schema, state, childID)
-  ).filter(obj => obj) as GameObject[];
+  const children = childrenID
+    .map((childID) => GetGameObject(schema, state, childID))
+    .filter((obj) => obj) as GameObject[];
 
   const snapZoneIDs = GetSnapZoneIDs(component, id);
-  const snapZones = snapZoneIDs.map((id) =>
-    GetGameObject(schema, state, id)
-  ).filter(obj => obj) as GameObject[];
+  const snapZones = snapZoneIDs
+    .map((id) => GetGameObject(schema, state, id))
+    .filter((obj) => obj) as GameObject[];
 
-  if ((stateVal as Container).kind === "stack" && children.length) {
+  if (stateVal.kind === 'stack' && children.length) {
     component = children[0].component as any;
   }
 
-  if ((stateVal as Container).kind === "stack" || (stateVal as Container).kind?.snap || component) {
+  if (
+    stateVal.kind === 'stack' ||
+    stateVal.kind?.hand ||
+    stateVal.kind?.snap ||
+    component
+  ) {
     return {
       id,
       stateVal: state.objects[id],
@@ -58,7 +63,10 @@ export function GetGameObject(
 }
 
 function GetSnapZoneIDs(component: any, instanceID: string): string[] {
-  const snaps = component?.layout?.faces.flatMap((face: any) => face.layers).flatMap((layer: any) => Object.values(layer.parts)).filter((part: any) => part.snap);
+  const snaps = component?.layout?.faces
+    .flatMap((face: any) => face.layers)
+    .flatMap((layer: any) => Object.values(layer.parts))
+    .filter((part: any) => part.snap);
 
   if (!snaps) {
     return [];

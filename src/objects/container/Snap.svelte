@@ -6,9 +6,9 @@
   import { getContext } from 'svelte';
   import { tweened } from 'svelte/motion';
   import { fade } from 'svelte/transition';
-  import { flip } from 'svelte/animate';
   import GameObject from '../GameObject.svelte';
-  import {ghost } from "../../ghost/ghost.ts";
+  import SnapRowCol from './SnapRowCol.svelte';
+  import { ghost } from '../../ghost/ghost.ts';
   import Size from './Size.svelte';
 
   const highlight = getContext('highlight');
@@ -21,11 +21,13 @@
   $: kind = obj.stateVal.kind.snap.kind;
   $: limit = obj.stateVal.kind.snap.limit;
   $: active = id in $activeObjects;
-  $: types = obj.stateVal.types.map(t => {
-    if (t.component) return t.component;
-    if (t.trait) return t.trait;
-    return t;
-  }).join(' ');
+  $: types = obj.stateVal.types
+    .map((t) => {
+      if (t.component) return t.component;
+      if (t.trait) return t.trait;
+      return t;
+    })
+    .join(' ');
 
   $: isFull = limit !== null && obj.children.length >= limit;
 
@@ -59,18 +61,25 @@
 <g
   data-id={id}
   data-selectable="true"
-  data-droppable={!isFull && "true"}
+  data-droppable={!isFull && 'true'}
   data-draggable="true"
   data-types={types}
   class:hide
-  use:ghost={{ id, isSnap: true, onTable: true, highlight, activeObjects, dispatchActions }}
+  use:ghost={{
+    id,
+    isSnap: true,
+    onTable: true,
+    highlight,
+    activeObjects,
+    dispatchActions,
+  }}
   on:hide={Hide}
   on:show={Show}
-  transform="rotate({$rotation}, {width / 2}, {height / 2})">
-
+  transform="rotate({$rotation}, {width / 2}, {height / 2})"
+>
   <!-- TODO: Move Frame.svelte into renderer (or pass it through setContext) -->
   {#if $isDragging || id in $highlight}
-    {#if shape === "rect"}
+    {#if shape === 'rect'}
       <rect
         in:fade|local={{ duration: 150 }}
         x={0}
@@ -79,11 +88,12 @@
         {height}
         stroke="#ff8700"
         stroke-width={50}
-        stroke-opacity={id in $highlight ? .8 : 0}
-        fill={"transparent"} />
+        stroke-opacity={id in $highlight ? 0.8 : 0}
+        fill={'transparent'}
+      />
     {/if}
 
-    {#if shape === "circle"}
+    {#if shape === 'circle'}
       <ellipse
         in:fade|local={{ duration: 150 }}
         cx={width / 2}
@@ -92,45 +102,26 @@
         ry={height / 2}
         stroke="#ff8700"
         stroke-width={50}
-        stroke-opacity={id in $highlight ? .8 : 0}
-        fill={"transparent"} />
+        stroke-opacity={id in $highlight ? 0.8 : 0}
+        fill={'transparent'}
+      />
     {/if}
 
-    {#if shape === "hex"}
+    {#if shape === 'hex'}
       <polygon
         points={FlatTopHexPointsStr(width, height)}
         stroke="#ff8700"
         stroke-width={50}
-        stroke-opacity={id in $highlight ? .8 : 0}
-        fill={"transparent"} />
+        stroke-opacity={id in $highlight ? 0.8 : 0}
+        fill={'transparent'}
+      />
     {/if}
   {/if}
 
   {#if obj.children.length}
-    {#if kind === "row" || kind === "column"}
+    {#if kind === 'row' || kind === 'column'}
       <foreignObject class="overflow-visible" {width} {height}>
-      <div
-        class:snap-row={kind === "row"}
-        class:snap-col={kind === "column"}
-        class="w-full h-full flex items-center justify-center"
-      >
-          {#each obj.children as child, index (child.id)}
-            <div
-              class:snap-row={kind === "row"}
-              class:snap-col={kind === "column"}
-              data-droppable="true" data-id={id} data-at={index} class="flex" animate:flip={{ duration: 100 }}>
-              <div data-droppable="true" data-id={id} data-at={index} class:at-end={index === 0} class="at-slot" />
-              <svg class="overflow-visible" width={child.component.layout.geometry.width} height={child.component.layout.geometry.height}>
-                <GameObject
-                  id={child.id}
-                  obj={child}
-                  parentID={id}
-                  selectable={true}
-                  droppable={true} />
-              </svg>
-            </div>
-          {/each}
-        </div>
+        <SnapRowCol gap="large" center={true} {id} {obj} {kind} />
       </foreignObject>
     {/if}
 
@@ -139,7 +130,7 @@
          each other) causes flickering when used inside a foreignObject.
          So, we just continue using SVG here instead.
          https://bugs.webkit.org/show_bug.cgi?id=23113 -->
-    {#if kind === "stack"}
+    {#if kind === 'stack'}
       <g>
         {#each obj.children.slice(-10) as child (child.id)}
           <GameObject
@@ -148,13 +139,14 @@
             parentID={id}
             selectable={true}
             anchor={{ x: width / 2, y: height / 2 }}
-            droppable={false} />
+            droppable={false}
+          />
         {/each}
       </g>
     {/if}
 
-    {#if kind === "stack"}
-    <Size {obj} {width} {height} highlight={id in $highlight || active} />
+    {#if kind === 'stack'}
+      <Size {obj} {width} {height} highlight={id in $highlight || active} />
     {/if}
   {/if}
 </g>
@@ -162,21 +154,5 @@
 <style>
   .hide {
     @apply opacity-0 pointer-events-none;
-  }
-
-  .at-slot {
-    @apply w-32 h-32 items-stretch;
-  }
-
-  .at-end {
-    @apply flex-grow;
-  }
-
-  .snap-row {
-    @apply flex-row;
-  }
-
-  .snap-col {
-    @apply flex-col;
   }
 </style>

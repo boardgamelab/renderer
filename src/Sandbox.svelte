@@ -1,5 +1,5 @@
 <script>
-  import Board from "./objects/container/Board.svelte";
+  import Board from './objects/container/Board.svelte';
   import GameObject from './objects/GameObject.svelte';
   import Effects from './Effects.svelte';
   import { drag } from './gestures/drag.ts';
@@ -116,7 +116,9 @@
     zoomLevel.set(actualZoom, { duration });
   }
 
-  onMount(() => { ResetViewport(); });
+  onMount(() => {
+    ResetViewport();
+  });
 
   function ToSVGPoint(point) {
     return ToSVGPointWithPan(point, svg.el, $panX, $panY);
@@ -141,20 +143,31 @@
 <svelte:head>
   <meta
     name="viewport"
-    content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    content="width=device-width,initial-scale=1.0,user-scalable=no"
+  />
 </svelte:head>
 
 <svelte:window
   bind:innerWidth={clientWidth}
   on:error={(e) => {
     dispatch('error', e);
-  }} />
+  }}
+/>
 
 <span
   class="select-none"
   use:preview={{ api: $previewAPI }}
   use:drag={{ dispatchActions, svg, panX: $panX, panY: $panY, isDragging }}
-  use:select={{ panX: $panX, panY: $panY, svg, activeObjects, selectBox, schema: $schema, state: $stateStore }}>
+  use:select={{
+    panX: $panX,
+    panY: $panY,
+    svg,
+    activeObjects,
+    selectBox,
+    schema: $schema,
+    state: $stateStore,
+  }}
+>
   <svg
     id="root"
     data-selectable="box"
@@ -162,14 +175,15 @@
     class="select-none w-full h-full"
     viewBox="{zoomOffsetX}
     {zoomOffsetY}
-    {$zoomLevel * zoomLength}
+    {$zoomLevel *
+      zoomLength}
     {$zoomLevel * zoomLength}"
     use:pan={{ panX, panY, activeObjects, isPanning }}
     use:zoom={{ zoomLevel }}
     on:touchmove|preventDefault={() => {}}
     on:contextmenu|preventDefault={() => {}}
-    xmlns="http://www.w3.org/2000/svg">
-
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <Effects />
 
     <g transform="translate({$panX}, {$panY})">
@@ -189,13 +203,17 @@
         x={$selectBox.x}
         y={$selectBox.y}
         width={$selectBox.width}
-        height={$selectBox.height} />
+        height={$selectBox.height}
+      />
     {/if}
-
   </svg>
 
   {#if handID && !$isPanning}
-    <div transition:fly|local={{ y: 50, duration: 200 }} data-handid={handID} class="absolute bottom-0 w-full">
+    <div
+      transition:fly|local={{ y: 50, duration: 200 }}
+      data-handid={handID}
+      class="absolute bottom-0 w-full"
+    >
       <Hand {handID} hand={$stateStore.objects[handID]} />
     </div>
   {/if}
@@ -219,7 +237,8 @@
   <div
     on:wheel|stopPropagation
     class="hidden opacity-75 md:block fixed z-50 top-0 mt-16 overflow-y-auto
-    h-screen right-0 bg-white shadow-lg p-8 text-xs">
+    h-screen right-0 bg-white shadow-lg p-8 text-xs"
+  >
     <pre>{JSON.stringify($stateStore, null, 2)}</pre>
   </div>
 {/if}
