@@ -23,10 +23,11 @@
   let draggable = true;
   $: {
     component = null;
-    if (obj.component) {
-      component = components[obj.component.type];
-    } else if (obj.stateVal.kind === "stack") {
+    
+    if (obj.stateVal.kind === "stack") {
       component = Stack;
+    } else if (obj.component) {
+      component = components[obj.component.type];
     }
 
     if (component === Board) {

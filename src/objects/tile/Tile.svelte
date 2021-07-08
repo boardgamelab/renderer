@@ -32,8 +32,10 @@
   }
 
   async function ShuffleAnimation() {
-    await rotation.update((r) => r + 359);
-    await rotation.set(0, { duration: 1 });
+    await rotation.update((r) => r + 25, { duration: 100 });
+    await rotation.update((r) => r - 50, { duration: 100 });
+    await rotation.update((r) => r + 50, { duration: 100 });
+    await rotation.update((r) => r - 25, { duration: 100 });
   }
 
   let shuffleID = null;
