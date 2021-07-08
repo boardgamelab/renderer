@@ -62,7 +62,7 @@
   data-id={id}
   data-selectable="true"
   data-droppable={!isFull && 'true'}
-  data-draggable="true"
+  data-draggable={kind === 'stack'}
   data-types={types}
   class:hide
   use:ghost={{
