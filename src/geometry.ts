@@ -15,7 +15,7 @@
  */
 
 import type { Container, Schema, State } from '@boardgamelab/components';
-import { GetComponent } from './utils/template';
+import { GetGameObject } from './objects/game-object';
 
 const HAND = 1;
 
@@ -54,30 +54,32 @@ export function FindIntersectingObjects(
 ): string[] {
   let result = [];
   for (const id in state.objects) {
-    const obj = state.objects[id];
+    const obj = GetGameObject(schema, state, id);
+
+    if (!obj) {
+      continue;
+    }
+
+    const stateVal: any = obj.stateVal;
+    const component: any = obj.component;
 
     // Ignore objects in containers.
-    if (obj.parent) {
+    if (stateVal.parent) {
       continue;
     }
 
     // Ignore snap zones.
-    if ((obj as Container).isSnap) {
+    if (stateVal.kind?.snap) {
       continue;
     }
 
-    const template = GetComponent(schema, state, id);
-    if (!template) {
+    if (!component) {
       continue;
     }
 
-    if (template.type === 3) {
-      continue;
-    }
-
-    const x = obj.x || 0;
-    const y = obj.y || 0;
-    const { width, height } = template.layout.geometry;
+    const x = stateVal.x || 0;
+    const y = stateVal.y || 0;
+    const { width, height } = component.layout.geometry;
     if (IsOverlap(box, { x, y, width, height })) {
       result.push(id);
     }

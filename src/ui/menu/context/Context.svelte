@@ -11,25 +11,13 @@
   const viewOnly = getContext('viewOnly');
   const { state, dispatchActions, activeObjects } = getContext('context');
 
-  function MakeDeck() {
-    const firstCardID = Object.keys($activeObjects)[0];
-
-    // TODO: Make a Rust action that groups an arbitrary set of objects.
-
-    let actions = [];
-    Object.keys($activeObjects).forEach((id) => {
-      if (id !== firstCardID) {
-        actions.push({
-          type: 'object',
-          context: { seatID, subject: { id }, args: [{ object: firstCardID }] },
-          move: {},
-        });
-      }
-    });
-
-    dispatchActions(actions);
-
-    activeObjects.set({ [firstCardID]: true });
+  function Group() {
+    dispatchActions([{
+      type: 'group',
+      context: { seatID },
+      schema: $schema,
+      ids: Object.keys($activeObjects)
+    }]);
   }
 
   function FlipCard(id) {
@@ -146,16 +134,7 @@
     }
 
     if (Object.keys(activeObjects).length > 1) {
-      const allCards = Object.keys(activeObjects).every((id) => {
-        const template = GetComponent($schema, $state, id);
-        if (!template) {
-          return false;
-        }
-        return (template.type === Component.CARD || template.type === Component.TILE);
-      });
-      if (allCards) {
-        items = [{ text: 'stack', fn: MakeDeck }];
-      }
+      items = [{ text: 'group', fn: Group }];
     }
   }
 
