@@ -21,7 +21,7 @@
 >
   <div data-hand="true" class="hand">
     {#if obj.children.length === 0}
-      <div class="text-gray-500 font-normal text-sm m-1">Player Hand</div>
+      <div class="text-gray-400 font-bold text-sm m-1 uppercase">Hand</div>
     {:else}
       <div class="mb-2 w-full">
         <SnapRowCol id={handID} kind="row" {obj} scale={0.15} />
