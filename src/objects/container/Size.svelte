@@ -9,7 +9,7 @@
   $: size = Math.min(300, Math.round(width / 2));
 </script>
 
-{#if obj.children.length > 0}
+{#if obj.children.length > 1}
   <g data-size="true" in:fly={{ duration: 250, y: -100 }}>
     <foreignObject
       x={width / 2 - size / 2}
