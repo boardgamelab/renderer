@@ -1,5 +1,6 @@
 <script>
   import Board from './objects/container/Board.svelte';
+  import Supply from './objects/container/Supply.svelte';
   import GameObject from './objects/GameObject.svelte';
   import Effects from './Effects.svelte';
   import { drag } from './gestures/drag.ts';
@@ -184,8 +185,6 @@
     on:contextmenu|preventDefault={() => {}}
     xmlns="http://www.w3.org/2000/svg"
   >
-    <Effects />
-
     <g transform="translate({$panX}, {$panY})">
       <Board {state} board={$schema.game.board} snapKeySuffix="game" />
 
@@ -221,6 +220,8 @@
   {#if players && multiplayer}
     <Seats {players} {seatID} />
   {/if}
+
+  <Supply {state} />
 
   {#if multiplayer && $stateStore.ctx}
     <Turn {seatID} game={$stateStore.game} ctx={$stateStore.ctx} />

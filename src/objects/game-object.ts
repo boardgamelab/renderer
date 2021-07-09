@@ -43,6 +43,7 @@ export function GetGameObject(
 
   if (
     stateVal.kind === 'stack' ||
+    stateVal.kind === 'supply' ||
     stateVal.kind?.hand ||
     stateVal.kind?.snap ||
     component
