@@ -62,7 +62,8 @@
   data-selectable="true"
   data-droppable="true"
   data-types={types}
-  transform="rotate({$rotation}, {width / 2}, {height / 2})"
+  transform="translate({$rotation * 2}) rotate({$rotation}, {width /
+    2}, {height / 2})"
 >
   {#if obj.children.length}
     {#each obj.children.slice(-10) as child (child.id)}

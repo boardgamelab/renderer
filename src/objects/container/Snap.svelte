@@ -31,11 +31,13 @@
 
   $: isFull = limit !== null && obj.children.length >= limit;
 
-  const rotation = tweened(0, { duration: 200 });
+  const rotation = tweened(0, { duration: 100 });
 
   async function ShuffleAnimation() {
-    await rotation.update((r) => r + 359);
-    await rotation.set(0, { duration: 1 });
+    await rotation.update((r) => r + 25, { duration: 100 });
+    await rotation.update((r) => r - 50, { duration: 100 });
+    await rotation.update((r) => r + 50, { duration: 100 });
+    await rotation.update((r) => r - 25, { duration: 100 });
   }
 
   let shuffleID = null;
@@ -75,7 +77,8 @@
   }}
   on:hide={Hide}
   on:show={Show}
-  transform="rotate({$rotation}, {width / 2}, {height / 2})"
+  transform="translate({$rotation * 2}) rotate({$rotation}, {width /
+    2}, {height / 2})"
 >
   <!-- TODO: Move Frame.svelte into renderer (or pass it through setContext) -->
   {#if $isDragging || id in $highlight}
