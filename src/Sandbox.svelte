@@ -221,7 +221,9 @@
     <Seats {players} {seatID} />
   {/if}
 
-  <Supply {state} />
+  {#if !$isPanning}
+    <Supply {state} />
+  {/if}
 
   {#if multiplayer && $stateStore.ctx}
     <Turn {seatID} game={$stateStore.game} ctx={$stateStore.ctx} />
