@@ -8,8 +8,10 @@
   const schema = getContext('schema');
   const { dispatchActions, state } = getContext('context');
   const highlight = getContext('highlight');
+  const isMobile = getContext('isMobile');
 
   $: obj = GetGameObject($schema, $state, handID);
+  $: scale = $isMobile ? 0.07 : 0.15;
 </script>
 
 <div
@@ -24,7 +26,7 @@
       <div class="text-gray-400 font-bold text-sm m-1 uppercase">Hand</div>
     {:else}
       <div class="mb-2 w-full">
-        <SnapRowCol id={handID} kind="row" {obj} scale={0.15} />
+        <SnapRowCol id={handID} kind="row" {obj} {scale} />
       </div>
     {/if}
   </div>
