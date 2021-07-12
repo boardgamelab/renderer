@@ -40,7 +40,7 @@
     await rotation.update((r) => r - 25, { duration: 100 });
   }
 
-  let shuffleID = null;
+  let shuffleID = obj.stateVal.shuffleID;
   $: {
     const newID = obj.stateVal.shuffleID;
     if (newID && newID !== shuffleID) {
