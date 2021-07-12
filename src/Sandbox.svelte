@@ -100,7 +100,12 @@
   });
 
   function ResetViewport(duration = 0) {
-    const bbox = svg.el.getBBox();
+    const board = document.querySelector('#game');
+    if (!board) {
+      return;
+    }
+
+    const bbox = board.getBBox();
 
     const z1 = bbox.width / zoomLength;
     const z2 = bbox.height / zoomLength;
