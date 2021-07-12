@@ -11,11 +11,11 @@
   export const isDragging = false;
 
   import { getContext } from 'svelte';
-  import { backOut } from "svelte/easing";
+  import { backOut } from 'svelte/easing';
   import { tweened } from 'svelte/motion';
-  import Snap from "../container/Snap.svelte";
-  import Size from "../container/Size.svelte";
-  import GameObject from "../GameObject.svelte";
+  import Snap from '../container/Snap.svelte';
+  import Size from '../container/Size.svelte';
+  import GameObject from '../GameObject.svelte';
 
   const renderer = getContext('renderer');
   const highlight = getContext('highlight');
@@ -50,9 +50,11 @@
   let faceDown = false;
   let rotation = tweened(0, { duration: 400, easing: backOut });
 
-  $: translate = anchor ?
-  `translate(${Math.round(anchor.x - width / 2)}, ${Math.round(anchor.y - height / 2)})`
-    : "";
+  $: translate = anchor
+    ? `translate(${Math.round(anchor.x - width / 2)}, ${Math.round(
+        anchor.y - height / 2
+      )})`
+    : '';
 
   $: {
     const card = obj.stateVal;
@@ -72,11 +74,13 @@
     }
   }
 
-  $: types = obj.stateVal.types.map(t => {
-    if (t.component) return t.component;
-    if (t.trait) return t.trait;
-    return t;
-  }).join(' ');
+  $: types = obj.stateVal.types
+    .map((t) => {
+      if (t.component) return t.component;
+      if (t.trait) return t.trait;
+      return t;
+    })
+    .join(' ');
 </script>
 
 <g
@@ -86,10 +90,10 @@
   data-component={component.id}
   data-droppable={droppable}
   data-types={types}
-  transform="rotate({$rotation}
+  transform="{translate} rotate({$rotation}
   {width / 2}
-  {height / 2}) {translate}">
-
+  {height / 2})"
+>
   {#if renderer && obj.instance}
     <svelte:component
       this={renderer}
@@ -98,7 +102,8 @@
       faceDown={forceFaceDown || (faceDown && !forceFaceUp)}
       {component}
       highlight={id in $highlight || active}
-      instance={obj.instance} />
+      instance={obj.instance}
+    />
   {/if}
 
   {#if obj.snapZones.length}
@@ -116,9 +121,16 @@
         obj={child}
         parentID={id}
         selectable={true}
-        droppable={false} />
+        droppable={false}
+      />
     {/each}
 
-    <Size stack={true} {obj} {width} {height} highlight={id in $highlight || active} />
+    <Size
+      stack={true}
+      {obj}
+      {width}
+      {height}
+      highlight={id in $highlight || active}
+    />
   {/if}
 </g>
