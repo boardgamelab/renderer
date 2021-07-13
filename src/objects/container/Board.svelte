@@ -7,12 +7,24 @@
   import Snap from './Snap.svelte';
 
   const schema = getContext('schema');
+  const seatID = getContext('seatID');
+  const { dispatchActions } = getContext('context');
 
   import { GetGameObject } from '../game-object.ts';
   import Render from '../../../../src/components/template/Render.svelte';
 
   const width = board.geometry.width;
   const height = board.geometry.height;
+
+  function OnPartClick({ detail: part }) {
+    dispatchActions([
+      {
+        context: { seatID, subject: { id } },
+        type: 'rule',
+        ruleID: part.clickable.handler,
+      },
+    ]);
+  }
 
   $: snaps = board.faces
     .flatMap((face) => face.layers)
@@ -25,7 +37,13 @@
 </script>
 
 <g id={snapKeySuffix}>
-  <Render {width} {height} {board} highlightOnHover={false} />
+  <Render
+    on:partclick={OnPartClick}
+    {width}
+    {height}
+    {board}
+    highlightOnHover={false}
+  />
 
   {#if snaps.length}
     {#each snaps as zone (zone.id)}

@@ -19,6 +19,8 @@
 
   const renderer = getContext('renderer');
   const highlight = getContext('highlight');
+  const seatID = getContext('seatID');
+  const { dispatchActions } = getContext('context');
 
   let width = 0;
   let height = 0;
@@ -74,6 +76,16 @@
     }
   }
 
+  function OnPartClick({ detail: part }) {
+    dispatchActions([
+      {
+        context: { seatID, subject: { id } },
+        type: 'rule',
+        ruleID: part.clickable.handler,
+      },
+    ]);
+  }
+
   $: types = obj.stateVal.types
     .map((t) => {
       if (t.component) return t.component;
@@ -97,6 +109,7 @@
   {#if renderer && obj.instance}
     <svelte:component
       this={renderer}
+      on:partclick={OnPartClick}
       {width}
       {height}
       faceDown={forceFaceDown || (faceDown && !forceFaceUp)}
