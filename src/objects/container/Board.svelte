@@ -1,4 +1,5 @@
 <script>
+  export let id = 'game';
   export let board;
   export let state;
   export let snapKeySuffix = '';
