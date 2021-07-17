@@ -4,6 +4,7 @@
 
   import Stack from './container/Stack.svelte';
   import Tile from './tile/Tile.svelte';
+  import { setContext } from 'svelte';
 
   export let id;
   export let obj;
@@ -12,6 +13,8 @@
   export let droppable = true;
   export let selectable = true;
   export let parentID = null;
+
+  setContext('stateID', id);
 
   const components = {
     [Component.TILE]: Tile,
