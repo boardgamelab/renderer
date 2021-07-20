@@ -15,8 +15,8 @@
   const isDragging = getContext('isDragging');
   const { activeObjects, dispatchActions } = getContext('context');
 
-  $: width = obj.stateVal.kind.snap.geometry.width;
-  $: height = obj.stateVal.kind.snap.geometry.height;
+  $: width = obj.stateVal.kind.snap.geometry.width.value;
+  $: height = obj.stateVal.kind.snap.geometry.height.value;
   $: shape = obj.stateVal.kind.snap.geometry.shape;
   $: kind = obj.stateVal.kind.snap.kind;
   $: limit = obj.stateVal.kind.snap.limit;
