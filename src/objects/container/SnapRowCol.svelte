@@ -34,10 +34,10 @@
       >
         <svg
           class="overflow-visible"
-          viewBox="0 0 {child.component.layout.geometry.width} {child.component
-            .layout.geometry.height}"
-          width={child.component.layout.geometry.width * scale}
-          height={child.component.layout.geometry.height * scale}
+          viewBox="0 0 {child.component.layout.geometry.width.value} {child
+            .component.layout.geometry.height.value}"
+          width={child.component.layout.geometry.width.value * scale}
+          height={child.component.layout.geometry.height.value * scale}
         >
           <GameObject
             id={child.id}

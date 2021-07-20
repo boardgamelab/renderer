@@ -29,8 +29,8 @@
 
   if (component) {
     const { geometry } = component.layout;
-    width = geometry.width;
-    height = geometry.height;
+    width = geometry.width.value;
+    height = geometry.height.value;
   }
 
   async function ShuffleAnimation() {

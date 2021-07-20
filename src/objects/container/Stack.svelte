@@ -38,11 +38,11 @@
         const { width: w, height: h } = firstChild.component.layout.geometry;
 
         if (w) {
-          width = w;
+          width = w.value;
         }
 
         if (h) {
-          height = h;
+          height = h.value;
         }
       }
     }

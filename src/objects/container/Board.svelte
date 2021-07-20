@@ -14,8 +14,8 @@
   import { GetGameObject } from '../game-object.ts';
   import Render from '../../../../src/components/template/Render.svelte';
 
-  const width = board.geometry.width;
-  const height = board.geometry.height;
+  const width = board.geometry.width.value;
+  const height = board.geometry.height.value;
 
   function OnPartClick({ detail: part }) {
     dispatchActions([
