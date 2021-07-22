@@ -21,6 +21,7 @@
   $: kind = obj.stateVal.kind.snap.kind;
   $: limit = obj.stateVal.kind.snap.limit;
   $: active = id in $activeObjects;
+  $: snapZoneRotation = obj.stateVal.rotation;
   $: types = obj.stateVal.types
     .map((t) => {
       if (t.component) return t.component;
@@ -82,43 +83,45 @@
 >
   <!-- TODO: Move Frame.svelte into renderer (or pass it through setContext) -->
   {#if $isDragging || id in $highlight}
-    {#if shape === 'rect'}
-      <rect
-        in:fade|local={{ duration: 150 }}
-        x={0}
-        y={0}
-        {width}
-        {height}
-        stroke="#ff8700"
-        stroke-width={50}
-        stroke-opacity={id in $highlight ? 0.8 : 0}
-        fill={'transparent'}
-      />
-    {/if}
+    <g transform="rotate({snapZoneRotation}, {width / 2}, {height / 2})">
+      {#if shape === 'rect'}
+        <rect
+          in:fade|local={{ duration: 150 }}
+          x={0}
+          y={0}
+          {width}
+          {height}
+          stroke="#ff8700"
+          stroke-width={50}
+          stroke-opacity={id in $highlight ? 0.8 : 0}
+          fill={'transparent'}
+        />
+      {/if}
 
-    {#if shape === 'circle'}
-      <ellipse
-        in:fade|local={{ duration: 150 }}
-        cx={width / 2}
-        cy={height / 2}
-        rx={width / 2}
-        ry={height / 2}
-        stroke="#ff8700"
-        stroke-width={50}
-        stroke-opacity={id in $highlight ? 0.8 : 0}
-        fill={'transparent'}
-      />
-    {/if}
+      {#if shape === 'circle'}
+        <ellipse
+          in:fade|local={{ duration: 150 }}
+          cx={width / 2}
+          cy={height / 2}
+          rx={width / 2}
+          ry={height / 2}
+          stroke="#ff8700"
+          stroke-width={50}
+          stroke-opacity={id in $highlight ? 0.8 : 0}
+          fill={'transparent'}
+        />
+      {/if}
 
-    {#if shape === 'hex'}
-      <polygon
-        points={FlatTopHexPointsStr(width, height)}
-        stroke="#ff8700"
-        stroke-width={50}
-        stroke-opacity={id in $highlight ? 0.8 : 0}
-        fill={'transparent'}
-      />
-    {/if}
+      {#if shape === 'hex'}
+        <polygon
+          points={FlatTopHexPointsStr(width, height)}
+          stroke="#ff8700"
+          stroke-width={50}
+          stroke-opacity={id in $highlight ? 0.8 : 0}
+          fill={'transparent'}
+        />
+      {/if}
+    </g>
   {/if}
 
   {#if obj.children.length}
