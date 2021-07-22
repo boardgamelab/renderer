@@ -5,6 +5,7 @@
   import Stack from './container/Stack.svelte';
   import Tile from './tile/Tile.svelte';
   import { setContext } from 'svelte';
+  import { writable } from 'svelte/store';
 
   export let id;
   export let obj;
@@ -14,7 +15,11 @@
   export let selectable = true;
   export let parentID = null;
 
+  const stateObj = writable(obj);
+  $: stateObj.set(obj);
+
   setContext('stateID', id);
+  setContext('stateObj', stateObj);
 
   const components = {
     [Component.TILE]: Tile,
